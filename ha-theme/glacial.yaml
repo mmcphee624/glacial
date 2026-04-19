@@ -1,0 +1,76 @@
+Glacial:
+  # Glacial Design System — Home Assistant Theme
+  # See DESIGN.md for full specification.
+  modes:
+    light:
+      # Primary
+      primary-color: "#00b8d4"
+      accent-color: "#00b8d4"
+      # Text
+      primary-text-color: "#3a3a42"
+      secondary-text-color: "#5a5a66"
+      text-primary-color: "#fff"
+      disabled-text-color: "#aaa"
+      # Surfaces
+      card-background-color: "rgba(255,255,255,0.6)"
+      ha-card-background: "rgba(255,255,255,0.6)"
+      ha-card-border-radius: "8px"
+      ha-card-box-shadow: "0 2px 12px rgba(0,0,0,0.04)"
+      paper-color: "#eef1f5"
+      # Header
+      app-header-background-color: "rgba(255,255,255,0.65)"
+      app-header-text-color: "#3a3a42"
+      # Sidebar
+      sidebar-background-color: "#eef1f5"
+      sidebar-text-color: "#3a3a42"
+      sidebar-selected-background-color: "rgba(0,184,212,0.08)"
+      sidebar-selected-icon-color: "#00b8d4"
+      sidebar-selected-text-color: "#00b8d4"
+      sidebar-icon-color: "#5a5a66"
+      # Divider
+      divider-color: "rgba(0,0,0,0.08)"
+      # States
+      state-active-color: "#00b8d4"
+      state-icon-active-color: "#00b8d4"
+      switch-checked-color: "#00b8d4"
+      # Status
+      success-color: "#16a34a"
+      warning-color: "#d97706"
+      error-color: "#dc2626"
+      info-color: "#2563eb"
+    dark:
+      # Primary
+      primary-color: "#00e5ff"
+      accent-color: "#00e5ff"
+      # Text
+      primary-text-color: "#c8c8d0"
+      secondary-text-color: "#888"
+      text-primary-color: "#111114"
+      disabled-text-color: "#444"
+      # Surfaces
+      card-background-color: "rgba(255,255,255,0.06)"
+      ha-card-background: "rgba(255,255,255,0.06)"
+      ha-card-border-radius: "8px"
+      ha-card-box-shadow: "none"
+      paper-color: "#111114"
+      # Header
+      app-header-background-color: "rgba(12,12,15,0.85)"
+      app-header-text-color: "#c8c8d0"
+      # Sidebar
+      sidebar-background-color: "#111114"
+      sidebar-text-color: "#c8c8d0"
+      sidebar-selected-background-color: "rgba(0,229,255,0.08)"
+      sidebar-selected-icon-color: "#00e5ff"
+      sidebar-selected-text-color: "#00e5ff"
+      sidebar-icon-color: "#888"
+      # Divider
+      divider-color: "rgba(255,255,255,0.08)"
+      # States
+      state-active-color: "#00e5ff"
+      state-icon-active-color: "#00e5ff"
+      switch-checked-color: "#00e5ff"
+      # Status
+      success-color: "#39ff14"
+      warning-color: "#fbbf24"
+      error-color: "#ff4444"
+      info-color: "#60a5fa"

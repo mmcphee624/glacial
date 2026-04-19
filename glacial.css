@@ -1,0 +1,263 @@
+/* Glacial Design System — Shared CSS Tokens
+ * Import this file into any service for Glacial theming.
+ * See DESIGN.md for full specification.
+ */
+
+/* ===== Light Theme (default) ===== */
+:root {
+  --bg: #eef1f5;
+  --bg-card: rgba(255,255,255,0.6);
+  --bg-card-hover: rgba(255,255,255,0.78);
+  --bg-header: rgba(255,255,255,0.65);
+  --bg-input: rgba(255,255,255,0.75);
+  --border: rgba(255,255,255,0.35);
+  --border-card: rgba(0,184,212,0.1);
+  --border-hover: rgba(0,184,212,0.25);
+  --text: #3a3a42;
+  --text-strong: #1a1a22;
+  --text-secondary: #5a5a66;
+  --text-muted: #888;
+  --text-faint: #aaa;
+  --accent: #00b8d4;
+  --accent-bg: rgba(0,184,212,0.08);
+  --accent-border: rgba(0,184,212,0.3);
+  --green: #16a34a;
+  --green-bg: rgba(22,163,74,0.1);
+  --yellow: #d97706;
+  --yellow-bg: rgba(217,119,6,0.1);
+  --red: #dc2626;
+  --red-bg: rgba(220,38,38,0.1);
+  --blue: #2563eb;
+  --blue-bg: rgba(37,99,235,0.1);
+  --shadow: 0 2px 12px rgba(0,0,0,0.04);
+  --blur: 20px;
+  --radius-sm: 4px;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --orb-opacity: 0;
+}
+
+/* ===== Dark Theme ===== */
+[data-theme="dark"] {
+  --bg: #111114;
+  --bg-card: rgba(255,255,255,0.06);
+  --bg-card-hover: rgba(255,255,255,0.10);
+  --bg-header: rgba(12,12,15,0.85);
+  --bg-input: rgba(255,255,255,0.06);
+  --border: rgba(255,255,255,0.08);
+  --border-card: rgba(255,255,255,0.06);
+  --border-hover: rgba(0,229,255,0.2);
+  --text: #c8c8d0;
+  --text-strong: #f0f0f5;
+  --text-secondary: #888;
+  --text-muted: #666;
+  --text-faint: #444;
+  --accent: #00e5ff;
+  --accent-bg: rgba(0,229,255,0.08);
+  --accent-border: rgba(0,229,255,0.25);
+  --green: #39ff14;
+  --green-bg: rgba(57,255,20,0.08);
+  --yellow: #fbbf24;
+  --yellow-bg: rgba(251,191,36,0.08);
+  --red: #ff4444;
+  --red-bg: rgba(255,68,68,0.08);
+  --blue: #60a5fa;
+  --blue-bg: rgba(96,165,250,0.08);
+  --shadow: none;
+  --orb-opacity: 1;
+}
+
+/* ===== OS Preference Detection ===== */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111114;
+    --bg-card: rgba(255,255,255,0.06);
+    --bg-card-hover: rgba(255,255,255,0.10);
+    --bg-header: rgba(12,12,15,0.85);
+    --bg-input: rgba(255,255,255,0.06);
+    --border: rgba(255,255,255,0.08);
+    --border-card: rgba(255,255,255,0.06);
+    --border-hover: rgba(0,229,255,0.2);
+    --text: #c8c8d0;
+    --text-strong: #f0f0f5;
+    --text-secondary: #888;
+    --text-muted: #666;
+    --text-faint: #444;
+    --accent: #00e5ff;
+    --accent-bg: rgba(0,229,255,0.08);
+    --accent-border: rgba(0,229,255,0.25);
+    --green: #39ff14;
+    --green-bg: rgba(57,255,20,0.08);
+    --yellow: #fbbf24;
+    --yellow-bg: rgba(251,191,36,0.08);
+    --red: #ff4444;
+    --red-bg: rgba(255,68,68,0.08);
+    --blue: #60a5fa;
+    --blue-bg: rgba(96,165,250,0.08);
+    --shadow: none;
+    --orb-opacity: 1;
+  }
+}
+
+/* ===== Glass Effect ===== */
+.glacial-glass {
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius);
+}
+
+.glacial-glass-header {
+  background: var(--bg-header);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border-bottom: 1px solid var(--border);
+}
+
+/* ===== Aurora Orbs ===== */
+.glacial-aurora {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.glacial-aurora .orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  pointer-events: none;
+  opacity: var(--orb-opacity);
+  transition: opacity 0.5s ease;
+}
+
+.glacial-aurora .orb-1 {
+  width: 600px; height: 600px;
+  background: #7c3aed; opacity: calc(0.15 * var(--orb-opacity));
+  top: -200px; left: -150px;
+  animation: glacial-float1 80s ease-in-out infinite;
+}
+
+.glacial-aurora .orb-2 {
+  width: 500px; height: 500px;
+  background: #2563eb; opacity: calc(0.10 * var(--orb-opacity));
+  bottom: -150px; right: -100px;
+  animation: glacial-float2 60s ease-in-out infinite;
+}
+
+.glacial-aurora .orb-3 {
+  width: 400px; height: 400px;
+  background: #14b8a6; opacity: calc(0.08 * var(--orb-opacity));
+  top: 30%; left: 50%;
+  animation: glacial-float3 70s ease-in-out infinite;
+}
+
+@keyframes glacial-float1 {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(100px, 150px); }
+}
+@keyframes glacial-float2 {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-80px, -100px); }
+}
+@keyframes glacial-float3 {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-60px, 80px); }
+}
+
+/* ===== Badges ===== */
+.glacial-badge {
+  font-family: 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 2px 7px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  display: inline-block;
+}
+
+.glacial-badge-green { color: var(--green); background: var(--green-bg); }
+.glacial-badge-yellow { color: var(--yellow); background: var(--yellow-bg); }
+.glacial-badge-red { color: var(--red); background: var(--red-bg); }
+.glacial-badge-blue { color: var(--blue); background: var(--blue-bg); }
+.glacial-badge-accent { color: var(--accent); background: var(--accent-bg); }
+
+/* ===== Buttons ===== */
+.glacial-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.glacial-btn-primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.glacial-btn-primary:hover {
+  filter: brightness(1.1);
+}
+
+.glacial-btn-secondary {
+  background: transparent;
+  color: var(--accent);
+  border-color: var(--accent-border);
+}
+.glacial-btn-secondary:hover {
+  background: var(--accent-bg);
+}
+
+/* ===== Nav Links ===== */
+.glacial-nav a {
+  font-family: 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all 0.15s;
+}
+
+.glacial-nav a:hover {
+  color: var(--text-strong);
+  background: var(--accent-bg);
+}
+
+.glacial-nav a.active {
+  color: var(--accent);
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+}
+
+/* ===== Theme Toggle Button ===== */
+.glacial-toggle {
+  font-size: 16px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  cursor: pointer;
+  color: var(--text);
+  transition: all 0.15s;
+}
+.glacial-toggle:hover {
+  border-color: var(--accent-border);
+  background: var(--accent-bg);
+}
+
+/* ===== Reduced Motion ===== */
+@media (prefers-reduced-motion: reduce) {
+  .glacial-aurora .orb,
+  .orb {
+    animation: none !important;
+  }
+}
