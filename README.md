@@ -42,6 +42,14 @@ The JS automatically:
 
 Copy `ha-theme/glacial.yaml` into your HA `themes/` directory and add `!include_dir_merge_named themes` to your configuration. See `DESIGN.md` for card-mod glass presets.
 
+## Adopting glacial in a new project
+
+Paste this into the agent working in the new repo:
+
+> Adopt the glacial design system from `https://github.com/mmcphee624/glacial`. Add it as a git submodule at `vendor/glacial`, and link `vendor/glacial/glacial.css` + `vendor/glacial/glacial.js` from the app shell. Restyle pages using glacial's tokens and component classes: `.glacial-glass`, `.glacial-glass-header`, `.glacial-badge` / `.glacial-badge-{green,yellow,red,blue,accent}`, `.glacial-btn-primary` / `.glacial-btn-secondary`, `.glacial-nav`, `.glacial-toggle`. Drive theming via the `data-theme` attribute on `<html>` and wire a toggle button to `window.glacialToggleTheme()`. Token and visual reference: `vendor/glacial/DESIGN.md`. Prefer the submodule over copying files so upstream changes flow through.
+
+If submodules are awkward for the project, fall back to copying `glacial.css` + `glacial.js` into `public/` (or equivalent) and linking them directly.
+
 ## Colors
 
 | Token | Light | Dark |
