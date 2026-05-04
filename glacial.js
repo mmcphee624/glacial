@@ -1,6 +1,6 @@
 /**
  * Glacial Design System — Theme + Skin + Aesthetic + Aurora + Debug + Tier 2 helpers
- * @version 2.1.0
+ * @version 2.2.0
  *
  * Include via <script src="glacial.js"></script>
  * Provides:
@@ -12,7 +12,7 @@
  *   - window.glacialPalette({ items, onSelect })  (v2.1.0 — Cmd+K helper)
  *   - window.glacial.help()
  *
- * Sets <html data-glacial-loaded="2.1.0"> before first paint.
+ * Sets <html data-glacial-loaded="2.2.0"> before first paint.
  *
  * Theme/skin priority (highest first):
  *   1. URL params:  ?theme=light|dark · ?skin=<name>
@@ -26,7 +26,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '2.1.0';
+  var VERSION = '2.2.0';
 
   // ===== Storage with graceful degradation =====
   // Try cookie first (persistent across tabs); fall back to sessionStorage
