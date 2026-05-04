@@ -70,6 +70,14 @@
       .v21-controls { top: 8px; right: 8px; }
       .v21-cmdk-hint { bottom: 88px; }
     }
+    /* Hide the Cmd+K hint on touch-primary devices (no physical keyboard).
+     * iPad with Magic Keyboard is the documented edge case — pointer: coarse
+     * still reports there, so the hint hides on iPad-with-keyboard too.
+     * If the user has a Pencil or trackpad attached, pointer: fine reports
+     * and the hint shows. Acceptable trade-off for the rare config. */
+    @media (pointer: coarse) {
+      .v21-cmdk-hint { display: none; }
+    }
   </style>
 </head>
 <body>
