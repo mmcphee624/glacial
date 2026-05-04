@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Variant C · Navigation · Glacial UX</title>
+  <link rel="stylesheet" href="../../glacial.css">
+  <link rel="stylesheet" href="../../skins/default.css">
+  <link rel="stylesheet" href="../../skins/warm-serif.css">
+  <link rel="stylesheet" href="../../skins/midnight-mono.css">
+  <link rel="stylesheet" href="../../skins/lavender.css">
+  <link rel="stylesheet" href="../../skins/deep-navy.css">
+  <link rel="stylesheet" href="../../skins/nord.css">
+  <link rel="stylesheet" href="../_examples.css">
+  <link rel="stylesheet" href="_ux-shared.css">
+  <script src="../../glacial.js"></script>
+</head>
+<body>
+  <header class="glacial-glass-header ux-toolbar">
+    <div class="ux-toolbar-inner">
+      <span class="ux-logo">GLACIAL · UX</span>
+      <a class="ux-back" href="index.html">← variants</a>
+      <span class="ux-title">C. Navigation</span>
+      <div class="ux-controls">
+        <select class="ux-select" data-glacial-skin>
+          <option value="default">default</option>
+          <option value="warm-serif">warm-serif</option>
+          <option value="midnight-mono">midnight-mono</option>
+          <option value="lavender">lavender</option>
+          <option value="deep-navy">deep-navy</option>
+          <option value="nord">nord</option>
+        </select>
+        <button class="glacial-toggle" onclick="glacialToggleTheme()">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="ux-main">
+    <h1 class="ux-h1">Navigation</h1>
+    <p class="ux-lede">Four nav patterns for the same dashboard. The choice depends on (1) how many sections you have, (2) whether discovery or speed matters more, and (3) whether you want the brand front-and-center.</p>
+
+    <p class="ux-takeaway">2026 trend: full sidebar + Cmd+K is becoming the standard combo (Linear, Vercel, Raycast, Notion). Mini-rail is the persisted-collapsed default.</p>
+
+    <div class="ux-variant-grid ux-variant-grid-4">
+
+      <article class="ux-frame">
+        <div class="ux-frame-label">
+          <span class="ux-frame-name">C1 · Top nav <span class="ux-frame-tag">(current default)</span></span>
+          <a class="ux-frame-fullscreen" href="nav-top.html" target="_blank">↗</a>
+        </div>
+        <iframe src="nav-top.html"></iframe>
+        <div class="ux-pros-cons">
+          <div class="pros"><strong>Pros</strong>All sections visible · Brand prominent · Mobile-friendly</div>
+          <div class="cons"><strong>Cons</strong>Caps at ~6 items · Wraps on narrow screens · Wastes vertical space</div>
+        </div>
+      </article>
+
+      <article class="ux-frame">
+        <div class="ux-frame-label">
+          <span class="ux-frame-name">C2 · Full sidebar</span>
+          <a class="ux-frame-fullscreen" href="nav-sidebar.html" target="_blank">↗</a>
+        </div>
+        <iframe src="nav-sidebar.html"></iframe>
+        <div class="ux-pros-cons">
+          <div class="pros"><strong>Pros</strong>Section grouping · Item counts · Scales to many destinations</div>
+          <div class="cons"><strong>Cons</strong>240px less content · Nav competes with content · Tablet/mobile awkward</div>
+        </div>
+      </article>
+
+      <article class="ux-frame">
+        <div class="ux-frame-label">
+          <span class="ux-frame-name">C3 · Mini rail</span>
+          <a class="ux-frame-fullscreen" href="nav-rail.html" target="_blank">↗</a>
+        </div>
+        <iframe src="nav-rail.html"></iframe>
+        <div class="ux-pros-cons">
+          <div class="pros"><strong>Pros</strong>Max content area · Linear/Notion default · Touch-friendly</div>
+          <div class="cons"><strong>Cons</strong>Icon-only ambiguous · Tooltips don't work on mobile · Less discoverable</div>
+        </div>
+      </article>
+
+      <article class="ux-frame">
+        <div class="ux-frame-label">
+          <span class="ux-frame-name">C4 · Cmd+K only</span>
+          <a class="ux-frame-fullscreen" href="nav-cmdk.html" target="_blank">↗</a>
+        </div>
+        <iframe src="nav-cmdk.html"></iframe>
+        <div class="ux-pros-cons">
+          <div class="pros"><strong>Pros</strong>Zero chrome · Fastest for power users · Search + nav unified</div>
+          <div class="cons"><strong>Cons</strong>Hostile to first-timers · Discoverability problem · No mobile equivalent</div>
+        </div>
+      </article>
+
+    </div>
+
+    <section style="margin: 32px 0;">
+      <h2 class="ux-takeaway">My recommendation</h2>
+      <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; max-width: 70ch;">
+        For a personal-tools-builder: <strong>C3 (mini-rail) + Cmd+K both ship</strong>. Rail handles the 6-12 destinations you have on any project; Cmd+K handles the speed once you know it. Top nav stays as a fallback for marketing pages or apps with ≤4 destinations. Drop the keyboard-first-only mode (C4) — your apps need to be discoverable to the version of you that hasn't touched the project in 3 months.
+      </p>
+      <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; max-width: 70ch;">
+        <strong>If you adopt this</strong>: build <code>.glacial-rail</code> + <code>.glacial-rail-item</code> as Tier 2 components. Add a <code>glacialOpenPalette()</code> helper to glacial.js. Document the keyboard contract in DESIGN.md (Cmd+K opens, ↑↓ navigates, Enter activates, Esc closes).
+      </p>
+    </section>
+  </main>
+
+  <script src="../_examples.js"></script>
+</body>
+</html>

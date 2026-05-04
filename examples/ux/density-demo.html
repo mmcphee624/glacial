@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Density Demo</title>
+  <link rel="stylesheet" href="../../glacial.css">
+  <link rel="stylesheet" href="../../skins/default.css">
+  <link rel="stylesheet" href="../../skins/warm-serif.css">
+  <link rel="stylesheet" href="../../skins/midnight-mono.css">
+  <link rel="stylesheet" href="../../skins/lavender.css">
+  <link rel="stylesheet" href="../../skins/deep-navy.css">
+  <link rel="stylesheet" href="../../skins/nord.css">
+  <link rel="stylesheet" href="../_examples.css">
+  <link rel="stylesheet" href="_ux-shared.css">
+  <link rel="stylesheet" href="_density.css">
+  <script src="../../glacial.js"></script>
+  <script>
+    // Read ?density=... from URL and apply BEFORE first paint
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var d = params.get('density') || 'comfortable';
+      document.documentElement.setAttribute('data-density', d);
+    })();
+  </script>
+</head>
+<body>
+  <main class="ex-main">
+    <h1 class="ex-h1">Operations</h1>
+    <p class="ex-lede">Live snapshot of services and revenue.</p>
+
+    <h2 class="ex-h3">Today</h2>
+    <section class="ex-grid-4">
+      <div class="glacial-metric">
+        <span class="glacial-metric-label">Active users</span>
+        <span class="glacial-metric-value">1,284</span>
+        <span class="glacial-metric-delta glacial-metric-delta-up">▲ 12.4% · 24h</span>
+      </div>
+      <div class="glacial-metric">
+        <span class="glacial-metric-label">Revenue</span>
+        <span class="glacial-metric-value">$84,210</span>
+        <span class="glacial-metric-delta glacial-metric-delta-up">▲ 3.1% · 24h</span>
+      </div>
+      <div class="glacial-metric">
+        <span class="glacial-metric-label">Error rate</span>
+        <span class="glacial-metric-value">0.18%</span>
+        <span class="glacial-metric-delta glacial-metric-delta-down">▼ 0.04% · 24h</span>
+      </div>
+      <div class="glacial-metric">
+        <span class="glacial-metric-label">Pending tasks</span>
+        <span class="glacial-metric-value">42</span>
+        <span class="glacial-metric-delta glacial-metric-delta-flat">→ unchanged</span>
+      </div>
+    </section>
+
+    <section class="ex-row" style="margin-top: 16px;">
+      <div class="ex-col ex-stack">
+        <h2 class="ex-h3">Notices</h2>
+        <div class="glacial-alert glacial-alert-info">
+          <svg class="glacial-alert-icon" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="5" r="0.8"/><rect x="7.4" y="7" width="1.2" height="5" rx="0.6"/></svg>
+          <div class="glacial-alert-body">
+            <div class="glacial-alert-title">Maintenance window scheduled</div>
+            Database migration tonight at 02:00 UTC. Expected downtime: 4 minutes.
+          </div>
+        </div>
+        <div class="glacial-alert glacial-alert-warn">
+          <svg class="glacial-alert-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1L1 14h14L8 1z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="11" r="0.8"/><rect x="7.4" y="6" width="1.2" height="4" rx="0.6"/></svg>
+          <div class="glacial-alert-body">
+            <div class="glacial-alert-title">Disk usage at 78%</div>
+            Cleanup of /var/log/archive recommended within 7 days.
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-col ex-stack">
+        <h2 class="ex-h3">Service Status</h2>
+        <div class="glacial-glass" style="padding: 4px 8px;">
+          <div class="glacial-status-row" data-state="healthy">
+            <svg class="glacial-status-row-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="12" height="9" rx="1"/></svg>
+            <span class="glacial-status-row-name">api.glacial.dev</span>
+            <span class="glacial-status-row-meta">99.98%</span>
+            <span class="glacial-status-row-dot"></span>
+          </div>
+          <div class="glacial-status-row" data-state="active">
+            <svg class="glacial-status-row-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1v14M1 8h14"/></svg>
+            <span class="glacial-status-row-name">jobs-worker</span>
+            <span class="glacial-status-row-meta">processing 18</span>
+            <span class="glacial-status-row-dot"></span>
+          </div>
+          <div class="glacial-status-row" data-state="warn">
+            <svg class="glacial-status-row-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1L1 14h14L8 1z"/></svg>
+            <span class="glacial-status-row-name">cdn-edge-04</span>
+            <span class="glacial-status-row-meta">elevated latency</span>
+            <span class="glacial-status-row-dot"></span>
+          </div>
+          <div class="glacial-status-row" data-state="error">
+            <svg class="glacial-status-row-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M5 5l6 6M11 5l-6 6"/></svg>
+            <span class="glacial-status-row-name">analytics-pipe</span>
+            <span class="glacial-status-row-meta">last seen 14m ago</span>
+            <span class="glacial-status-row-dot"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="margin-top: 16px;">
+      <h2 class="ex-h3">Recent activity</h2>
+      <div class="glacial-glass" style="padding: 0; overflow: hidden;">
+        <table class="glacial-table">
+          <thead>
+            <tr>
+              <th>When</th>
+              <th>User</th>
+              <th>Action</th>
+              <th class="num">Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>10:42</td><td>maxm</td><td>deploy(api)</td><td class="num">42s</td></tr>
+            <tr><td>10:38</td><td>system</td><td>backup-rotate</td><td class="num">3.1m</td></tr>
+            <tr><td>10:14</td><td>maxm</td><td>config-edit</td><td class="num">8s</td></tr>
+            <tr><td>09:51</td><td>oncall</td><td>ack-incident</td><td class="num">2s</td></tr>
+            <tr><td>09:30</td><td>system</td><td>migration-run</td><td class="num">12.4m</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

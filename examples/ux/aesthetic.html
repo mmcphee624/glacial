@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Variant E · Aesthetic · Glacial UX</title>
+  <link rel="stylesheet" href="../../glacial.css">
+  <link rel="stylesheet" href="../../skins/default.css">
+  <link rel="stylesheet" href="../../skins/warm-serif.css">
+  <link rel="stylesheet" href="../../skins/midnight-mono.css">
+  <link rel="stylesheet" href="../../skins/lavender.css">
+  <link rel="stylesheet" href="../../skins/deep-navy.css">
+  <link rel="stylesheet" href="../../skins/nord.css">
+  <link rel="stylesheet" href="../_examples.css">
+  <link rel="stylesheet" href="_ux-shared.css">
+  <script src="../../glacial.js"></script>
+</head>
+<body>
+  <header class="glacial-glass-header ux-toolbar">
+    <div class="ux-toolbar-inner">
+      <span class="ux-logo">GLACIAL · UX</span>
+      <a class="ux-back" href="index.html">← variants</a>
+      <span class="ux-title">E. Aesthetic temperament</span>
+      <div class="ux-controls">
+        <select class="ux-select" data-glacial-skin>
+          <option value="default">default</option>
+          <option value="warm-serif">warm-serif</option>
+          <option value="midnight-mono">midnight-mono</option>
+          <option value="lavender">lavender</option>
+          <option value="deep-navy">deep-navy</option>
+          <option value="nord">nord</option>
+        </select>
+        <button class="glacial-toggle" onclick="glacialToggleTheme()">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="ux-main">
+    <h1 class="ux-h1">Aesthetic temperament</h1>
+    <p class="ux-lede">Three reactions to the AI-slop default. Polished is what glacial ships today: smooth blur, soft shadows, generous radii. Brutalist is the 2026 reaction: 1px hard borders, offset shadows, square corners, monospace headings, no glass. Hybrid keeps glacial's atmosphere but borrows brutalist edges — the best of both, possibly.</p>
+
+    <p class="ux-takeaway">2026 trend (NN/g, Fireart, brutalism.plus): "tactile brutalism" pushes back against AI-generated polish. The point isn't ugly — it's a deliberate refusal of fake-perfection.</p>
+
+    <div class="ux-variant-grid ux-variant-grid-3">
+
+      <article class="ux-frame">
+        <div class="ux-frame-label">
+          <span class="ux-frame-name">E1 · Polished <span class="ux-frame-tag">(current default)</span></span>
+          <a class="ux-frame-fullscreen" href="aesthetic-demo.html?aesthetic=polished" target="_blank">↗</a>
+        </div>
+        <iframe src="aesthetic-demo.html?aesthetic=polished"></iframe>
+        <div class="ux-pros-cons">
+          <div class="pros"><strong>Pros</strong>Calm · Pretty · Modern · Aurora atmosphere · Wide appeal</div>
+          <div class="cons"><strong>Cons</strong>Risk: looks AI-generated · Generic 2024-Apple-clone vibe · Can feel weightless</div>
+        </div>
+      </article>
+
+      <article class="ux-frame">
+        <div class="ux-frame-label">
+          <span class="ux-frame-name">E2 · Neo-brutalist</span>
+          <a class="ux-frame-fullscreen" href="aesthetic-demo.html?aesthetic=brutalist" target="_blank">↗</a>
+        </div>
+        <iframe src="aesthetic-demo.html?aesthetic=brutalist"></iframe>
+        <div class="ux-pros-cons">
+          <div class="pros"><strong>Pros</strong>Distinctive · Tactile · Reads as "human-made" · Memorable</div>
+          <div class="cons"><strong>Cons</strong>Loud · Tiring on long sessions · Loses skin variety · No glass = loses glacial DNA</div>
+        </div>
+      </article>
+
+      <article class="ux-frame">
+        <div class="ux-frame-label">
+          <span class="ux-frame-name">E3 · Hybrid (glass + brutal edges)</span>
+          <a class="ux-frame-fullscreen" href="aesthetic-demo.html?aesthetic=hybrid" target="_blank">↗</a>
+        </div>
+        <iframe src="aesthetic-demo.html?aesthetic=hybrid"></iframe>
+        <div class="ux-pros-cons">
+          <div class="pros"><strong>Pros</strong>Keeps aurora · Earns its polish via discipline · Monospace headings tie to glacial's typography spec · Distinctive without being loud</div>
+          <div class="cons"><strong>Cons</strong>More opinionated · Hard offset shadows compete with skins that disable orbs (warm-serif, nord)</div>
+        </div>
+      </article>
+
+    </div>
+
+    <section style="margin: 32px 0;">
+      <h2 class="ux-takeaway">My recommendation</h2>
+      <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; max-width: 70ch;">
+        <strong>Keep E1 (polished) as the default. Ship E3 (hybrid) as an opt-in <code>data-aesthetic="hybrid"</code> mode</strong> for projects where you want to dial in distinctiveness — your homepage dashboard, control-plane, anything you'd rather not look "generic." Skip E2 brutalism wholesale: it loses glacial's identity.
+      </p>
+      <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; max-width: 70ch;">
+        <strong>If you adopt this</strong>: ship <code>data-aesthetic="hybrid"</code> as a third orthogonal axis (alongside <code>data-theme</code> and <code>data-skin</code>). Document it in DESIGN.md. Add <code>window.glacialSetAesthetic(name)</code>.
+      </p>
+      <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; max-width: 70ch; font-style: italic;">
+        Note: hybrid in dark mode + midnight-mono skin is genuinely strong — try the fullscreen link with skin set to midnight-mono.
+      </p>
+    </section>
+  </main>
+
+  <script src="../_examples.js"></script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Layout: Split View · Glacial UX</title>
+  <link rel="stylesheet" href="../../glacial.css">
+  <link rel="stylesheet" href="../../skins/default.css">
+  <link rel="stylesheet" href="../../skins/warm-serif.css">
+  <link rel="stylesheet" href="../../skins/midnight-mono.css">
+  <link rel="stylesheet" href="../../skins/lavender.css">
+  <link rel="stylesheet" href="../../skins/deep-navy.css">
+  <link rel="stylesheet" href="../../skins/nord.css">
+  <link rel="stylesheet" href="../_examples.css">
+  <link rel="stylesheet" href="_ux-shared.css">
+  <link rel="stylesheet" href="_layout.css">
+  <script src="../../glacial.js"></script>
+</head>
+<body>
+  <div class="lo-shell-split" id="shell">
+    <aside class="lo-split-list">
+      <div class="lo-split-list-header">
+        <h2 class="lo-split-list-title">Listings</h2>
+        <span class="lo-split-list-meta">8 active</span>
+      </div>
+      <div class="lo-split-row selected" data-id="civic">
+        <div class="lo-split-row-title">2018 Honda Civic</div>
+        <div class="lo-split-row-meta"><span>Sedan · 42,180 mi</span><span class="num">$14,200</span></div>
+      </div>
+      <div class="lo-split-row" data-id="rav4">
+        <div class="lo-split-row-title">2020 Toyota RAV4</div>
+        <div class="lo-split-row-meta"><span>SUV · 28,500 mi</span><span class="num">$22,900</span></div>
+      </div>
+      <div class="lo-split-row" data-id="f150">
+        <div class="lo-split-row-title">2017 Ford F-150</div>
+        <div class="lo-split-row-meta"><span>Truck · 71,400 mi</span><span class="num">$18,500</span></div>
+      </div>
+      <div class="lo-split-row" data-id="mx5">
+        <div class="lo-split-row-title">2019 Mazda MX-5</div>
+        <div class="lo-split-row-meta"><span>Coupe · 18,900 mi</span><span class="num">$24,800</span></div>
+      </div>
+      <div class="lo-split-row" data-id="outback">
+        <div class="lo-split-row-title">2016 Subaru Outback</div>
+        <div class="lo-split-row-meta"><span>SUV · 94,200 mi</span><span class="num">$11,200</span></div>
+      </div>
+      <div class="lo-split-row" data-id="v60">
+        <div class="lo-split-row-title">2021 Volvo V60</div>
+        <div class="lo-split-row-meta"><span>Sedan · 12,400 mi</span><span class="num">$36,500</span></div>
+      </div>
+      <div class="lo-split-row" data-id="tahoe">
+        <div class="lo-split-row-title">2015 Chevy Tahoe</div>
+        <div class="lo-split-row-meta"><span>SUV · 128,000 mi</span><span class="num">$13,400</span></div>
+      </div>
+      <div class="lo-split-row" data-id="m3">
+        <div class="lo-split-row-title">2022 Tesla Model 3</div>
+        <div class="lo-split-row-meta"><span>Sedan · 9,200 mi</span><span class="num">$38,700</span></div>
+      </div>
+    </aside>
+
+    <section class="lo-split-detail" id="detail">
+      <h1 class="ex-h1" id="d-title">2018 Honda Civic</h1>
+      <p class="ex-lede" id="d-lede">Sedan · LX trim · 42,180 mi · 1 owner.</p>
+
+      <section class="ex-grid-3" style="margin: 16px 0;">
+        <div class="glacial-metric"><span class="glacial-metric-label">Asking</span><span class="glacial-metric-value">$14,200</span><span class="glacial-metric-delta glacial-metric-delta-flat">→ initial</span></div>
+        <div class="glacial-metric"><span class="glacial-metric-label">Mileage</span><span class="glacial-metric-value">42,180</span><span class="glacial-metric-delta glacial-metric-delta-flat">average</span></div>
+        <div class="glacial-metric"><span class="glacial-metric-label">Views</span><span class="glacial-metric-value">128</span><span class="glacial-metric-delta glacial-metric-delta-up">▲ 12 today</span></div>
+      </section>
+
+      <h2 class="ex-h3">Specifications</h2>
+      <dl class="ex-spec-grid">
+        <dt>Trim</dt><dd>LX</dd>
+        <dt>Year</dt><dd>2018</dd>
+        <dt>Drivetrain</dt><dd>FWD, CVT</dd>
+        <dt>VIN</dt><dd>2HGFC2F50JH123456</dd>
+        <dt>Title</dt><dd>Clean</dd>
+        <dt>Owner</dt><dd>1st owner</dd>
+      </dl>
+
+      <div style="display: flex; gap: 8px; margin-top: 24px;">
+        <button class="glacial-btn glacial-btn-primary">Edit listing</button>
+        <button class="glacial-btn glacial-btn-secondary">View on site</button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    var data = {
+      civic:   { title: '2018 Honda Civic', lede: 'Sedan · LX trim · 42,180 mi · 1 owner.', price: '$14,200', mileage: '42,180', views: '128', trim: 'LX', year: '2018', drive: 'FWD, CVT', vin: '2HGFC2F50JH123456' },
+      rav4:    { title: '2020 Toyota RAV4', lede: 'SUV · XLE Premium · 28,500 mi · clean title.', price: '$22,900', mileage: '28,500', views: '342', trim: 'XLE Premium', year: '2020', drive: 'AWD, 8-spd auto', vin: '2T3RFREV9LW098765' },
+      f150:    { title: '2017 Ford F-150', lede: 'Truck · XLT SuperCrew · 71,400 mi · pending sale.', price: '$18,500', mileage: '71,400', views: '212', trim: 'XLT SuperCrew', year: '2017', drive: '4WD, 10-spd auto', vin: '1FTEW1EP9HKD12345' },
+      mx5:     { title: '2019 Mazda MX-5', lede: 'Coupe · Grand Touring · 18,900 mi · 2nd owner.', price: '$24,800', mileage: '18,900', views: '412', trim: 'Grand Touring', year: '2019', drive: 'RWD, 6-spd manual', vin: 'JM1NDAD7XK0301234' },
+      outback: { title: '2016 Subaru Outback', lede: 'SUV · 2.5i Limited · 94,200 mi · sold.', price: '$11,200', mileage: '94,200', views: '88', trim: '2.5i Limited', year: '2016', drive: 'AWD, CVT', vin: '4S4BSANC0G3290000' },
+      v60:     { title: '2021 Volvo V60', lede: 'Sedan/wagon · T5 Inscription · 12,400 mi.', price: '$36,500', mileage: '12,400', views: '195', trim: 'T5 Inscription', year: '2021', drive: 'AWD, 8-spd auto', vin: 'YV1A22RL0M2230000' },
+      tahoe:   { title: '2015 Chevy Tahoe', lede: 'SUV · LT · 128,000 mi · pulled from market.', price: '$13,400', mileage: '128,000', views: '52', trim: 'LT', year: '2015', drive: '4WD, 6-spd auto', vin: '1GNSKBKC0FR123456' },
+      m3:      { title: '2022 Tesla Model 3', lede: 'Sedan · Long Range · 9,200 mi · 1 owner.', price: '$38,700', mileage: '9,200', views: '623', trim: 'Long Range', year: '2022', drive: 'AWD, single-speed', vin: '5YJ3E1EB0NF400000' }
+    };
+
+    var rows = document.querySelectorAll('.lo-split-row');
+    rows.forEach(function (row) {
+      row.addEventListener('click', function () {
+        rows.forEach(function (r) { r.classList.remove('selected'); });
+        row.classList.add('selected');
+        var d = data[row.dataset.id];
+        if (!d) return;
+        document.getElementById('d-title').textContent = d.title;
+        document.getElementById('d-lede').textContent = d.lede;
+        var detail = document.getElementById('detail');
+        detail.querySelector('.glacial-metric:nth-child(1) .glacial-metric-value').textContent = d.price;
+        detail.querySelector('.glacial-metric:nth-child(2) .glacial-metric-value').textContent = d.mileage;
+        detail.querySelector('.glacial-metric:nth-child(3) .glacial-metric-value').textContent = d.views;
+        var dds = detail.querySelectorAll('.ex-spec-grid dd');
+        dds[0].textContent = d.trim;
+        dds[1].textContent = d.year;
+        dds[2].textContent = d.drive;
+        dds[3].textContent = d.vin;
+      });
+    });
+  </script>
+</body>
+</html>

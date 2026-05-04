@@ -1,0 +1,205 @@
+/**
+ * Layout variant styles
+ * Three patterns for "list of things → look at one thing in detail"
+ */
+
+/* ============================================================
+ * D1 — SINGLE PAGE (current default — click row, navigate to detail page)
+ * ============================================================ */
+.lo-shell-single {
+  padding: 16px 20px;
+}
+
+/* ============================================================
+ * D2 — SPLIT VIEW (email-client style — list left, detail right)
+ * ============================================================ */
+.lo-shell-split {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  height: 100vh;
+  overflow: hidden;
+}
+.lo-split-list {
+  border-right: 1px solid var(--border-card);
+  overflow-y: auto;
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+}
+.lo-split-list-header {
+  position: sticky;
+  top: 0;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-card);
+  background: var(--bg-header);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  z-index: 5;
+}
+.lo-split-list-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-strong);
+  margin: 0 0 4px;
+}
+.lo-split-list-meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+}
+.lo-split-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-card);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.lo-split-row:hover { background: var(--bg-card-hover); }
+.lo-split-row.selected {
+  background: var(--accent-bg);
+  border-left: 2px solid var(--accent);
+  padding-left: 14px;
+}
+.lo-split-row-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.lo-split-row-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.lo-split-row-meta .num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.lo-split-detail {
+  overflow-y: auto;
+  padding: 24px 32px;
+}
+.lo-split-detail-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-faint);
+  font-size: 14px;
+}
+@media (max-width: 768px) {
+  .lo-shell-split { grid-template-columns: 1fr; }
+  .lo-shell-split[data-mobile-view="detail"] .lo-split-list { display: none; }
+  .lo-shell-split[data-mobile-view="list"] .lo-split-detail { display: none; }
+}
+
+/* ============================================================
+ * D3 — DRAWER (list full-width, click → drawer slides in from right)
+ * ============================================================ */
+.lo-shell-drawer { padding: 16px 20px; }
+.lo-drawer-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border-card);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.lo-drawer-row:hover { background: var(--bg-card-hover); }
+.lo-drawer-row-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-strong);
+  margin: 0 0 2px;
+}
+.lo-drawer-row-meta {
+  font-size: 12px;
+  color: var(--text-secondary);
+  display: flex;
+  gap: 12px;
+}
+.lo-drawer-row-meta .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.lo-drawer-row-arrow { color: var(--text-faint); font-family: var(--font-mono); }
+
+.lo-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.lo-drawer-overlay.open { opacity: 1; pointer-events: auto; }
+
+.lo-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 480px;
+  max-width: 100vw;
+  background: var(--bg);
+  border-left: 1px solid var(--border-card);
+  z-index: 110;
+  transform: translateX(100%);
+  transition: transform 0.25s ease-out;
+  overflow-y: auto;
+  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.15);
+}
+.lo-drawer.open { transform: translateX(0); }
+
+.lo-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-card);
+  background: var(--bg-header);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+.lo-drawer-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-strong);
+  margin: 0;
+}
+.lo-drawer-close {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  width: 28px;
+  height: 28px;
+  font-size: 16px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.lo-drawer-close:hover { color: var(--text); border-color: var(--accent-border); }
+.lo-drawer-body { padding: 20px; }
+
+@media (max-width: 540px) {
+  /* On mobile drawer becomes bottom sheet */
+  .lo-drawer {
+    top: auto;
+    width: 100%;
+    height: 90vh;
+    border-left: 0;
+    border-top: 1px solid var(--border-card);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    transform: translateY(100%);
+  }
+  .lo-drawer.open { transform: translateY(0); }
+}

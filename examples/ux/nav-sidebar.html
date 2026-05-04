@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nav: Full Sidebar · Glacial UX</title>
+  <link rel="stylesheet" href="../../glacial.css">
+  <link rel="stylesheet" href="../../skins/default.css">
+  <link rel="stylesheet" href="../../skins/warm-serif.css">
+  <link rel="stylesheet" href="../../skins/midnight-mono.css">
+  <link rel="stylesheet" href="../../skins/lavender.css">
+  <link rel="stylesheet" href="../../skins/deep-navy.css">
+  <link rel="stylesheet" href="../../skins/nord.css">
+  <link rel="stylesheet" href="../_examples.css">
+  <link rel="stylesheet" href="_ux-shared.css">
+  <link rel="stylesheet" href="_nav.css">
+  <script src="../../glacial.js"></script>
+</head>
+<body>
+  <div class="nav-shell-sidebar">
+    <aside class="nav-sidebar">
+      <div class="nav-brand">GLACIAL</div>
+      <div class="nav-section">Workspace</div>
+      <a href="#" class="nav-item active">
+        <svg class="nav-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/><rect x="9" y="9" width="5" height="5"/></svg>
+        Dashboard
+      </a>
+      <a href="#" class="nav-item">
+        <svg class="nav-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12M2 8h12M2 12h12"/></svg>
+        Listings <span class="nav-item-badge">218</span>
+      </a>
+      <a href="#" class="nav-item">
+        <svg class="nav-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 4v4l3 2"/></svg>
+        Activity <span class="nav-item-badge">14</span>
+      </a>
+      <a href="#" class="nav-item">
+        <svg class="nav-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 14V6M6 14V2M10 14v-7M14 14V9"/></svg>
+        Analytics
+      </a>
+
+      <div class="nav-section">Admin</div>
+      <a href="#" class="nav-item">
+        <svg class="nav-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="6" r="3"/><path d="M2 14c0-3 3-5 6-5s6 2 6 5"/></svg>
+        Team
+      </a>
+      <a href="#" class="nav-item">
+        <svg class="nav-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+        Audit log
+      </a>
+      <a href="#" class="nav-item">
+        <svg class="nav-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="2"/><path d="M8 1v3M8 12v3M1 8h3M12 8h3"/></svg>
+        Settings
+      </a>
+
+      <div style="margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border-card);">
+        <button class="glacial-toggle" onclick="glacialToggleTheme()" style="width:100%;">◐ theme</button>
+      </div>
+    </aside>
+
+    <div class="nav-content">
+      <h1 class="ex-h1">Operations</h1>
+      <p class="ex-lede">Full sidebar (240px). Section labels visible. Section grouping (Workspace · Admin) and item counts. Best for apps with 6+ destinations or where grouping matters.</p>
+
+      <section class="ex-grid-4">
+        <div class="glacial-metric"><span class="glacial-metric-label">Active</span><span class="glacial-metric-value">1,284</span><span class="glacial-metric-delta glacial-metric-delta-up">▲ 12.4%</span></div>
+        <div class="glacial-metric"><span class="glacial-metric-label">Revenue</span><span class="glacial-metric-value">$84.2k</span><span class="glacial-metric-delta glacial-metric-delta-up">▲ 3.1%</span></div>
+        <div class="glacial-metric"><span class="glacial-metric-label">Errors</span><span class="glacial-metric-value">0.18%</span><span class="glacial-metric-delta glacial-metric-delta-down">▼ 0.04%</span></div>
+        <div class="glacial-metric"><span class="glacial-metric-label">Pending</span><span class="glacial-metric-value">42</span><span class="glacial-metric-delta glacial-metric-delta-flat">→ 0</span></div>
+      </section>
+
+      <h2 class="ex-h3" style="margin-top: 16px;">Service Status</h2>
+      <div class="glacial-glass" style="padding: 4px 8px;">
+        <div class="glacial-status-row" data-state="healthy"><svg class="glacial-status-row-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="12" height="9" rx="1"/></svg><span class="glacial-status-row-name">api.glacial.dev</span><span class="glacial-status-row-meta">99.98%</span><span class="glacial-status-row-dot"></span></div>
+        <div class="glacial-status-row" data-state="active"><svg class="glacial-status-row-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1v14M1 8h14"/></svg><span class="glacial-status-row-name">jobs-worker</span><span class="glacial-status-row-meta">processing 18</span><span class="glacial-status-row-dot"></span></div>
+        <div class="glacial-status-row" data-state="warn"><svg class="glacial-status-row-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1L1 14h14L8 1z"/></svg><span class="glacial-status-row-name">cdn-edge-04</span><span class="glacial-status-row-meta">elevated latency</span><span class="glacial-status-row-dot"></span></div>
+        <div class="glacial-status-row" data-state="error"><svg class="glacial-status-row-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M5 5l6 6M11 5l-6 6"/></svg><span class="glacial-status-row-name">analytics-pipe</span><span class="glacial-status-row-meta">last seen 14m ago</span><span class="glacial-status-row-dot"></span></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

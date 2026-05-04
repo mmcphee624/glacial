@@ -1,0 +1,283 @@
+/**
+ * Navigation variant styles
+ * (NOT part of glacial. Demo-only. May promote to glacial.css if a winner is picked.)
+ */
+
+/* Demo content shared across nav variants */
+.nav-demo-content {
+  padding: 20px;
+}
+.nav-demo-content h1 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 4px;
+  color: var(--text-strong);
+}
+.nav-demo-content .lede {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0 0 16px;
+  max-width: 64ch;
+}
+
+/* ============================================================
+ * C1 — TOP NAV (current default)
+ * ============================================================ */
+/* Already implemented in _examples.css as .ex-toolbar — no extra rules needed */
+
+/* ============================================================
+ * C2 — FULL SIDEBAR (240px, labels visible, persisted)
+ * ============================================================ */
+.nav-shell-sidebar {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 100vh;
+}
+.nav-shell-sidebar .nav-sidebar {
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border-right: 1px solid var(--border-card);
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.nav-shell-sidebar .nav-brand {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--accent);
+  padding: 6px 8px 16px;
+  border-bottom: 1px solid var(--border-card);
+  margin-bottom: 8px;
+}
+.nav-shell-sidebar .nav-section {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  padding: 12px 8px 4px;
+}
+.nav-shell-sidebar .nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+.nav-shell-sidebar .nav-item:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-strong);
+}
+.nav-shell-sidebar .nav-item.active {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+.nav-shell-sidebar .nav-item-icon {
+  width: 16px; height: 16px;
+  flex-shrink: 0;
+}
+.nav-shell-sidebar .nav-item-badge {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: var(--bg-card-hover);
+  color: var(--text-secondary);
+}
+.nav-shell-sidebar .nav-item.active .nav-item-badge { background: var(--accent-bg); color: var(--accent); }
+.nav-shell-sidebar .nav-content { padding: 16px 20px; }
+
+/* ============================================================
+ * C3 — MINI RAIL (60px, icons only, tooltips on hover)
+ * ============================================================ */
+.nav-shell-rail {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  min-height: 100vh;
+}
+.nav-shell-rail .nav-rail {
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border-right: 1px solid var(--border-card);
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.nav-shell-rail .nav-brand {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  padding: 4px;
+  border-bottom: 1px solid var(--border-card);
+  margin-bottom: 8px;
+  width: 100%;
+  text-align: center;
+}
+.nav-shell-rail .nav-item {
+  position: relative;
+  width: 40px; height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+.nav-shell-rail .nav-item:hover { background: var(--bg-card-hover); color: var(--text-strong); }
+.nav-shell-rail .nav-item.active {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+.nav-shell-rail .nav-item-icon { width: 18px; height: 18px; }
+.nav-shell-rail .nav-item-tip {
+  position: absolute;
+  left: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--text-strong);
+  color: var(--bg);
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  z-index: 100;
+}
+.nav-shell-rail .nav-item:hover .nav-item-tip { opacity: 1; }
+.nav-shell-rail .nav-content { padding: 16px 20px; }
+
+/* ============================================================
+ * C4 — CMD+K ONLY (no persistent nav, just a hint, palette opens on key)
+ * ============================================================ */
+.nav-shell-cmdk {
+  min-height: 100vh;
+  position: relative;
+}
+.nav-cmdk-hint {
+  position: fixed;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--border-card);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+  z-index: 50;
+}
+.nav-cmdk-hint kbd {
+  font-family: var(--font-mono);
+  background: var(--bg-input);
+  border: 1px solid var(--border-card);
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-size: 10px;
+  color: var(--text);
+}
+.nav-cmdk-content { padding: 24px; max-width: 1100px; margin: 0 auto; }
+
+/* Cmd+K palette overlay */
+.nav-cmdk-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 12vh;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+}
+.nav-cmdk-overlay.open { opacity: 1; pointer-events: auto; }
+.nav-cmdk-palette {
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  width: 600px;
+  max-width: 90vw;
+  max-height: 70vh;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+}
+.nav-cmdk-input {
+  border: none;
+  border-bottom: 1px solid var(--border-card);
+  padding: 16px 20px;
+  font-size: 15px;
+  font-family: var(--font-body);
+  background: transparent;
+  color: var(--text-strong);
+  outline: none;
+  width: 100%;
+}
+.nav-cmdk-input:focus { outline: none; }
+.nav-cmdk-input::placeholder { color: var(--text-faint); }
+.nav-cmdk-list {
+  overflow-y: auto;
+  padding: 8px;
+}
+.nav-cmdk-section-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  padding: 8px 12px 4px;
+}
+.nav-cmdk-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text);
+}
+.nav-cmdk-item:hover, .nav-cmdk-item.selected {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+.nav-cmdk-item-icon { width: 16px; height: 16px; flex-shrink: 0; }
+.nav-cmdk-item-shortcut {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-faint);
+}

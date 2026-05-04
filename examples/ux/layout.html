@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Variant D · Layout · Glacial UX</title>
+  <link rel="stylesheet" href="../../glacial.css">
+  <link rel="stylesheet" href="../../skins/default.css">
+  <link rel="stylesheet" href="../../skins/warm-serif.css">
+  <link rel="stylesheet" href="../../skins/midnight-mono.css">
+  <link rel="stylesheet" href="../../skins/lavender.css">
+  <link rel="stylesheet" href="../../skins/deep-navy.css">
+  <link rel="stylesheet" href="../../skins/nord.css">
+  <link rel="stylesheet" href="../_examples.css">
+  <link rel="stylesheet" href="_ux-shared.css">
+  <script src="../../glacial.js"></script>
+</head>
+<body>
+  <header class="glacial-glass-header ux-toolbar">
+    <div class="ux-toolbar-inner">
+      <span class="ux-logo">GLACIAL · UX</span>
+      <a class="ux-back" href="index.html">← variants</a>
+      <span class="ux-title">D. Layout (list → detail)</span>
+      <div class="ux-controls">
+        <select class="ux-select" data-glacial-skin>
+          <option value="default">default</option>
+          <option value="warm-serif">warm-serif</option>
+          <option value="midnight-mono">midnight-mono</option>
+          <option value="lavender">lavender</option>
+          <option value="deep-navy">deep-navy</option>
+          <option value="nord">nord</option>
+        </select>
+        <button class="glacial-toggle" onclick="glacialToggleTheme()">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="ux-main">
+    <h1 class="ux-h1">Layout: list → detail</h1>
+    <p class="ux-lede">When a user picks an item from a list, where does the detail show up? Three patterns, each with different tradeoffs around URL state, scroll position, and quick-edit speed.</p>
+
+    <p class="ux-takeaway">2026 trend: master–detail / split-view is the gold standard for power users (email clients, Linear's issue list, Notion's database peek). Drawers are the consumer alternative.</p>
+
+    <div class="ux-variant-grid ux-variant-grid-3">
+
+      <article class="ux-frame">
+        <div class="ux-frame-label">
+          <span class="ux-frame-name">D1 · Single page <span class="ux-frame-tag">(current default)</span></span>
+          <a class="ux-frame-fullscreen" href="layout-single.html" target="_blank">↗</a>
+        </div>
+        <iframe src="layout-single.html"></iframe>
+        <div class="ux-pros-cons">
+          <div class="pros"><strong>Pros</strong>Shareable URLs · Browser back/forward · Simplest mental model</div>
+          <div class="cons"><strong>Cons</strong>Lose list scroll · Slow comparison · Full reload per item</div>
+        </div>
+      </article>
+
+      <article class="ux-frame">
+        <div class="ux-frame-label">
+          <span class="ux-frame-name">D2 · Split view (master-detail)</span>
+          <a class="ux-frame-fullscreen" href="layout-split.html" target="_blank">↗</a>
+        </div>
+        <iframe src="layout-split.html"></iframe>
+        <div class="ux-pros-cons">
+          <div class="pros"><strong>Pros</strong>Fast browse · No reload · Email-client familiar · ↑↓ to step through</div>
+          <div class="cons"><strong>Cons</strong>Half the detail width · Mobile collapses · URL state harder</div>
+        </div>
+      </article>
+
+      <article class="ux-frame">
+        <div class="ux-frame-label">
+          <span class="ux-frame-name">D3 · Drawer / bottom sheet</span>
+          <a class="ux-frame-fullscreen" href="layout-drawer.html" target="_blank">↗</a>
+        </div>
+        <iframe src="layout-drawer.html"></iframe>
+        <div class="ux-pros-cons">
+          <div class="pros"><strong>Pros</strong>Full list visible · Quick preview/edit · Becomes bottom sheet on mobile</div>
+          <div class="cons"><strong>Cons</strong>Can't compare two items · No deep-link by default · Modal anxiety</div>
+        </div>
+      </article>
+
+    </div>
+
+    <section style="margin: 32px 0;">
+      <h2 class="ux-takeaway">My recommendation</h2>
+      <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; max-width: 70ch;">
+        For your tools where you build, browse, and tweak rapidly: <strong>D2 (split-view) for power-user lists</strong> (price-tracker listings, control-plane projects, kent-collection guests), <strong>D3 (drawer) for quick-edit cases</strong> (form approvals, inline edits, mobile-first). <strong>D1 (single-page) stays for content that benefits from shareable URLs</strong> — public listings, archive pages.
+      </p>
+      <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; max-width: 70ch;">
+        <strong>If you adopt this</strong>: ship <code>.glacial-split-view</code> (Tier 2 component) with sticky list header, selected-row indicator, mobile collapse pattern. Ship <code>.glacial-drawer</code> + <code>glacialOpenDrawer(id)</code> with focus trap, escape to close, scrim, mobile bottom-sheet. Both are already in the Tier 2 backlog from the v2 plan.
+      </p>
+    </section>
+  </main>
+
+  <script src="../_examples.js"></script>
+</body>
+</html>
