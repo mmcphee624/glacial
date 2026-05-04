@@ -1,5 +1,5 @@
 /* Glacial Design System — Shared CSS Tokens
- * @version 2.0.0
+ * @version 2.1.0
  * Import this file into any service for Glacial theming.
  * See DESIGN.md for full specification, RECIPES.md for page recipes.
  */
@@ -688,6 +688,541 @@
 }
 @media (pointer: coarse) and (max-width: 540px) {
   :root { --blur: 8px; }
+}
+
+/* ============================================================
+ * v2.1.0 — Tier 2 Components
+ *   .glacial-rail (responsive: vertical rail desktop, bottom nav mobile)
+ *   .glacial-drawer (right desktop, bottom sheet mobile)
+ *   .glacial-split-view (master/detail with mobile list↔detail swap)
+ *   data-aesthetic="hybrid" axis (subtle brutalist edges on glass)
+ *
+ *   Each is a UX-decision winner from the v2.0 variant exploration.
+ *   See examples/ux/ for the comparison record.
+ * ============================================================ */
+
+/* ===== Rail (responsive: rail → bottom nav) =================
+ * Desktop: 60px vertical rail on the left, icons + tooltips
+ * Mobile (<768px): 60px bottom nav, icons + labels, fixed bottom
+ * Use as <aside class="glacial-rail"> with <a class="glacial-rail-item">
+ * children. Pair with <main class="glacial-rail-content"> sibling for
+ * automatic safe layout.
+ */
+.glacial-rail-shell {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  min-height: 100vh;
+}
+.glacial-rail {
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border-right: 1px solid var(--border-card);
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.glacial-rail-brand {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  padding: 4px;
+  border-bottom: 1px solid var(--border-card);
+  margin-bottom: 8px;
+  width: 100%;
+  text-align: center;
+}
+.glacial-rail-item {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  text-decoration: none;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.glacial-rail-item:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-strong);
+}
+.glacial-rail-item:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.glacial-rail-item.is-active,
+.glacial-rail-item[aria-current="page"] {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+[data-theme="dark"] .glacial-rail-item.is-active,
+[data-theme="dark"] .glacial-rail-item[aria-current="page"] {
+  box-shadow: var(--glow-low) var(--accent);
+}
+.glacial-rail-item-icon { width: 18px; height: 18px; }
+.glacial-rail-item-label {
+  /* Visible only in mobile bottom-nav layout */
+  display: none;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+.glacial-rail-item-tip {
+  /* Tooltip for desktop rail (hidden on touch devices) */
+  position: absolute;
+  left: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--text-strong);
+  color: var(--bg);
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  z-index: 100;
+}
+@media (hover: hover) {
+  .glacial-rail-item:hover .glacial-rail-item-tip { opacity: 1; }
+}
+.glacial-rail-spacer { flex: 1; }
+.glacial-rail-content { padding: 16px 20px; }
+
+/* Mobile transform: vertical rail becomes a horizontal bottom nav */
+@media (max-width: 767px) {
+  .glacial-rail-shell {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto;
+  }
+  .glacial-rail {
+    grid-row: 2;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    border-right: 0;
+    border-top: 1px solid var(--border-card);
+    padding: 8px 6px;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+    position: sticky;
+    bottom: 0;
+    z-index: 50;
+  }
+  .glacial-rail-brand,
+  .glacial-rail-spacer { display: none; }
+  .glacial-rail-item {
+    flex-direction: column;
+    width: 56px;
+    height: 48px;
+    gap: 0;
+  }
+  .glacial-rail-item-label { display: block; }
+  .glacial-rail-item-tip { display: none; }
+  .glacial-rail-content { padding: 12px 16px 76px; }
+}
+
+/* ===== Drawer (right-side panel; bottom sheet on mobile) ===
+ * Use as <aside class="glacial-drawer"> hidden by default; toggle
+ * via [data-open] attribute or window.glacialOpenDrawer().
+ */
+.glacial-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.glacial-drawer-overlay[data-open="true"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+.glacial-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 480px;
+  max-width: 100vw;
+  background: var(--bg);
+  border-left: 1px solid var(--border-card);
+  z-index: 110;
+  transform: translateX(100%);
+  transition: transform 0.25s ease-out;
+  overflow-y: auto;
+  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+}
+[data-theme="dark"] .glacial-drawer { box-shadow: -8px 0 32px rgba(0, 0, 0, 0.5); }
+.glacial-drawer[data-open="true"] { transform: translateX(0); }
+
+.glacial-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-card);
+  background: var(--bg-header);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  flex-shrink: 0;
+}
+.glacial-drawer-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-strong);
+  margin: 0;
+}
+.glacial-drawer-close {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  width: 32px;
+  height: 32px;
+  font-size: 18px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s, border-color 0.15s;
+}
+.glacial-drawer-close:hover { color: var(--text); border-color: var(--accent-border); }
+.glacial-drawer-close:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.glacial-drawer-body { padding: 20px; flex: 1; }
+
+@media (max-width: 540px) {
+  .glacial-drawer {
+    top: auto;
+    width: 100%;
+    height: 92vh;
+    border-left: 0;
+    border-top: 1px solid var(--border-card);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    transform: translateY(100%);
+  }
+  .glacial-drawer[data-open="true"] { transform: translateY(0); }
+  .glacial-drawer-header { border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+  /* Bottom-sheet handle */
+  .glacial-drawer::before {
+    content: "";
+    display: block;
+    width: 36px;
+    height: 4px;
+    background: var(--text-faint);
+    border-radius: 2px;
+    margin: 8px auto 0;
+    flex-shrink: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glacial-drawer { transition: none; }
+  .glacial-drawer-overlay { transition: none; }
+}
+
+/* ===== Split View (master / detail with mobile swap) =======
+ * Use as <div class="glacial-split-view"> containing two children:
+ *   .glacial-split-list (left) + .glacial-split-detail (right)
+ * On mobile (<768px) the parent toggles [data-mobile-view]:
+ *   "list" (default) — list visible, detail hidden
+ *   "detail"         — detail visible, list hidden
+ * The list rows are responsible for setting data-mobile-view="detail"
+ * on click (handled by glacialOpenSplitDetail or app code).
+ */
+.glacial-split-view {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  height: 100%;
+  min-height: calc(100vh - 56px); /* 56px = typical app header */
+  overflow: hidden;
+}
+.glacial-split-list {
+  border-right: 1px solid var(--border-card);
+  overflow-y: auto;
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+}
+.glacial-split-list-header {
+  position: sticky;
+  top: 0;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-card);
+  background: var(--bg-header);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  z-index: 5;
+}
+.glacial-split-list-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-strong);
+  margin: 0 0 2px;
+}
+.glacial-split-list-meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+.glacial-split-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-card);
+  cursor: pointer;
+  transition: background 0.15s;
+  text-decoration: none;
+  color: var(--text);
+}
+.glacial-split-row:hover { background: var(--bg-card-hover); }
+.glacial-split-row:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.glacial-split-row.is-selected,
+.glacial-split-row[aria-current="true"] {
+  background: var(--accent-bg);
+  border-left: 2px solid var(--accent);
+  padding-left: 14px;
+}
+.glacial-split-row-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.glacial-split-row-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.glacial-split-detail { overflow-y: auto; padding: 24px 32px; }
+.glacial-split-back {
+  /* Mobile-only "← back to list" button; hidden on desktop */
+  display: none;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  margin-bottom: 12px;
+}
+.glacial-split-back:hover { color: var(--text); border-color: var(--accent-border); }
+.glacial-split-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-faint);
+  font-size: 14px;
+  text-align: center;
+}
+
+@media (max-width: 767px) {
+  .glacial-split-view { grid-template-columns: 1fr; }
+  .glacial-split-list { border-right: 0; }
+  .glacial-split-back { display: inline-flex; }
+  /* Mobile: show only one pane at a time */
+  .glacial-split-view:not([data-mobile-view="detail"]) .glacial-split-detail { display: none; }
+  .glacial-split-view[data-mobile-view="detail"] .glacial-split-list { display: none; }
+}
+
+/* ===== Cmd+K Palette (injected DOM) ========================
+ * Markup is created by glacialPalette({ items, onSelect }).
+ */
+.glacial-palette-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 200;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 12vh;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+}
+.glacial-palette-overlay[data-open="true"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+.glacial-palette {
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  width: 600px;
+  max-width: 90vw;
+  max-height: 70vh;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+}
+.glacial-palette-input {
+  border: 0;
+  border-bottom: 1px solid var(--border-card);
+  padding: 16px 20px;
+  font-size: 15px;
+  font-family: var(--font-body);
+  background: transparent;
+  color: var(--text-strong);
+  outline: 0;
+  width: 100%;
+}
+.glacial-palette-input::placeholder { color: var(--text-faint); }
+.glacial-palette-list {
+  overflow-y: auto;
+  padding: 8px;
+  flex: 1;
+}
+.glacial-palette-section {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  padding: 8px 12px 4px;
+}
+.glacial-palette-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text);
+}
+.glacial-palette-item:hover,
+.glacial-palette-item.is-selected {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+.glacial-palette-item-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.glacial-palette-item-label { flex: 1; }
+.glacial-palette-item-shortcut {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-faint);
+}
+.glacial-palette-empty {
+  padding: 24px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+  display: none;
+}
+@media (max-width: 540px) {
+  .glacial-palette-overlay { padding-top: 4vh; }
+  .glacial-palette { width: 95vw; max-height: 80vh; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .glacial-palette-overlay { transition: none; }
+}
+
+/* ============================================================
+ * v2.1.0 — Aesthetic axis (data-aesthetic="hybrid")
+ *
+ * A subtle brutalist counterpoint to the polished default. Keeps
+ * glass + aurora atmosphere; borrows hard-edged accents:
+ *   - tighter radii (3 / 6 / 10)
+ *   - 1px solid accent borders (vs 1px translucent)
+ *   - hard offset shadows in accent-bg (instead of soft blur shadow)
+ *   - monospace headings via .glacial-h1 utility class (opt-in)
+ *
+ * Apply via <html data-aesthetic="hybrid"> alongside data-theme and
+ * data-skin. Default (no attribute) keeps the polished look.
+ * ============================================================ */
+[data-aesthetic="hybrid"] {
+  --radius-sm: 3px;
+  --radius: 6px;
+  --radius-lg: 10px;
+}
+[data-aesthetic="hybrid"] .glacial-glass {
+  border: 1px solid var(--accent-border);
+  box-shadow: 4px 4px 0 var(--accent-bg);
+}
+[data-aesthetic="hybrid"] .glacial-metric {
+  border-color: var(--accent-border);
+  box-shadow: 3px 3px 0 var(--accent-bg);
+}
+[data-aesthetic="hybrid"] .glacial-alert {
+  border-color: var(--text-secondary);
+  box-shadow: 3px 3px 0 var(--accent-bg);
+}
+[data-aesthetic="hybrid"] .glacial-filter-pill {
+  border-color: var(--text-secondary);
+  border-radius: 3px;
+}
+[data-aesthetic="hybrid"] .glacial-filter-pill[aria-pressed="true"],
+[data-aesthetic="hybrid"] .glacial-filter-pill.is-active {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+  box-shadow: 2px 2px 0 var(--accent-bg);
+}
+[data-aesthetic="hybrid"] .glacial-rail-item.is-active,
+[data-aesthetic="hybrid"] .glacial-rail-item[aria-current="page"] {
+  border: 1px solid var(--accent-border);
+}
+/* Heading utility — opt-in for hybrid emphasis */
+[data-aesthetic="hybrid"] .glacial-h1,
+[data-aesthetic="hybrid"] .glacial-h2 {
+  font-family: var(--font-mono);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-aesthetic="hybrid"] .glacial-glass,
+  [data-aesthetic="hybrid"] .glacial-metric,
+  [data-aesthetic="hybrid"] .glacial-alert {
+    box-shadow: none;
+  }
 }
 
 /* ============================================================

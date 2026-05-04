@@ -1,5 +1,86 @@
 # Migrating
 
+## v2.0.x → v2.1.0
+
+**No breaking changes.** All v2.0 components unchanged. v2.1 adds three
+optional Tier 2 components and an `aesthetic` axis.
+
+### What you can do without changing anything
+- Skip Tier 2 entirely. Your v2.0 dashboard works exactly as before.
+- The new `data-aesthetic` attribute is unset by default — polished look
+  is preserved.
+
+### What's new and worth adopting
+
+1. **Mini rail / bottom nav** for projects with 4-6 sections:
+   ```html
+   <div class="glacial-rail-shell">
+     <aside class="glacial-rail">
+       <a class="glacial-rail-item is-active">
+         <svg class="glacial-rail-item-icon">…</svg>
+         <span class="glacial-rail-item-label">Home</span>
+         <span class="glacial-rail-item-tip">Dashboard</span>
+       </a>
+       …
+     </aside>
+     <main class="glacial-rail-content">…</main>
+   </div>
+   ```
+   Desktop renders a 60px vertical rail with tooltips on hover; mobile
+   renders a thumb-zone bottom nav with the labels visible.
+
+2. **Drawer** for quick-edit / detail-peek without leaving the list:
+   ```html
+   <div class="glacial-drawer-overlay"></div>
+   <aside class="glacial-drawer" id="my-drawer" role="dialog" aria-modal="true">
+     <header class="glacial-drawer-header">
+       <h2 class="glacial-drawer-title">Title</h2>
+       <button class="glacial-drawer-close" data-glacial-drawer-close="my-drawer">×</button>
+     </header>
+     <div class="glacial-drawer-body">…</div>
+   </aside>
+
+   <script>glacialOpenDrawer('my-drawer');</script>
+   ```
+   Right-side panel on desktop, bottom sheet on mobile. Focus trap +
+   Esc close + overlay click close are auto-wired.
+
+3. **Split view** for power-user list → detail flows:
+   ```html
+   <div class="glacial-split-view" id="my-split">
+     <aside class="glacial-split-list">…rows…</aside>
+     <section class="glacial-split-detail">
+       <button class="glacial-split-back" onclick="document.getElementById('my-split').setAttribute('data-mobile-view','list')">← Back</button>
+       …detail…
+     </section>
+   </div>
+   ```
+   Two columns on desktop, mobile shows one at a time. App code sets
+   `data-mobile-view="detail"` on the parent when a row is clicked.
+
+4. **Hybrid aesthetic** for projects where you want a more deliberate
+   look:
+   ```html
+   <html data-aesthetic="hybrid">
+   ```
+   Or programmatically: `glacialSetAesthetic('hybrid')`. Reverts with
+   `glacialSetAesthetic(null)`.
+
+5. **Cmd+K palette** for keyboard-first navigation:
+   ```js
+   glacialPalette({
+     items: [
+       { id: 'home', label: 'Go to Dashboard', section: 'Navigate', onSelect: () => location.href = '/' },
+       { id: 'theme', label: 'Toggle theme', section: 'Actions', shortcut: '⌥T', onSelect: glacialToggleTheme }
+     ]
+   });
+   ```
+   Auto-binds `⌘K` (Mac) and `Ctrl+K` (others). Disable with
+   `{ shortcut: false }` and call `.open()` yourself.
+
+### Token names — none renamed
+Every v2.0 token is intact. Two new tokens are added; nothing changed.
+
 ## v1.x → v2.0.0
 
 **No breaking changes.** v2 is fully additive over v1 — all v1 classes, tokens, and behaviors continue to work.
