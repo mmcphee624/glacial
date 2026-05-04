@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UX Variants · Glacial</title>
+  <link rel="stylesheet" href="../../glacial.css">
+  <link rel="stylesheet" href="../../skins/default.css">
+  <link rel="stylesheet" href="../../skins/warm-serif.css">
+  <link rel="stylesheet" href="../../skins/midnight-mono.css">
+  <link rel="stylesheet" href="../../skins/lavender.css">
+  <link rel="stylesheet" href="../../skins/deep-navy.css">
+  <link rel="stylesheet" href="../../skins/nord.css">
+  <link rel="stylesheet" href="../_examples.css">
+  <link rel="stylesheet" href="_ux-shared.css">
+  <script src="../../glacial.js"></script>
+</head>
+<body>
+  <header class="glacial-glass-header ex-toolbar">
+    <div class="ex-toolbar-inner">
+      <span class="ex-logo">GLACIAL · UX</span>
+      <nav class="glacial-nav ex-nav">
+        <a href="../index.html">← examples</a>
+        <a href="density.html">density</a>
+        <a href="navigation.html">navigation</a>
+        <a href="layout.html">layout</a>
+        <a href="aesthetic.html">aesthetic</a>
+      </nav>
+      <div class="ex-controls">
+        <select class="ex-select" data-glacial-skin>
+          <option value="default">default</option>
+          <option value="warm-serif">warm-serif</option>
+          <option value="midnight-mono">midnight-mono</option>
+          <option value="lavender">lavender</option>
+          <option value="deep-navy">deep-navy</option>
+          <option value="nord">nord</option>
+        </select>
+        <button class="glacial-toggle" onclick="glacialToggleTheme()">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="ex-main">
+    <section class="ex-hero">
+      <h1 class="ex-h1">UX Variants</h1>
+      <p class="ex-lede">Side-by-side comparisons across four UX dimensions, grounded in 2026 design research. Pick winners; we lock the choices into glacial. Each comparison page also links to fullscreen variants you can test individually.</p>
+    </section>
+
+    <section class="ex-grid">
+      <a href="density.html" class="glacial-glass ex-card">
+        <span class="glacial-badge glacial-badge-accent">A · DENSITY</span>
+        <h2 class="ex-card-title">Compact / comfortable / spacious</h2>
+        <p class="ex-card-desc">Same dashboard, three rhythms. Padding, font sizes, and gap values change — no structural shift.</p>
+        <p class="ex-card-desc" style="font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); margin-top: 8px;">3 variants · iframe comparison</p>
+      </a>
+
+      <a href="navigation.html" class="glacial-glass ex-card">
+        <span class="glacial-badge glacial-badge-accent">C · NAV</span>
+        <h2 class="ex-card-title">Top / sidebar / mini rail / Cmd+K</h2>
+        <p class="ex-card-desc">Four nav patterns. Cmd+K palette is functional — open the fullscreen link and try ⌘K.</p>
+        <p class="ex-card-desc" style="font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); margin-top: 8px;">4 variants · iframe comparison</p>
+      </a>
+
+      <a href="layout.html" class="glacial-glass ex-card">
+        <span class="glacial-badge glacial-badge-accent">D · LAYOUT</span>
+        <h2 class="ex-card-title">Single page / split view / drawer</h2>
+        <p class="ex-card-desc">List → detail patterns. Split view is functional (click rows). Drawer slides on click; bottom-sheet on mobile.</p>
+        <p class="ex-card-desc" style="font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); margin-top: 8px;">3 variants · iframe comparison</p>
+      </a>
+
+      <a href="aesthetic.html" class="glacial-glass ex-card">
+        <span class="glacial-badge glacial-badge-accent">E · AESTHETIC</span>
+        <h2 class="ex-card-title">Polished / neo-brutalist / hybrid</h2>
+        <p class="ex-card-desc">2026's tactile-brutalism reaction to AI-slop polish. Hybrid keeps glacial's aurora; brutalism strips it.</p>
+        <p class="ex-card-desc" style="font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); margin-top: 8px;">3 variants · iframe comparison</p>
+      </a>
+    </section>
+
+    <section style="margin: 32px 0;">
+      <h2 class="ex-h3">How to review</h2>
+      <ol style="font-size: 13px; color: var(--text-secondary); line-height: 1.7; max-width: 64ch;">
+        <li>Open each variant page. Scroll through the iframes side-by-side.</li>
+        <li>For ones you want to test seriously, click the <code>↗</code> "fullscreen" link to load that variant on its own.</li>
+        <li>Try every comparison under different skins (selector top-right) — variant winners often look different across warm-serif vs midnight-mono.</li>
+        <li>Try in dark mode (◐ toggle). Aurora orbs only show in dark.</li>
+        <li>Tell me your picks. I lock them into the next PR — Tier 2 components, density tokens in <code>glacial.css</code>, <code>data-aesthetic</code> axis, etc.</li>
+      </ol>
+    </section>
+
+    <section style="margin: 24px 0;">
+      <h2 class="ex-h3">Skipped this round</h2>
+      <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; max-width: 64ch;">
+        Filter UX (B/G), empty-state patterns (F), and microinteraction discipline (H) were skipped — they're smaller refinements that follow naturally once nav and layout are locked. We'll spin them out in a follow-up if needed.
+      </p>
+    </section>
+  </main>
+
+  <script src="../_examples.js"></script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Variant A · Density · Glacial UX</title>
+  <link rel="stylesheet" href="../../glacial.css">
+  <link rel="stylesheet" href="../../skins/default.css">
+  <link rel="stylesheet" href="../../skins/warm-serif.css">
+  <link rel="stylesheet" href="../../skins/midnight-mono.css">
+  <link rel="stylesheet" href="../../skins/lavender.css">
+  <link rel="stylesheet" href="../../skins/deep-navy.css">
+  <link rel="stylesheet" href="../../skins/nord.css">
+  <link rel="stylesheet" href="../_examples.css">
+  <link rel="stylesheet" href="_ux-shared.css">
+  <script src="../../glacial.js"></script>
+</head>
+<body>
+  <header class="glacial-glass-header ux-toolbar">
+    <div class="ux-toolbar-inner">
+      <span class="ux-logo">GLACIAL · UX</span>
+      <a class="ux-back" href="index.html">← variants</a>
+      <span class="ux-title">A. Density</span>
+      <div class="ux-controls">
+        <select class="ux-select" data-glacial-skin>
+          <option value="default">default</option>
+          <option value="warm-serif">warm-serif</option>
+          <option value="midnight-mono">midnight-mono</option>
+          <option value="lavender">lavender</option>
+          <option value="deep-navy">deep-navy</option>
+          <option value="nord">nord</option>
+        </select>
+        <button class="glacial-toggle" onclick="glacialToggleTheme()">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="ux-main">
+    <h1 class="ux-h1">Density</h1>
+    <p class="ux-lede">Same dashboard data, three rhythms. The token deltas are padding, font sizes, and gap values — no structural change. Choose what feels right for the kinds of dashboards you build most.</p>
+
+    <p class="ux-takeaway">2026 trend: ship a density toggle (Sprinklr, Salesforce, MUI all do). User picks once, persists.</p>
+
+    <div class="ux-variant-grid ux-variant-grid-3">
+
+      <article class="ux-frame">
+        <div class="ux-frame-label">
+          <span class="ux-frame-name">A1 · Compact</span>
+          <a class="ux-frame-fullscreen" href="density-demo.html?density=compact" target="_blank">↗ fullscreen</a>
+        </div>
+        <iframe src="density-demo.html?density=compact"></iframe>
+        <div class="ux-pros-cons">
+          <div class="pros">
+            <strong>Pros</strong>
+            More data per screen · Power-user feel · Less scrolling on logs/tables
+          </div>
+          <div class="cons">
+            <strong>Cons</strong>
+            Tighter touch targets · Harder for casual scans · Looks "intense"
+          </div>
+        </div>
+      </article>
+
+      <article class="ux-frame">
+        <div class="ux-frame-label">
+          <span class="ux-frame-name">A2 · Comfortable <span class="ux-frame-tag">(current default)</span></span>
+          <a class="ux-frame-fullscreen" href="density-demo.html?density=comfortable" target="_blank">↗ fullscreen</a>
+        </div>
+        <iframe src="density-demo.html?density=comfortable"></iframe>
+        <div class="ux-pros-cons">
+          <div class="pros">
+            <strong>Pros</strong>
+            Balanced rhythm · Good for mixed audiences · 44px touch targets
+          </div>
+          <div class="cons">
+            <strong>Cons</strong>
+            Compromise: not the densest, not the calmest
+          </div>
+        </div>
+      </article>
+
+      <article class="ux-frame">
+        <div class="ux-frame-label">
+          <span class="ux-frame-name">A3 · Spacious</span>
+          <a class="ux-frame-fullscreen" href="density-demo.html?density=spacious" target="_blank">↗ fullscreen</a>
+        </div>
+        <iframe src="density-demo.html?density=spacious"></iframe>
+        <div class="ux-pros-cons">
+          <div class="pros">
+            <strong>Pros</strong>
+            Calm scan · Marketing-grade feel · Hero metrics breathe
+          </div>
+          <div class="cons">
+            <strong>Cons</strong>
+            More scrolling · Less data per screen · Phones suffer
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+    <section style="margin: 32px 0;">
+      <h2 class="ux-takeaway">If you adopt this</h2>
+      <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; max-width: 70ch;">
+        Add <code>data-density</code> attribute support to <code>glacial.css</code> with <code>compact</code>, <code>comfortable</code> (default, no overrides needed), and <code>spacious</code> values. Persist user choice in cookie <code>glacial-density</code>, mirror the theme/skin pattern. Add <code>window.glacialSetDensity(name)</code>.
+      </p>
+      <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; max-width: 70ch;">
+        <strong>You can also pick one as the new default.</strong> If you primarily build infra dashboards, "compact" might just be the new comfortable. If you build personal/lifestyle apps, "spacious" might fit better. The toggle is most useful when you have apps that span the range.
+      </p>
+    </section>
+  </main>
+
+  <script src="../_examples.js"></script>
+</body>
+</html>

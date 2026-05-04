@@ -1,0 +1,167 @@
+/**
+ * Aesthetic variant overrides
+ * Three temperaments for the same dashboard, applied via [data-aesthetic]
+ *
+ * E1 (polished)   — current default; glass + aurora + soft shadows + blur
+ * E2 (brutalist)  — neo-brutalism; 1px solid borders, hard offset shadows,
+ *                   no blur, monospace headings, raw color blocks
+ * E3 (hybrid)     — glass surfaces but with brutalist edges:
+ *                   1px hard borders, hard offset shadows, monospace
+ *                   headings — keeps the aurora atmosphere
+ */
+
+/* ============================================================
+ * E1 — POLISHED (current default, no overrides needed)
+ * ============================================================ */
+
+/* ============================================================
+ * E2 — NEO-BRUTALIST
+ * Disables glass entirely; sharp edges, hard shadows, monospace.
+ * ============================================================ */
+[data-aesthetic="brutalist"] {
+  --radius-sm: 0;
+  --radius: 0;
+  --radius-lg: 0;
+  --blur: 0;
+  --orb-opacity: 0;
+}
+[data-aesthetic="brutalist"] body { background: var(--bg) !important; }
+[data-aesthetic="brutalist"] body::before { display: none !important; }
+
+[data-aesthetic="brutalist"] .glacial-glass,
+[data-aesthetic="brutalist"] .glacial-glass-header {
+  background: var(--bg-card-hover);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: 1px solid var(--text-strong);
+  box-shadow: 4px 4px 0 var(--text-strong);
+}
+
+[data-aesthetic="brutalist"] .glacial-metric {
+  background: var(--bg-card-hover);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: 1px solid var(--text-strong);
+  box-shadow: 4px 4px 0 var(--text-strong);
+}
+
+[data-aesthetic="brutalist"] .glacial-alert {
+  background: var(--bg-card-hover);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: 1px solid var(--text-strong);
+  border-left: 6px solid var(--accent);
+  box-shadow: 4px 4px 0 var(--text-strong);
+}
+[data-aesthetic="brutalist"] .glacial-alert-info    { border-left-color: var(--blue); }
+[data-aesthetic="brutalist"] .glacial-alert-success { border-left-color: var(--green); }
+[data-aesthetic="brutalist"] .glacial-alert-warn    { border-left-color: var(--yellow); }
+[data-aesthetic="brutalist"] .glacial-alert-error   { border-left-color: var(--red); }
+
+[data-aesthetic="brutalist"] .glacial-table thead th {
+  background: var(--bg-card-hover);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom: 2px solid var(--text-strong);
+}
+[data-aesthetic="brutalist"] .glacial-table tbody td {
+  border-bottom: 1px solid var(--text-strong);
+}
+
+[data-aesthetic="brutalist"] .glacial-filter-pill {
+  border: 1px solid var(--text-strong);
+  border-radius: 0;
+}
+[data-aesthetic="brutalist"] .glacial-filter-pill[aria-pressed="true"],
+[data-aesthetic="brutalist"] .glacial-filter-pill.is-active {
+  background: var(--accent);
+  color: var(--bg);
+  box-shadow: 3px 3px 0 var(--text-strong);
+}
+
+[data-aesthetic="brutalist"] .glacial-badge {
+  border: 1px solid currentColor;
+  border-radius: 0;
+}
+
+[data-aesthetic="brutalist"] .glacial-btn {
+  border: 1px solid var(--text-strong);
+  border-radius: 0;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 11px;
+  box-shadow: 3px 3px 0 var(--text-strong);
+  transition: transform 0.05s, box-shadow 0.05s;
+}
+[data-aesthetic="brutalist"] .glacial-btn:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--text-strong); }
+[data-aesthetic="brutalist"] .glacial-btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--text-strong); }
+[data-aesthetic="brutalist"] .glacial-btn-primary { background: var(--accent); color: var(--bg); }
+[data-aesthetic="brutalist"] .glacial-btn-secondary { background: var(--bg-card-hover); color: var(--text-strong); }
+
+[data-aesthetic="brutalist"] .ex-h1,
+[data-aesthetic="brutalist"] h1, [data-aesthetic="brutalist"] h2, [data-aesthetic="brutalist"] h3 {
+  font-family: var(--font-mono);
+  letter-spacing: 0;
+  text-transform: none;
+}
+[data-aesthetic="brutalist"] .ex-h1 {
+  font-size: 28px;
+  text-transform: uppercase;
+  border-bottom: 3px solid var(--text-strong);
+  padding-bottom: 8px;
+  display: inline-block;
+}
+
+[data-aesthetic="brutalist"] .glacial-status-row {
+  border-radius: 0;
+}
+[data-aesthetic="brutalist"] .glacial-status-row-dot {
+  border-radius: 0; /* even the dots are square */
+  width: 10px; height: 10px;
+}
+[data-theme="dark"][data-aesthetic="brutalist"] .glacial-status-row-dot { box-shadow: none !important; }
+
+/* ============================================================
+ * E3 — HYBRID (glass + aurora kept; edges go brutalist)
+ * ============================================================ */
+[data-aesthetic="hybrid"] {
+  --radius-sm: 2px;
+  --radius: 4px;
+  --radius-lg: 6px;
+}
+[data-aesthetic="hybrid"] .glacial-glass {
+  border: 1px solid var(--accent);
+  box-shadow: 4px 4px 0 var(--accent-bg);
+}
+[data-aesthetic="hybrid"] .glacial-metric {
+  border: 1px solid var(--accent-border);
+  box-shadow: 3px 3px 0 var(--accent-bg);
+}
+[data-aesthetic="hybrid"] .glacial-alert {
+  border: 1px solid var(--text-strong);
+  border-left: 4px solid var(--accent);
+  box-shadow: 3px 3px 0 var(--accent-bg);
+}
+[data-aesthetic="hybrid"] .glacial-alert-info    { border-left-color: var(--blue); }
+[data-aesthetic="hybrid"] .glacial-alert-success { border-left-color: var(--green); }
+[data-aesthetic="hybrid"] .glacial-alert-warn    { border-left-color: var(--yellow); }
+[data-aesthetic="hybrid"] .glacial-alert-error   { border-left-color: var(--red); }
+
+[data-aesthetic="hybrid"] .glacial-filter-pill {
+  border: 1px solid var(--text-secondary);
+  border-radius: 2px;
+}
+[data-aesthetic="hybrid"] .glacial-filter-pill[aria-pressed="true"],
+[data-aesthetic="hybrid"] .glacial-filter-pill.is-active {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+}
+
+[data-aesthetic="hybrid"] .ex-h1, [data-aesthetic="hybrid"] h1 {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 24px;
+}

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Layout: Single Page · Glacial UX</title>
+  <link rel="stylesheet" href="../../glacial.css">
+  <link rel="stylesheet" href="../../skins/default.css">
+  <link rel="stylesheet" href="../../skins/warm-serif.css">
+  <link rel="stylesheet" href="../../skins/midnight-mono.css">
+  <link rel="stylesheet" href="../../skins/lavender.css">
+  <link rel="stylesheet" href="../../skins/deep-navy.css">
+  <link rel="stylesheet" href="../../skins/nord.css">
+  <link rel="stylesheet" href="../_examples.css">
+  <link rel="stylesheet" href="_ux-shared.css">
+  <link rel="stylesheet" href="_layout.css">
+  <script src="../../glacial.js"></script>
+</head>
+<body>
+  <main class="lo-shell-single" style="max-width: 1100px; margin: 0 auto;">
+    <h1 class="ex-h1">Listings</h1>
+    <p class="ex-lede">Click a row to navigate to the detail page (URL changes, browser back/forward works). The default for content where shareable URLs matter.</p>
+
+    <div class="glacial-glass" style="padding: 0; overflow: hidden; margin-top: 16px;">
+      <table class="glacial-table">
+        <thead>
+          <tr><th>Listing</th><th>Body</th><th>Year</th><th class="num">Price</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr onclick="alert('Would navigate to /listings/civic-2018');" style="cursor: pointer;"><td>2018 Honda Civic</td><td>Sedan</td><td>2018</td><td class="num">$14,200</td><td><span class="glacial-badge glacial-badge-green">ACTIVE</span></td></tr>
+          <tr onclick="alert('Would navigate to /listings/rav4-2020');" style="cursor: pointer;"><td>2020 Toyota RAV4</td><td>SUV</td><td>2020</td><td class="num">$22,900</td><td><span class="glacial-badge glacial-badge-green">ACTIVE</span></td></tr>
+          <tr onclick="alert('Would navigate to /listings/f150-2017');" style="cursor: pointer;"><td>2017 Ford F-150</td><td>Truck</td><td>2017</td><td class="num">$18,500</td><td><span class="glacial-badge glacial-badge-yellow">PENDING</span></td></tr>
+          <tr onclick="alert('Would navigate to /listings/mx5-2019');" style="cursor: pointer;"><td>2019 Mazda MX-5</td><td>Coupe</td><td>2019</td><td class="num">$24,800</td><td><span class="glacial-badge glacial-badge-green">ACTIVE</span></td></tr>
+          <tr onclick="alert('Would navigate to /listings/outback-2016');" style="cursor: pointer;"><td>2016 Subaru Outback</td><td>SUV</td><td>2016</td><td class="num">$11,200</td><td><span class="glacial-badge glacial-badge-yellow">SOLD</span></td></tr>
+          <tr onclick="alert('Would navigate to /listings/v60-2021');" style="cursor: pointer;"><td>2021 Volvo V60</td><td>Sedan</td><td>2021</td><td class="num">$36,500</td><td><span class="glacial-badge glacial-badge-green">ACTIVE</span></td></tr>
+          <tr onclick="alert('Would navigate to /listings/tahoe-2015');" style="cursor: pointer;"><td>2015 Chevy Tahoe</td><td>SUV</td><td>2015</td><td class="num">$13,400</td><td><span class="glacial-badge glacial-badge-red">PULLED</span></td></tr>
+          <tr onclick="alert('Would navigate to /listings/m3-2022');" style="cursor: pointer;"><td>2022 Tesla Model 3</td><td>Sedan</td><td>2022</td><td class="num">$38,700</td><td><span class="glacial-badge glacial-badge-green">ACTIVE</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</body>
+</html>
