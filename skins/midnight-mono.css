@@ -1,0 +1,153 @@
+/**
+ * Glacial Midnight-Mono Skin — terminal / cyberpunk / hacker tools
+ * @version 2.0.0
+ *
+ * Pure-black background with neon-green accent. Monospace everywhere.
+ * For dev tools, infra dashboards, log viewers, observability UIs —
+ * anywhere you want the page to feel like a terminal that grew up.
+ *
+ * Aurora orbs are recolored to greens/cyan/lime so they stay moody
+ * instead of clashing with the matrix-green accent.
+ */
+
+/* ============================================================
+ * Light variant — yes, even cyberpunk gets a light mode
+ * ============================================================ */
+[data-skin="midnight-mono"] {
+  /* Typography — monospace everywhere */
+  --font-body: 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  --font-mono: 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+
+  /* Surfaces — cool gray with green tint */
+  --bg: #f4f5f3;
+  --bg-card: rgba(255, 255, 255, 0.65);
+  --bg-card-hover: rgba(255, 255, 255, 0.82);
+  --bg-header: rgba(255, 255, 255, 0.72);
+  --bg-input: rgba(255, 255, 255, 0.78);
+
+  --border: rgba(0, 100, 50, 0.10);
+  --border-card: rgba(0, 100, 50, 0.12);
+  --border-hover: rgba(0, 180, 90, 0.32);
+
+  /* Text — slightly green-tinted dark */
+  --text: #1f2a22;
+  --text-strong: #0a1410;
+  --text-secondary: #4a5a4f;
+  --text-muted: #7a8a7f;
+  --text-faint: #b0bcb4;
+
+  /* Accent — emerald that survives a white background */
+  --accent: #008f4e;
+  --accent-bg: rgba(0, 143, 78, 0.07);
+  --accent-border: rgba(0, 143, 78, 0.30);
+
+  /* Status */
+  --green: #008f4e;
+  --green-bg: rgba(0, 143, 78, 0.08);
+  --yellow: #b8860b;
+  --yellow-bg: rgba(184, 134, 11, 0.08);
+  --red: #c5364a;
+  --red-bg: rgba(197, 54, 74, 0.08);
+  --blue: #2563eb;
+  --blue-bg: rgba(37, 99, 235, 0.08);
+
+  --shadow: 0 1px 8px rgba(0, 100, 50, 0.04);
+  --skeleton-shimmer: rgba(0, 143, 78, 0.10);
+
+  /* Tighter radii — terminals don't have round corners */
+  --radius-sm: 2px;
+  --radius: 4px;
+  --radius-lg: 6px;
+
+  /* Light mode: orbs off — they'd just look weird on a clean white-green */
+  --orb-opacity: 0;
+}
+
+/* ============================================================
+ * Dark variant — the real one. Pure black + matrix green.
+ * ============================================================ */
+[data-skin="midnight-mono"][data-theme="dark"] {
+  --bg: #050507;
+  --bg-card: rgba(0, 255, 136, 0.025);
+  --bg-card-hover: rgba(0, 255, 136, 0.06);
+  --bg-header: rgba(5, 5, 7, 0.92);
+  --bg-input: rgba(0, 255, 136, 0.02);
+
+  --border: rgba(0, 255, 136, 0.10);
+  --border-card: rgba(0, 255, 136, 0.08);
+  --border-hover: rgba(0, 255, 136, 0.35);
+
+  /* Text — phosphor green tint without going full Matrix */
+  --text: #c8d8cc;
+  --text-strong: #f0fff5;
+  --text-secondary: #7a8c80;
+  --text-muted: #4a5a50;
+  --text-faint: #2a3530;
+
+  /* Accent — neon emerald */
+  --accent: #00ff88;
+  --accent-bg: rgba(0, 255, 136, 0.08);
+  --accent-border: rgba(0, 255, 136, 0.30);
+
+  /* Status — vivid neons, all glow-friendly */
+  --green: #00ff88;
+  --green-bg: rgba(0, 255, 136, 0.08);
+  --yellow: #f5d76e;
+  --yellow-bg: rgba(245, 215, 110, 0.08);
+  --red: #ff3860;
+  --red-bg: rgba(255, 56, 96, 0.10);
+  --blue: #4cc9f0;
+  --blue-bg: rgba(76, 201, 240, 0.08);
+
+  --shadow: none;
+  --skeleton-shimmer: rgba(0, 255, 136, 0.08);
+
+  /* Aurora orbs in green/cyan/lime — keep the atmosphere, drop the purple */
+  --orb-1-color: #00ff88;
+  --orb-2-color: #4cc9f0;
+  --orb-3-color: #b3ff66;
+  --orb-opacity: 1;
+
+  --radius-sm: 2px;
+  --radius: 4px;
+  --radius-lg: 6px;
+}
+
+/* OS dark fallback */
+@media (prefers-color-scheme: dark) {
+  [data-skin="midnight-mono"]:not([data-theme="light"]) {
+    --bg: #050507;
+    --bg-card: rgba(0, 255, 136, 0.025);
+    --bg-card-hover: rgba(0, 255, 136, 0.06);
+    --bg-header: rgba(5, 5, 7, 0.92);
+    --bg-input: rgba(0, 255, 136, 0.02);
+    --border: rgba(0, 255, 136, 0.10);
+    --border-card: rgba(0, 255, 136, 0.08);
+    --border-hover: rgba(0, 255, 136, 0.35);
+    --text: #c8d8cc;
+    --text-strong: #f0fff5;
+    --text-secondary: #7a8c80;
+    --text-muted: #4a5a50;
+    --text-faint: #2a3530;
+    --accent: #00ff88;
+    --accent-bg: rgba(0, 255, 136, 0.08);
+    --accent-border: rgba(0, 255, 136, 0.30);
+    --green: #00ff88;
+    --green-bg: rgba(0, 255, 136, 0.08);
+    --yellow: #f5d76e;
+    --yellow-bg: rgba(245, 215, 110, 0.08);
+    --red: #ff3860;
+    --red-bg: rgba(255, 56, 96, 0.10);
+    --blue: #4cc9f0;
+    --blue-bg: rgba(76, 201, 240, 0.08);
+    --shadow: none;
+    --skeleton-shimmer: rgba(0, 255, 136, 0.08);
+    --orb-1-color: #00ff88;
+    --orb-2-color: #4cc9f0;
+    --orb-3-color: #b3ff66;
+    --orb-opacity: 1;
+    --radius-sm: 2px;
+    --radius: 4px;
+    --radius-lg: 6px;
+  }
+}

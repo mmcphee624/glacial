@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Board · Glacial Examples</title>
+  <link rel="stylesheet" href="../glacial.css">
+  <link rel="stylesheet" href="../skins/default.css">
+  <link rel="stylesheet" href="../skins/warm-serif.css">
+  <link rel="stylesheet" href="../skins/midnight-mono.css">
+  <link rel="stylesheet" href="../skins/lavender.css">
+  <link rel="stylesheet" href="../skins/deep-navy.css">
+  <link rel="stylesheet" href="../skins/nord.css">
+  <link rel="stylesheet" href="_examples.css">
+  <script src="../glacial.js"></script>
+  <style>
+    /* Board-specific demo layout — uses .glacial-glass cards inside columns */
+    .ex-board {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .ex-board-col {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .ex-board-col-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 4px;
+    }
+    .ex-board-col-title {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+    .ex-board-card {
+      padding: 12px;
+      cursor: grab;
+    }
+    .ex-board-card:hover { border-color: var(--border-hover); }
+    .ex-board-card-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-strong);
+      margin: 0 0 6px;
+      line-height: 1.35;
+    }
+    .ex-board-card-meta {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+    }
+    .ex-board-card-priority {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+    }
+    .ex-priority-high   { background: var(--red); }
+    .ex-priority-med    { background: var(--yellow); }
+    .ex-priority-low    { background: var(--text-muted); }
+    [data-theme="dark"] .ex-priority-high { box-shadow: var(--glow-low) var(--red); }
+    [data-theme="dark"] .ex-priority-med  { box-shadow: var(--glow-low) var(--yellow); }
+
+    @media (max-width: 1023px) { .ex-board { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 540px)  { .ex-board { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header class="glacial-glass-header ex-toolbar">
+    <div class="ex-toolbar-inner">
+      <span class="ex-logo">GLACIAL</span>
+      <nav class="glacial-nav ex-nav">
+        <a href="index.html">index</a>
+        <a href="dashboard.html">dashboard</a>
+        <a href="list.html">list</a>
+        <a href="detail.html">detail</a>
+        <a href="form.html">form</a>
+        <a href="board.html" class="active">board</a>
+        <a href="mobile.html">mobile</a>
+        <a href="skins-preview.html">skins</a>
+      </nav>
+      <div class="ex-controls">
+        <select class="ex-select" data-glacial-skin>
+          <option value="default">default</option>
+          <option value="warm-serif">warm-serif</option>
+          <option value="midnight-mono">midnight-mono</option>
+          <option value="lavender">lavender</option>
+          <option value="deep-navy">deep-navy</option>
+          <option value="nord">nord</option>
+        </select>
+        <button class="glacial-toggle" onclick="glacialToggleTheme()">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="ex-main">
+
+    <!-- Recipe: Board
+         Container max-width: 1100-1200px
+         Header: breadcrumbs + title + filter bar
+         Layout: 4-column grid (2 tablet, 1 mobile) of glass cards
+         Components: breadcrumbs · filter-bar · glass cards · badges
+    -->
+
+    <nav aria-label="Breadcrumb" class="glacial-breadcrumbs" style="margin: 8px 0 16px;">
+      <a href="index.html">Home</a>
+      <span class="glacial-breadcrumbs-sep">/</span>
+      <span class="glacial-breadcrumbs-current">Pipeline</span>
+    </nav>
+
+    <section class="ex-hero">
+      <h1 class="ex-h1">Customer Pipeline</h1>
+      <p class="ex-lede">Drag cards between columns to update stage. Filter by priority or assignee.</p>
+    </section>
+
+    <section class="glacial-filter-bar" style="margin: 12px 0;">
+      <div>
+        <span class="glacial-filter-bar-label">Priority</span>
+        <div class="glacial-filter-bar-group" role="group" data-multi="true">
+          <button class="glacial-filter-pill is-active" aria-pressed="true">All</button>
+          <button class="glacial-filter-pill">High</button>
+          <button class="glacial-filter-pill">Medium</button>
+          <button class="glacial-filter-pill">Low</button>
+        </div>
+      </div>
+      <div>
+        <span class="glacial-filter-bar-label">Owner</span>
+        <div class="glacial-filter-bar-group" role="group" data-multi="false">
+          <button class="glacial-filter-pill is-active" aria-pressed="true">Anyone</button>
+          <button class="glacial-filter-pill">Me</button>
+          <button class="glacial-filter-pill">Maxm</button>
+          <button class="glacial-filter-pill">Sam</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="ex-board">
+
+      <div class="ex-board-col">
+        <div class="ex-board-col-header">
+          <span class="ex-board-col-title">Intake (4)</span>
+          <span class="glacial-badge glacial-badge-yellow">NEW</span>
+        </div>
+        <div class="glacial-glass ex-board-card">
+          <h3 class="ex-board-card-title">Acme Corp · platform eval</h3>
+          <div class="ex-board-card-meta"><span class="ex-board-card-priority ex-priority-high"></span> HIGH · 2d</div>
+        </div>
+        <div class="glacial-glass ex-board-card">
+          <h3 class="ex-board-card-title">Northstar · contract review</h3>
+          <div class="ex-board-card-meta"><span class="ex-board-card-priority ex-priority-med"></span> MED · 5d</div>
+        </div>
+        <div class="glacial-glass ex-board-card">
+          <h3 class="ex-board-card-title">Bluebird · pricing question</h3>
+          <div class="ex-board-card-meta"><span class="ex-board-card-priority ex-priority-low"></span> LOW · 8d</div>
+        </div>
+        <div class="glacial-glass ex-board-card">
+          <h3 class="ex-board-card-title">Hexagon Inc · referral inbound</h3>
+          <div class="ex-board-card-meta"><span class="ex-board-card-priority ex-priority-low"></span> LOW · 12d</div>
+        </div>
+      </div>
+
+      <div class="ex-board-col">
+        <div class="ex-board-col-header">
+          <span class="ex-board-col-title">In progress (3)</span>
+          <span class="glacial-badge glacial-badge-accent">ACTIVE</span>
+        </div>
+        <div class="glacial-glass ex-board-card">
+          <h3 class="ex-board-card-title">Cypress Labs · onboarding integration</h3>
+          <div class="ex-board-card-meta"><span class="ex-board-card-priority ex-priority-high"></span> HIGH · 1d</div>
+        </div>
+        <div class="glacial-glass ex-board-card">
+          <h3 class="ex-board-card-title">Quarterstone · technical demo</h3>
+          <div class="ex-board-card-meta"><span class="ex-board-card-priority ex-priority-med"></span> MED · 4d</div>
+        </div>
+        <div class="glacial-glass ex-board-card">
+          <h3 class="ex-board-card-title">Riverbed · custom report build</h3>
+          <div class="ex-board-card-meta"><span class="ex-board-card-priority ex-priority-med"></span> MED · 7d</div>
+        </div>
+      </div>
+
+      <div class="ex-board-col">
+        <div class="ex-board-col-header">
+          <span class="ex-board-col-title">Review (2)</span>
+          <span class="glacial-badge glacial-badge-blue">REVIEW</span>
+        </div>
+        <div class="glacial-glass ex-board-card">
+          <h3 class="ex-board-card-title">Atlas Group · final proposal</h3>
+          <div class="ex-board-card-meta"><span class="ex-board-card-priority ex-priority-high"></span> HIGH · 1d</div>
+        </div>
+        <div class="glacial-glass ex-board-card">
+          <h3 class="ex-board-card-title">Wendell &amp; Co · contract redlines</h3>
+          <div class="ex-board-card-meta"><span class="ex-board-card-priority ex-priority-med"></span> MED · 3d</div>
+        </div>
+      </div>
+
+      <div class="ex-board-col">
+        <div class="ex-board-col-header">
+          <span class="ex-board-col-title">Closed (5)</span>
+          <span class="glacial-badge glacial-badge-green">DONE</span>
+        </div>
+        <div class="glacial-glass ex-board-card">
+          <h3 class="ex-board-card-title">Tigerfly Studio · signed</h3>
+          <div class="ex-board-card-meta"><span class="ex-board-card-priority ex-priority-high"></span> HIGH · 2d</div>
+        </div>
+        <div class="glacial-glass ex-board-card">
+          <h3 class="ex-board-card-title">Kestrel Co · signed</h3>
+          <div class="ex-board-card-meta"><span class="ex-board-card-priority ex-priority-med"></span> MED · 4d</div>
+        </div>
+        <div class="glacial-glass ex-board-card">
+          <h3 class="ex-board-card-title">Northpoint · signed</h3>
+          <div class="ex-board-card-meta"><span class="ex-board-card-priority ex-priority-low"></span> LOW · 6d</div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <script src="_examples.js"></script>
+</body>
+</html>

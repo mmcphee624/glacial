@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Mobile Audit · Glacial Examples</title>
+  <link rel="stylesheet" href="../glacial.css">
+  <link rel="stylesheet" href="../skins/default.css">
+  <link rel="stylesheet" href="../skins/warm-serif.css">
+  <link rel="stylesheet" href="../skins/midnight-mono.css">
+  <link rel="stylesheet" href="../skins/lavender.css">
+  <link rel="stylesheet" href="../skins/deep-navy.css">
+  <link rel="stylesheet" href="../skins/nord.css">
+  <link rel="stylesheet" href="_examples.css">
+  <script src="../glacial.js"></script>
+  <style>
+    /* 44px touch-target overlay (toggled by checkbox) */
+    .ex-target-overlay button,
+    .ex-target-overlay a,
+    .ex-target-overlay [role="button"],
+    .ex-target-overlay input,
+    .ex-target-overlay select,
+    .ex-target-overlay .glacial-filter-pill,
+    .ex-target-overlay .glacial-status-row {
+      outline: 2px dashed rgba(255, 0, 100, 0.6);
+      outline-offset: -2px;
+    }
+    .ex-target-overlay button:not(:disabled),
+    .ex-target-overlay a {
+      position: relative;
+    }
+    .ex-target-overlay button::after,
+    .ex-target-overlay a::after,
+    .ex-target-overlay .glacial-filter-pill::after {
+      content: attr(data-size);
+      position: absolute;
+      top: -16px;
+      left: 0;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: rgba(255, 0, 100, 0.9);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .ex-fact { font-size: 13px; color: var(--text-secondary); }
+    .ex-fact strong { color: var(--text-strong); }
+  </style>
+</head>
+<body>
+  <header class="glacial-glass-header ex-toolbar">
+    <div class="ex-toolbar-inner">
+      <span class="ex-logo">GLACIAL</span>
+      <nav class="glacial-nav ex-nav">
+        <a href="index.html">index</a>
+        <a href="dashboard.html">dashboard</a>
+        <a href="list.html">list</a>
+        <a href="detail.html">detail</a>
+        <a href="form.html">form</a>
+        <a href="board.html">board</a>
+        <a href="mobile.html" class="active">mobile</a>
+        <a href="skins-preview.html">skins</a>
+      </nav>
+      <div class="ex-controls">
+        <select class="ex-select" data-glacial-skin>
+          <option value="default">default</option>
+          <option value="warm-serif">warm-serif</option>
+          <option value="midnight-mono">midnight-mono</option>
+          <option value="lavender">lavender</option>
+          <option value="deep-navy">deep-navy</option>
+          <option value="nord">nord</option>
+        </select>
+        <button class="glacial-toggle" onclick="glacialToggleTheme()">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="ex-main">
+
+    <nav aria-label="Breadcrumb" class="glacial-breadcrumbs" style="margin: 8px 0 16px;">
+      <a href="index.html">Home</a>
+      <span class="glacial-breadcrumbs-sep">/</span>
+      <a href="#">Verification</a>
+      <span class="glacial-breadcrumbs-sep">/</span>
+      <a href="#" class="glacial-breadcrumbs-trunc">…</a>
+      <span class="glacial-breadcrumbs-sep">/</span>
+      <span class="glacial-breadcrumbs-current">Mobile</span>
+    </nav>
+
+    <section class="ex-hero">
+      <h1 class="ex-h1">Mobile Audit</h1>
+      <p class="ex-lede">A focused page for verifying mobile behaviors. Open this on your phone (via cloudflared tunnel or LAN IP) to test touch targets, breakpoint behavior, and scroll-snap pills with real fingers.</p>
+    </section>
+
+    <!-- Touch target overlay toggle -->
+    <section style="margin: 16px 0;">
+      <h2 class="ex-h3">Touch target audit</h2>
+      <p class="ex-fact">Apple/Google guidelines: every interactive element should be at least <strong>44 &times; 44px</strong>. Toggle the overlay to highlight every button, link, pill, status row, and form input. Anything visibly smaller than the dashed outline is a violation.</p>
+      <label style="display: inline-flex; align-items: center; gap: 8px; margin: 8px 0; cursor: pointer;">
+        <input type="checkbox" id="overlay-toggle" style="accent-color: var(--accent);">
+        <span class="glacial-filter-pill" style="pointer-events: none;">Show 44px target overlay</span>
+      </label>
+    </section>
+
+    <!-- Filter bar with horizontal scroll on mobile -->
+    <section style="margin: 24px 0;">
+      <h2 class="ex-h3">Filter bar (horizontal scroll-snap on mobile)</h2>
+      <p class="ex-fact">On phones the pill group becomes a horizontal scroll list. Each pill snaps to start. Try swiping.</p>
+      <div class="glacial-filter-bar" style="margin-top: 8px;">
+        <span class="glacial-filter-bar-label">Status</span>
+        <div class="glacial-filter-bar-group" role="group" data-multi="false">
+          <button class="glacial-filter-pill" aria-pressed="true">All <span class="glacial-filter-pill-count">218</span></button>
+          <button class="glacial-filter-pill">Active <span class="glacial-filter-pill-count">184</span></button>
+          <button class="glacial-filter-pill">Pending <span class="glacial-filter-pill-count">22</span></button>
+          <button class="glacial-filter-pill">Sold <span class="glacial-filter-pill-count">28</span></button>
+          <button class="glacial-filter-pill">Pulled <span class="glacial-filter-pill-count">6</span></button>
+          <button class="glacial-filter-pill">Draft <span class="glacial-filter-pill-count">11</span></button>
+          <button class="glacial-filter-pill">Archived <span class="glacial-filter-pill-count">42</span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Status rows: 44px min-height -->
+    <section style="margin: 24px 0;">
+      <h2 class="ex-h3">Status rows (44px min-height)</h2>
+      <p class="ex-fact">Each status row reserves <strong>44px</strong> minimum height regardless of content. Tapping anywhere on the row should feel comfortable.</p>
+      <div class="glacial-glass" style="padding: 4px 8px; margin-top: 8px;">
+        <a href="#" class="glacial-status-row" data-state="healthy" style="text-decoration: none;">
+          <svg class="glacial-status-row-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="12" height="9" rx="1"/></svg>
+          <span class="glacial-status-row-name">api.glacial.dev</span>
+          <span class="glacial-status-row-meta">99.98%</span>
+          <span class="glacial-status-row-dot"></span>
+        </a>
+        <a href="#" class="glacial-status-row" data-state="warn" style="text-decoration: none;">
+          <svg class="glacial-status-row-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1L1 14h14L8 1z"/></svg>
+          <span class="glacial-status-row-name">cdn-edge-04</span>
+          <span class="glacial-status-row-meta">elevated latency</span>
+          <span class="glacial-status-row-dot"></span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Table with data-priority -->
+    <section style="margin: 24px 0;">
+      <h2 class="ex-h3">Responsive table (column hiding via <code>data-priority</code>)</h2>
+      <p class="ex-fact">At <strong>&lt;1024px</strong>, columns with <code>data-priority="3"</code> hide. At <strong>&lt;768px</strong>, columns with <code>data-priority="2"</code> also hide. <code>="1"</code> always shows.</p>
+      <div class="glacial-glass" style="padding: 0; overflow: hidden; margin-top: 8px;">
+        <table class="glacial-table">
+          <thead>
+            <tr>
+              <th data-priority="1">Listing</th>
+              <th data-priority="2">Body</th>
+              <th data-priority="3">Year</th>
+              <th data-priority="3" class="num">Mileage</th>
+              <th data-priority="2" class="num">Price</th>
+              <th data-priority="1">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>2018 Civic</td><td>Sedan</td><td>2018</td><td class="num">42,180</td><td class="num">$14,200</td><td><span class="glacial-badge glacial-badge-green">ACTIVE</span></td></tr>
+            <tr><td>2020 RAV4</td><td>SUV</td><td>2020</td><td class="num">28,500</td><td class="num">$22,900</td><td><span class="glacial-badge glacial-badge-green">ACTIVE</span></td></tr>
+            <tr><td>2017 F-150</td><td>Truck</td><td>2017</td><td class="num">71,400</td><td class="num">$18,500</td><td><span class="glacial-badge glacial-badge-yellow">PENDING</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Breadcrumb truncation -->
+    <section style="margin: 24px 0;">
+      <h2 class="ex-h3">Breadcrumb middle-truncation</h2>
+      <p class="ex-fact">At <strong>&lt;540px</strong>, intermediate items collapse to <code>…</code>; first and last stay visible (see top of page for live example). On wider screens the full trail shows.</p>
+    </section>
+
+    <!-- Mobile blur policy -->
+    <section style="margin: 24px 0;">
+      <h2 class="ex-h3">Glass blur policy</h2>
+      <p class="ex-fact"><code>--blur</code> auto-reduces from <strong>20px</strong> &rarr; <strong>12px</strong> at <code>&lt;768px</code>, then to <strong>8px</strong> on coarse-pointer devices at <code>&lt;540px</code>. Five stacked glass cards on iOS Safari at full blur drops below 30 FPS during scroll &mdash; this policy keeps it smooth.</p>
+      <div class="glacial-metric" style="margin-top: 8px;">
+        <span class="glacial-metric-label">Current --blur</span>
+        <span class="glacial-metric-value" id="blur-readout">—</span>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="_examples.js"></script>
+  <script>
+    // Touch target overlay toggle
+    document.getElementById('overlay-toggle').addEventListener('change', function (e) {
+      document.body.classList.toggle('ex-target-overlay', e.target.checked);
+    });
+
+    // Live --blur readout
+    function updateBlurReadout() {
+      var blur = getComputedStyle(document.documentElement).getPropertyValue('--blur').trim();
+      var el = document.getElementById('blur-readout');
+      if (el) el.textContent = blur || '20px';
+    }
+    updateBlurReadout();
+    window.addEventListener('resize', updateBlurReadout);
+
+    // Annotate every interactive element with its measured size for the overlay
+    function annotateSizes() {
+      var els = document.querySelectorAll('button, a, .glacial-filter-pill, .glacial-status-row, input, select');
+      els.forEach(function (el) {
+        var r = el.getBoundingClientRect();
+        if (r.width > 0 && r.height > 0) {
+          el.setAttribute('data-size', Math.round(r.width) + '×' + Math.round(r.height));
+        }
+      });
+    }
+    window.addEventListener('load', annotateSizes);
+    window.addEventListener('resize', annotateSizes);
+  </script>
+</body>
+</html>

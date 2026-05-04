@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Detail · Glacial Examples</title>
+  <link rel="stylesheet" href="../glacial.css">
+  <link rel="stylesheet" href="../skins/default.css">
+  <link rel="stylesheet" href="../skins/warm-serif.css">
+  <link rel="stylesheet" href="../skins/midnight-mono.css">
+  <link rel="stylesheet" href="../skins/lavender.css">
+  <link rel="stylesheet" href="../skins/deep-navy.css">
+  <link rel="stylesheet" href="../skins/nord.css">
+  <link rel="stylesheet" href="_examples.css">
+  <script src="../glacial.js"></script>
+</head>
+<body>
+  <header class="glacial-glass-header ex-toolbar">
+    <div class="ex-toolbar-inner">
+      <span class="ex-logo">GLACIAL</span>
+      <nav class="glacial-nav ex-nav">
+        <a href="index.html">index</a>
+        <a href="dashboard.html">dashboard</a>
+        <a href="list.html">list</a>
+        <a href="detail.html" class="active">detail</a>
+        <a href="form.html">form</a>
+        <a href="board.html">board</a>
+        <a href="mobile.html">mobile</a>
+        <a href="skins-preview.html">skins</a>
+      </nav>
+      <div class="ex-controls">
+        <select class="ex-select" data-glacial-skin>
+          <option value="default">default</option>
+          <option value="warm-serif">warm-serif</option>
+          <option value="midnight-mono">midnight-mono</option>
+          <option value="lavender">lavender</option>
+          <option value="deep-navy">deep-navy</option>
+          <option value="nord">nord</option>
+        </select>
+        <button class="glacial-toggle" onclick="glacialToggleTheme()">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="ex-main" style="max-width: 700px;">
+
+    <!-- Recipe: Detail
+         Container max-width: 700px (narrow for readability)
+         Header: breadcrumbs + title + status row
+         Layout: hero metric row → spec grid → activity log → actions
+         Components: breadcrumbs · metric · status-row · spec-grid · alert
+    -->
+
+    <nav aria-label="Breadcrumb" class="glacial-breadcrumbs" style="margin: 8px 0 16px;">
+      <a href="index.html">Home</a>
+      <span class="glacial-breadcrumbs-sep">/</span>
+      <a href="list.html">Listings</a>
+      <span class="glacial-breadcrumbs-sep">/</span>
+      <span class="glacial-breadcrumbs-current">2019 Mazda MX-5</span>
+    </nav>
+
+    <section class="ex-hero">
+      <h1 class="ex-h1">2019 Mazda MX-5 Miata</h1>
+      <div class="glacial-status-row" data-state="active" style="padding: 4px 0; margin-top: 4px;">
+        <span class="glacial-status-row-name" style="font-weight: 500;">Active listing</span>
+        <span class="glacial-status-row-meta">Listed 14d ago</span>
+        <span class="glacial-status-row-dot" aria-label="active"></span>
+      </div>
+    </section>
+
+    <!-- Metric row: 3 KPIs across the top -->
+    <section class="ex-grid-3" style="margin: 16px 0;">
+      <div class="glacial-metric">
+        <span class="glacial-metric-label">Asking price</span>
+        <span class="glacial-metric-value">$24,800</span>
+        <span class="glacial-metric-delta glacial-metric-delta-flat">→ Initial</span>
+      </div>
+      <div class="glacial-metric">
+        <span class="glacial-metric-label">Mileage</span>
+        <span class="glacial-metric-value">18,900</span>
+        <span class="glacial-metric-delta glacial-metric-delta-flat">low</span>
+      </div>
+      <div class="glacial-metric">
+        <span class="glacial-metric-label">Views</span>
+        <span class="glacial-metric-value">412</span>
+        <span class="glacial-metric-delta glacial-metric-delta-up">▲ 38 today</span>
+      </div>
+    </section>
+
+    <!-- Alert: market context -->
+    <div class="glacial-alert glacial-alert-info" style="margin: 12px 0;">
+      <svg class="glacial-alert-icon" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="5" r="0.8"/><rect x="7.4" y="7" width="1.2" height="5" rx="0.6"/></svg>
+      <div class="glacial-alert-body">
+        <div class="glacial-alert-title">Priced 8% above market</div>
+        Comparable 2019 MX-5 listings within 50 miles average $22,800. Consider a price drop to $23,500 to match the median.
+      </div>
+    </div>
+
+    <!-- Spec grid -->
+    <section class="glacial-glass" style="padding: 16px; margin: 12px 0;">
+      <h2 class="ex-h3" style="margin-top: 0;">Specifications</h2>
+      <dl class="ex-spec-grid">
+        <dt>Trim</dt><dd>Grand Touring</dd>
+        <dt>Year</dt><dd>2019</dd>
+        <dt>Body</dt><dd>Convertible coupe</dd>
+        <dt>Drivetrain</dt><dd>RWD, 6-speed manual</dd>
+        <dt>Engine</dt><dd>2.0L SkyActiv-G I4</dd>
+        <dt>Power</dt><dd>181 hp @ 7,000 rpm</dd>
+        <dt>VIN</dt><dd>JM1NDAD7XK0301234</dd>
+        <dt>Title</dt><dd>Clean</dd>
+        <dt>Owner</dt><dd>2nd owner, original purchase 2020</dd>
+        <dt>Service</dt><dd>Up to date, full Mazda dealer history</dd>
+      </dl>
+    </section>
+
+    <!-- Activity / log -->
+    <section style="margin: 16px 0;">
+      <h2 class="ex-h3">Activity</h2>
+      <div class="glacial-glass" style="padding: 4px 8px;">
+        <div class="glacial-status-row" data-state="active">
+          <svg class="glacial-status-row-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 4v4l3 2"/></svg>
+          <span class="glacial-status-row-name">Listing created</span>
+          <span class="glacial-status-row-meta">14d ago</span>
+          <span class="glacial-status-row-dot" aria-label="active"></span>
+        </div>
+        <div class="glacial-status-row" data-state="healthy">
+          <svg class="glacial-status-row-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7l4 4 6-7"/></svg>
+          <span class="glacial-status-row-name">Inspection passed</span>
+          <span class="glacial-status-row-meta">10d ago</span>
+          <span class="glacial-status-row-dot" aria-label="passed"></span>
+        </div>
+        <div class="glacial-status-row" data-state="warn">
+          <svg class="glacial-status-row-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8h12M8 2v12"/></svg>
+          <span class="glacial-status-row-name">Price reduction recommended</span>
+          <span class="glacial-status-row-meta">2d ago</span>
+          <span class="glacial-status-row-dot" aria-label="warning"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Action footer -->
+    <section style="display: flex; gap: 8px; margin: 24px 0; flex-wrap: wrap;">
+      <button class="glacial-btn glacial-btn-primary">Drop price to $23,500</button>
+      <button class="glacial-btn glacial-btn-secondary">Edit listing</button>
+      <button class="glacial-btn glacial-btn-secondary">Pull listing</button>
+    </section>
+
+  </main>
+
+  <script src="_examples.js"></script>
+</body>
+</html>

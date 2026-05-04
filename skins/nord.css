@@ -1,0 +1,136 @@
+/**
+ * Glacial Nord Skin — calm enterprise / engineering tools
+ * @version 2.0.0
+ *
+ * The Nord palette by Arctic Ice Studio (https://www.nordtheme.com/),
+ * adapted to glacial's token system. Muted polar blues, frost surfaces,
+ * subtle aurora-borealis status colors. Reads as "calm and professional"
+ * without going corporate-bland.
+ *
+ * Aurora orbs are intentionally disabled — Nord is a quiet palette and
+ * animated colored blobs would fight its character. Override
+ * --orb-opacity if you want them back.
+ */
+
+/* ============================================================
+ * Light variant — Snow Storm
+ * ============================================================ */
+[data-skin="nord"] {
+  /* Surfaces — Snow Storm */
+  --bg: #eceff4;                       /* nord6 */
+  --bg-card: rgba(229, 233, 240, 0.65); /* nord5 @ 65% */
+  --bg-card-hover: rgba(229, 233, 240, 0.85);
+  --bg-header: rgba(229, 233, 240, 0.78);
+  --bg-input: rgba(255, 255, 255, 0.85);
+
+  /* Borders — frost-tinted */
+  --border: rgba(76, 86, 106, 0.10);    /* nord3 */
+  --border-card: rgba(76, 86, 106, 0.13);
+  --border-hover: rgba(94, 129, 172, 0.35); /* nord10 */
+
+  /* Text — Polar Night */
+  --text: #2e3440;                      /* nord0 */
+  --text-strong: #2e3440;
+  --text-secondary: #4c566a;            /* nord3 */
+  --text-muted: #72809a;
+  --text-faint: #a8b0c0;
+
+  /* Accent — Frost (nord10) */
+  --accent: #5e81ac;
+  --accent-bg: rgba(94, 129, 172, 0.08);
+  --accent-border: rgba(94, 129, 172, 0.32);
+
+  /* Status — Aurora Borealis */
+  --green: #a3be8c;     /* nord14 */
+  --green-bg: rgba(163, 190, 140, 0.14);
+  --yellow: #d08770;    /* nord12 — orange, but used semantically as "warning" */
+  --yellow-bg: rgba(208, 135, 112, 0.14);
+  --red: #bf616a;       /* nord11 */
+  --red-bg: rgba(191, 97, 106, 0.14);
+  --blue: #5e81ac;      /* nord10 */
+  --blue-bg: rgba(94, 129, 172, 0.12);
+
+  --shadow: 0 1px 8px rgba(46, 52, 64, 0.06);
+  --skeleton-shimmer: rgba(255, 255, 255, 0.65);
+
+  /* Aurora off — Nord is quiet */
+  --orb-opacity: 0;
+}
+
+/* ============================================================
+ * Dark variant — Polar Night
+ * ============================================================ */
+[data-skin="nord"][data-theme="dark"] {
+  /* Surfaces — Polar Night */
+  --bg: #2e3440;                      /* nord0 */
+  --bg-card: rgba(216, 222, 233, 0.04); /* nord4 at low alpha */
+  --bg-card-hover: rgba(216, 222, 233, 0.08);
+  --bg-header: rgba(46, 52, 64, 0.85);
+  --bg-input: rgba(216, 222, 233, 0.05);
+
+  --border: rgba(216, 222, 233, 0.08);
+  --border-card: rgba(216, 222, 233, 0.06);
+  --border-hover: rgba(136, 192, 208, 0.32); /* nord8 */
+
+  /* Text — Snow Storm */
+  --text: #d8dee9;       /* nord4 */
+  --text-strong: #eceff4; /* nord6 */
+  --text-secondary: #98a3b8;
+  --text-muted: #6c7891;
+  --text-faint: #4c566a;
+
+  /* Accent — lifted Frost (nord8) for dark legibility */
+  --accent: #88c0d0;
+  --accent-bg: rgba(136, 192, 208, 0.10);
+  --accent-border: rgba(136, 192, 208, 0.32);
+
+  /* Status — Aurora Borealis (untouched, they read fine on dark) */
+  --green: #a3be8c;
+  --green-bg: rgba(163, 190, 140, 0.10);
+  --yellow: #d08770;
+  --yellow-bg: rgba(208, 135, 112, 0.10);
+  --red: #bf616a;
+  --red-bg: rgba(191, 97, 106, 0.12);
+  --blue: #81a1c1;        /* nord9 */
+  --blue-bg: rgba(129, 161, 193, 0.10);
+
+  --shadow: none;
+  --skeleton-shimmer: rgba(216, 222, 233, 0.07);
+
+  /* Aurora — kept off in dark too. If you want Nord with orbs, override
+   * --orb-opacity and swap --orb-*-color to nord frost shades. */
+  --orb-opacity: 0;
+}
+
+/* OS dark fallback */
+@media (prefers-color-scheme: dark) {
+  [data-skin="nord"]:not([data-theme="light"]) {
+    --bg: #2e3440;
+    --bg-card: rgba(216, 222, 233, 0.04);
+    --bg-card-hover: rgba(216, 222, 233, 0.08);
+    --bg-header: rgba(46, 52, 64, 0.85);
+    --bg-input: rgba(216, 222, 233, 0.05);
+    --border: rgba(216, 222, 233, 0.08);
+    --border-card: rgba(216, 222, 233, 0.06);
+    --border-hover: rgba(136, 192, 208, 0.32);
+    --text: #d8dee9;
+    --text-strong: #eceff4;
+    --text-secondary: #98a3b8;
+    --text-muted: #6c7891;
+    --text-faint: #4c566a;
+    --accent: #88c0d0;
+    --accent-bg: rgba(136, 192, 208, 0.10);
+    --accent-border: rgba(136, 192, 208, 0.32);
+    --green: #a3be8c;
+    --green-bg: rgba(163, 190, 140, 0.10);
+    --yellow: #d08770;
+    --yellow-bg: rgba(208, 135, 112, 0.10);
+    --red: #bf616a;
+    --red-bg: rgba(191, 97, 106, 0.12);
+    --blue: #81a1c1;
+    --blue-bg: rgba(129, 161, 193, 0.10);
+    --shadow: none;
+    --skeleton-shimmer: rgba(216, 222, 233, 0.07);
+    --orb-opacity: 0;
+  }
+}

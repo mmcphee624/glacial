@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>List · Glacial Examples</title>
+  <link rel="stylesheet" href="../glacial.css">
+  <link rel="stylesheet" href="../skins/default.css">
+  <link rel="stylesheet" href="../skins/warm-serif.css">
+  <link rel="stylesheet" href="../skins/midnight-mono.css">
+  <link rel="stylesheet" href="../skins/lavender.css">
+  <link rel="stylesheet" href="../skins/deep-navy.css">
+  <link rel="stylesheet" href="../skins/nord.css">
+  <link rel="stylesheet" href="_examples.css">
+  <script src="../glacial.js"></script>
+</head>
+<body>
+  <header class="glacial-glass-header ex-toolbar">
+    <div class="ex-toolbar-inner">
+      <span class="ex-logo">GLACIAL</span>
+      <nav class="glacial-nav ex-nav">
+        <a href="index.html">index</a>
+        <a href="dashboard.html">dashboard</a>
+        <a href="list.html" class="active">list</a>
+        <a href="detail.html">detail</a>
+        <a href="form.html">form</a>
+        <a href="board.html">board</a>
+        <a href="mobile.html">mobile</a>
+        <a href="skins-preview.html">skins</a>
+      </nav>
+      <div class="ex-controls">
+        <select class="ex-select" data-glacial-skin>
+          <option value="default">default</option>
+          <option value="warm-serif">warm-serif</option>
+          <option value="midnight-mono">midnight-mono</option>
+          <option value="lavender">lavender</option>
+          <option value="deep-navy">deep-navy</option>
+          <option value="nord">nord</option>
+        </select>
+        <button class="glacial-toggle" onclick="glacialToggleTheme()">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="ex-main" style="max-width: 1100px;">
+
+    <!-- Recipe: List / Index
+         Container max-width: 900-1100px
+         Header: breadcrumbs + page title + filter bar
+         Layout: filter bar → table (full-width within container)
+         Components: breadcrumbs · filter-bar · filter-pill · table · empty-state · alert
+    -->
+
+    <nav aria-label="Breadcrumb" class="glacial-breadcrumbs" style="margin: 8px 0 16px;">
+      <a href="index.html">Home</a>
+      <span class="glacial-breadcrumbs-sep">/</span>
+      <a href="#">Inventory</a>
+      <span class="glacial-breadcrumbs-sep">/</span>
+      <span class="glacial-breadcrumbs-current">Listings</span>
+    </nav>
+
+    <section class="ex-hero" style="padding-bottom: 8px;">
+      <h1 class="ex-h1">Vehicle Listings</h1>
+      <p class="ex-lede">218 active listings tracked. Filter by status, body type, or year range.</p>
+    </section>
+
+    <!-- Filter bar -->
+    <section class="glacial-filter-bar" style="margin: 12px 0;">
+      <div>
+        <span class="glacial-filter-bar-label">Status</span>
+        <div class="glacial-filter-bar-group" role="group" aria-label="Filter by status" data-multi="false">
+          <button class="glacial-filter-pill" aria-pressed="true">All <span class="glacial-filter-pill-count">218</span></button>
+          <button class="glacial-filter-pill">Active <span class="glacial-filter-pill-count">184</span></button>
+          <button class="glacial-filter-pill">Sold <span class="glacial-filter-pill-count">28</span></button>
+          <button class="glacial-filter-pill">Pulled <span class="glacial-filter-pill-count">6</span></button>
+        </div>
+      </div>
+      <div>
+        <span class="glacial-filter-bar-label">Body</span>
+        <div class="glacial-filter-bar-group" role="group" aria-label="Filter by body type" data-multi="true">
+          <button class="glacial-filter-pill">Sedan</button>
+          <button class="glacial-filter-pill">SUV</button>
+          <button class="glacial-filter-pill">Truck</button>
+          <button class="glacial-filter-pill">Coupe</button>
+          <button class="glacial-filter-pill" disabled>EV (soon)</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Table -->
+    <div class="glacial-glass" style="padding: 0; overflow: hidden; margin-top: 8px;">
+      <table class="glacial-table">
+        <thead>
+          <tr>
+            <th data-priority="1">Listing</th>
+            <th data-priority="2">Body</th>
+            <th data-priority="3">Year</th>
+            <th data-priority="3" class="num">Mileage</th>
+            <th data-priority="2" class="num">Price</th>
+            <th data-priority="1">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>2018 Honda Civic</td><td>Sedan</td><td>2018</td><td class="num">42,180</td><td class="num">$14,200</td><td><span class="glacial-badge glacial-badge-green">ACTIVE</span></td></tr>
+          <tr><td>2020 Toyota RAV4</td><td>SUV</td><td>2020</td><td class="num">28,500</td><td class="num">$22,900</td><td><span class="glacial-badge glacial-badge-green">ACTIVE</span></td></tr>
+          <tr><td>2017 Ford F-150</td><td>Truck</td><td>2017</td><td class="num">71,400</td><td class="num">$18,500</td><td><span class="glacial-badge glacial-badge-yellow">PENDING</span></td></tr>
+          <tr><td>2019 Mazda MX-5</td><td>Coupe</td><td>2019</td><td class="num">18,900</td><td class="num">$24,800</td><td><span class="glacial-badge glacial-badge-green">ACTIVE</span></td></tr>
+          <tr><td>2016 Subaru Outback</td><td>SUV</td><td>2016</td><td class="num">94,200</td><td class="num">$11,200</td><td><span class="glacial-badge glacial-badge-yellow">SOLD</span></td></tr>
+          <tr><td>2021 Volvo V60</td><td>Sedan</td><td>2021</td><td class="num">12,400</td><td class="num">$36,500</td><td><span class="glacial-badge glacial-badge-green">ACTIVE</span></td></tr>
+          <tr><td>2015 Chevy Tahoe</td><td>SUV</td><td>2015</td><td class="num">128,000</td><td class="num">$13,400</td><td><span class="glacial-badge glacial-badge-red">PULLED</span></td></tr>
+          <tr><td>2022 Tesla Model 3</td><td>Sedan</td><td>2022</td><td class="num">9,200</td><td class="num">$38,700</td><td><span class="glacial-badge glacial-badge-green">ACTIVE</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty state demo (commented out by default; toggle on with ?empty=1)
+         When showing an empty state, REPLACE the table with this block.
+    -->
+    <details style="margin-top: 24px;">
+      <summary style="font-family: var(--font-mono); font-size: 11px; color: var(--text-secondary); cursor: pointer;">▾ Empty state preview (when no listings match)</summary>
+      <div class="glacial-glass" style="margin-top: 8px;">
+        <div class="glacial-empty-state">
+          <svg class="glacial-empty-state-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="14" cy="14" r="10"/>
+            <path d="M22 22l6 6"/>
+          </svg>
+          <h3 class="glacial-empty-state-title">No listings match your filters</h3>
+          <p class="glacial-empty-state-caption">Try widening the year range, or clear the body filter to see all 218 listings.</p>
+          <button class="glacial-btn glacial-btn-secondary">Clear filters</button>
+        </div>
+      </div>
+    </details>
+
+  </main>
+
+  <script src="_examples.js"></script>
+</body>
+</html>

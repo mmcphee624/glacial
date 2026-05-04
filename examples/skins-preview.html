@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Skins Preview · Glacial Examples</title>
+  <link rel="stylesheet" href="../glacial.css">
+  <link rel="stylesheet" href="../skins/default.css">
+  <link rel="stylesheet" href="../skins/warm-serif.css">
+  <link rel="stylesheet" href="../skins/midnight-mono.css">
+  <link rel="stylesheet" href="../skins/lavender.css">
+  <link rel="stylesheet" href="../skins/deep-navy.css">
+  <link rel="stylesheet" href="../skins/nord.css">
+  <link rel="stylesheet" href="_examples.css">
+  <script src="../glacial.js"></script>
+</head>
+<body>
+  <header class="glacial-glass-header ex-toolbar">
+    <div class="ex-toolbar-inner">
+      <span class="ex-logo">GLACIAL</span>
+      <nav class="glacial-nav ex-nav">
+        <a href="index.html">index</a>
+        <a href="dashboard.html">dashboard</a>
+        <a href="list.html">list</a>
+        <a href="detail.html">detail</a>
+        <a href="form.html">form</a>
+        <a href="board.html">board</a>
+        <a href="mobile.html">mobile</a>
+        <a href="skins-preview.html" class="active">skins</a>
+      </nav>
+      <div class="ex-controls">
+        <select class="ex-select" id="preview-page">
+          <option value="dashboard">dashboard</option>
+          <option value="list">list</option>
+          <option value="detail">detail</option>
+          <option value="form">form</option>
+          <option value="board">board</option>
+        </select>
+        <select class="ex-select" id="preview-theme">
+          <option value="">OS preference</option>
+          <option value="light">light</option>
+          <option value="dark">dark</option>
+        </select>
+        <button class="glacial-toggle" onclick="glacialToggleTheme()">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="ex-main">
+
+    <section class="ex-hero">
+      <h1 class="ex-h1">Skins Preview</h1>
+      <p class="ex-lede">Same recipe, three skins. Use the page selector above to switch which recipe is rendered. The theme selector applies to all three frames at once.</p>
+    </section>
+
+    <div class="ex-skin-grid" id="frames">
+      <div class="ex-skin-frame">
+        <div class="ex-skin-frame-label">
+          <span>default</span>
+          <span style="color: var(--text-faint);">teal · system fonts · aurora</span>
+        </div>
+        <iframe data-skin="default" src="dashboard.html?skin=default"></iframe>
+      </div>
+      <div class="ex-skin-frame">
+        <div class="ex-skin-frame-label">
+          <span>warm-serif</span>
+          <span style="color: var(--text-faint);">cream · forest green · serif headings</span>
+        </div>
+        <iframe data-skin="warm-serif" src="dashboard.html?skin=warm-serif"></iframe>
+      </div>
+      <div class="ex-skin-frame">
+        <div class="ex-skin-frame-label">
+          <span>midnight-mono</span>
+          <span style="color: var(--text-faint);">terminal · neon green · monospace</span>
+        </div>
+        <iframe data-skin="midnight-mono" src="dashboard.html?skin=midnight-mono"></iframe>
+      </div>
+      <div class="ex-skin-frame">
+        <div class="ex-skin-frame-label">
+          <span>lavender</span>
+          <span style="color: var(--text-faint);">dusty purple · soft radii · twilight orbs</span>
+        </div>
+        <iframe data-skin="lavender" src="dashboard.html?skin=lavender"></iframe>
+      </div>
+      <div class="ex-skin-frame">
+        <div class="ex-skin-frame-label">
+          <span>deep-navy</span>
+          <span style="color: var(--text-faint);">abyssal navy · sky cyan · deep-sea orbs</span>
+        </div>
+        <iframe data-skin="deep-navy" src="dashboard.html?skin=deep-navy"></iframe>
+      </div>
+      <div class="ex-skin-frame">
+        <div class="ex-skin-frame-label">
+          <span>nord</span>
+          <span style="color: var(--text-faint);">arctic frost · muted blue · calm</span>
+        </div>
+        <iframe data-skin="nord" src="dashboard.html?skin=nord"></iframe>
+      </div>
+    </div>
+
+    <section style="margin: 32px 0;">
+      <h2 class="ex-h3">How it works</h2>
+      <p class="ex-fact" style="font-size: 14px; line-height: 1.6;">
+        Each frame loads <code>dashboard.html?skin={name}</code>. URL parameters override cookies for that page load, so the iframes don&rsquo;t conflict with your top-level skin choice. Theme is set on each iframe&rsquo;s <code>&lt;html&gt;</code> via <code>data-theme</code> when you change the theme selector. The skins themselves are pure CSS &mdash; same markup, different tokens.
+      </p>
+      <p class="ex-fact" style="font-size: 14px; line-height: 1.6;">
+        <strong>Authoring a new skin:</strong> copy <code>skins/_template.css</code>, fill in token overrides, link it after <code>glacial.css</code>, and set <code>&lt;html data-skin=&quot;your-name&quot;&gt;</code>. The skin contract (token-only, no class-internal selectors) is enforced by <code>scripts/lint-skin.sh</code>.
+      </p>
+    </section>
+
+  </main>
+
+  <script src="_examples.js"></script>
+  <script>
+    var frames = document.querySelectorAll('#frames iframe');
+    var pageSel = document.getElementById('preview-page');
+    var themeSel = document.getElementById('preview-theme');
+
+    function rebuildSrc() {
+      var page = pageSel.value;
+      frames.forEach(function (frame) {
+        var skin = frame.dataset.skin;
+        var theme = themeSel.value;
+        var qs = '?skin=' + encodeURIComponent(skin);
+        if (theme) qs += '&theme=' + encodeURIComponent(theme);
+        frame.src = page + '.html' + qs;
+      });
+    }
+
+    pageSel.addEventListener('change', rebuildSrc);
+    themeSel.addEventListener('change', rebuildSrc);
+  </script>
+</body>
+</html>

@@ -1,0 +1,353 @@
+/**
+ * Glacial examples — DEMO CHROME ONLY
+ * @version 2.0.0
+ *
+ * The styles in this file are NOT part of glacial. They exist to render
+ * the example pages' shared chrome (toolbar, hero, card grid, demo layout).
+ * Agents adopting glacial should NOT copy this file.
+ *
+ * Glacial component classes start with `.glacial-*`. Demo classes start
+ * with `.ex-*`. When you copy an example page's content into your own
+ * project, drop the `.ex-*` markup and keep the `.glacial-*` markup.
+ */
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-body);
+  color: var(--text);
+  background: var(--bg);
+  min-height: 100vh;
+}
+
+[data-skin="warm-serif"] body { color: var(--text); background: var(--bg); }
+
+/* Light-mode background wash (subtle radial tints to make glass cards pop) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at top right, var(--accent-bg), transparent 50%),
+    radial-gradient(ellipse at bottom left, var(--accent-bg), transparent 50%);
+  opacity: var(--wash-opacity, 0.6);
+}
+[data-theme="dark"] body::before { opacity: 0; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) body::before { opacity: 0; }
+}
+
+/* ============================================================
+ * Toolbar (top header bar with skin/theme selectors)
+ * ============================================================ */
+.ex-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: 0;
+}
+.ex-toolbar-inner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 20px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.ex-logo {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--accent);
+}
+.ex-nav {
+  display: flex;
+  gap: 2px;
+  flex: 1;
+  flex-wrap: wrap;
+}
+.ex-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ex-select {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  color: var(--text);
+  cursor: pointer;
+}
+.ex-select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+@media (max-width: 767px) {
+  .ex-toolbar-inner { flex-wrap: wrap; gap: 8px; padding: 8px 12px; }
+  .ex-nav { font-size: 10px; order: 3; flex-basis: 100%; }
+}
+
+/* ============================================================
+ * Main / hero
+ * ============================================================ */
+.ex-main {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+.ex-hero {
+  padding: 24px 0 12px;
+}
+.ex-h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  color: var(--text-strong);
+  letter-spacing: -0.5px;
+}
+.ex-h2 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 24px 0 12px;
+  color: var(--text-strong);
+}
+.ex-h3 {
+  font-size: 13px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-secondary);
+  margin: 16px 0 8px;
+}
+.ex-lede {
+  font-size: 15px;
+  color: var(--text-secondary);
+  max-width: 64ch;
+  margin: 0 0 16px;
+  line-height: 1.5;
+}
+
+/* ============================================================
+ * Card grid (index page)
+ * ============================================================ */
+.ex-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+.ex-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  text-decoration: none;
+  color: var(--text);
+  transition: border-color 0.15s, transform 0.15s;
+}
+.ex-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-1px);
+}
+.ex-card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-strong);
+  margin: 4px 0 0;
+}
+.ex-card-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  margin: 0;
+}
+
+/* ============================================================
+ * QR card
+ * ============================================================ */
+.ex-qr-card {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 20px;
+}
+.ex-qr-text { flex: 1; }
+.ex-qr-lede { font-size: 14px; margin: 0 0 8px; color: var(--text-strong); font-weight: 600; }
+.ex-qr-hint { font-size: 12px; color: var(--text-secondary); margin: 8px 0 0; line-height: 1.5; }
+.ex-qr-img { flex-shrink: 0; }
+.ex-qr-img img { display: block; border-radius: var(--radius-sm); background: white; padding: 6px; }
+.ex-qr-fallback { font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); text-align: center; padding: 60px 20px; }
+.ex-url {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: var(--bg-input);
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-card);
+  color: var(--text-strong);
+  word-break: break-all;
+}
+@media (max-width: 540px) {
+  .ex-qr-card { flex-direction: column-reverse; align-items: stretch; gap: 12px; }
+}
+
+/* ============================================================
+ * Section helpers
+ * ============================================================ */
+.ex-section { margin: 32px 0; }
+.ex-debug {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 16px;
+  margin: 0;
+  overflow-x: auto;
+  color: var(--text);
+  white-space: pre;
+  line-height: 1.5;
+}
+.ex-debug-hint { font-size: 12px; color: var(--text-muted); margin: 8px 0 0; }
+
+/* ============================================================
+ * Demo layout helpers
+ * ============================================================ */
+.ex-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.ex-col { flex: 1; min-width: 240px; }
+.ex-stack { display: flex; flex-direction: column; gap: 12px; }
+.ex-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.ex-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+@media (max-width: 1023px) {
+  .ex-grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .ex-grid-3 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 540px) {
+  .ex-grid-4, .ex-grid-3 { grid-template-columns: 1fr; }
+}
+
+.ex-pad { padding: 16px; }
+.ex-divider {
+  border: 0;
+  border-top: 1px solid var(--border-card);
+  margin: 16px 0;
+}
+
+/* ============================================================
+ * Skins-preview page (3-column comparison)
+ * ============================================================ */
+.ex-skin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 12px;
+  margin: 12px 0;
+}
+.ex-skin-frame {
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--bg);
+}
+.ex-skin-frame iframe {
+  display: block;
+  width: 100%;
+  height: 600px;
+  border: 0;
+  background: var(--bg);
+}
+.ex-skin-frame-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 8px 12px;
+  background: var(--bg-header);
+  border-bottom: 1px solid var(--border-card);
+  color: var(--text-secondary);
+  display: flex;
+  justify-content: space-between;
+}
+@media (max-width: 1023px) {
+  .ex-skin-grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+ * Form helpers (demo only)
+ * ============================================================ */
+.ex-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius);
+  background: var(--bg-input);
+  color: var(--text);
+  font-size: 14px;
+  font-family: var(--font-body);
+  transition: border-color 0.15s;
+}
+.ex-input:focus { outline: 2px solid var(--accent); outline-offset: -2px; border-color: var(--accent-border); }
+.ex-input:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.ex-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+/* Spec grid (used in detail pages) */
+.ex-spec-grid {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px 16px;
+  font-size: 13px;
+}
+.ex-spec-grid dt {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-secondary);
+  padding: 6px 0;
+}
+.ex-spec-grid dd {
+  margin: 0;
+  padding: 6px 0;
+  color: var(--text-strong);
+}
+@media (max-width: 540px) {
+  .ex-spec-grid { grid-template-columns: 1fr; gap: 0; }
+  .ex-spec-grid dt { padding: 6px 0 0; }
+  .ex-spec-grid dd { padding: 0 0 6px; }
+}
+
+/* Sparkline placeholder for metric demo */
+.ex-spark {
+  height: 24px;
+  margin-top: 4px;
+  background: linear-gradient(180deg, var(--accent-bg), transparent);
+  border-bottom: 1.5px solid var(--accent);
+  position: relative;
+  border-radius: 2px;
+}

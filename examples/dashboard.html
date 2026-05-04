@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Dashboard · Glacial Examples</title>
+  <link rel="stylesheet" href="../glacial.css">
+  <link rel="stylesheet" href="../skins/default.css">
+  <link rel="stylesheet" href="../skins/warm-serif.css">
+  <link rel="stylesheet" href="../skins/midnight-mono.css">
+  <link rel="stylesheet" href="../skins/lavender.css">
+  <link rel="stylesheet" href="../skins/deep-navy.css">
+  <link rel="stylesheet" href="../skins/nord.css">
+  <link rel="stylesheet" href="_examples.css">
+  <script src="../glacial.js"></script>
+</head>
+<body>
+  <header class="glacial-glass-header ex-toolbar">
+    <div class="ex-toolbar-inner">
+      <span class="ex-logo">GLACIAL</span>
+      <nav class="glacial-nav ex-nav">
+        <a href="index.html">index</a>
+        <a href="dashboard.html" class="active">dashboard</a>
+        <a href="list.html">list</a>
+        <a href="detail.html">detail</a>
+        <a href="form.html">form</a>
+        <a href="board.html">board</a>
+        <a href="mobile.html">mobile</a>
+        <a href="skins-preview.html">skins</a>
+      </nav>
+      <div class="ex-controls">
+        <select class="ex-select" data-glacial-skin>
+          <option value="default">default</option>
+          <option value="warm-serif">warm-serif</option>
+          <option value="midnight-mono">midnight-mono</option>
+          <option value="lavender">lavender</option>
+          <option value="deep-navy">deep-navy</option>
+          <option value="nord">nord</option>
+        </select>
+        <button class="glacial-toggle" onclick="glacialToggleTheme()" title="Toggle theme">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="ex-main">
+
+    <!-- Recipe: Dashboard
+         Container max-width: 1280px (ex-main)
+         Header: breadcrumbs (optional) + page title
+         Layout: 4-column metric grid → status rows + alerts → table
+         Components: breadcrumbs · metric × 4 · status-row · alert · skeleton · table
+    -->
+
+    <nav aria-label="Breadcrumb" class="glacial-breadcrumbs" style="margin: 8px 0 16px;">
+      <a href="index.html">Home</a>
+      <span class="glacial-breadcrumbs-sep">/</span>
+      <span class="glacial-breadcrumbs-current">Dashboard</span>
+    </nav>
+
+    <section class="ex-hero">
+      <h1 class="ex-h1">Operations Dashboard</h1>
+      <p class="ex-lede">Live snapshot of services, requests, and revenue. The metric tile on the right is a skeleton-to-real demo &mdash; click it to see the swap.</p>
+    </section>
+
+    <!-- Metric grid (4 columns desktop, 2 tablet, 1 mobile) -->
+    <h2 class="ex-h3">Today</h2>
+    <section class="ex-grid-4">
+      <div class="glacial-metric">
+        <span class="glacial-metric-label">Active users</span>
+        <span class="glacial-metric-value">1,284</span>
+        <span class="glacial-metric-delta glacial-metric-delta-up">▲ 12.4% · 24h</span>
+      </div>
+      <div class="glacial-metric">
+        <span class="glacial-metric-label">Revenue</span>
+        <span class="glacial-metric-value">$84,210</span>
+        <span class="glacial-metric-delta glacial-metric-delta-up">▲ 3.1% · 24h</span>
+      </div>
+      <div class="glacial-metric">
+        <span class="glacial-metric-label">Error rate</span>
+        <span class="glacial-metric-value">0.18%</span>
+        <span class="glacial-metric-delta glacial-metric-delta-down">▼ 0.04% · 24h</span>
+      </div>
+      <!-- Skeleton-to-real swap demo -->
+      <div class="glacial-metric" data-skeleton-demo style="cursor:pointer;" title="Click to load real data">
+        <span class="glacial-metric-label">Pending tasks</span>
+        <span data-skeleton style="display:flex;flex-direction:column;gap:6px;">
+          <span class="glacial-skeleton glacial-skeleton-text" style="width:60%;height:24px;"></span>
+          <span class="glacial-skeleton glacial-skeleton-text" style="width:80%;height:11px;"></span>
+        </span>
+        <span data-real>
+          <span class="glacial-metric-value">42</span>
+          <span class="glacial-metric-delta glacial-metric-delta-flat">→ unchanged · 24h</span>
+        </span>
+      </div>
+    </section>
+
+    <!-- Two-column row: alerts + service status -->
+    <section class="ex-row" style="margin-top: 16px;">
+      <div class="ex-col ex-stack">
+        <h2 class="ex-h3">Notices</h2>
+        <div class="glacial-alert glacial-alert-info">
+          <svg class="glacial-alert-icon" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="5" r="0.8"/><rect x="7.4" y="7" width="1.2" height="5" rx="0.6"/></svg>
+          <div class="glacial-alert-body">
+            <div class="glacial-alert-title">Maintenance window scheduled</div>
+            Database migration tonight at 02:00 UTC. Expected downtime: 4 minutes.
+          </div>
+          <button class="glacial-alert-dismiss" aria-label="Dismiss">×</button>
+        </div>
+        <div class="glacial-alert glacial-alert-warn">
+          <svg class="glacial-alert-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1L1 14h14L8 1z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="8" cy="11" r="0.8"/><rect x="7.4" y="6" width="1.2" height="4" rx="0.6"/></svg>
+          <div class="glacial-alert-body">
+            <div class="glacial-alert-title">Disk usage at 78%</div>
+            Cleanup of <code>/var/log/archive</code> recommended within 7 days.
+          </div>
+        </div>
+        <div class="glacial-alert glacial-alert-success">
+          <svg class="glacial-alert-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="7"/><path d="M5 8l2 2 4-4"/></svg>
+          <div class="glacial-alert-body">
+            <div class="glacial-alert-title">Backup completed</div>
+            Daily snapshot finished at 04:18 UTC. 14.2 GB written.
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-col ex-stack">
+        <h2 class="ex-h3">Service Status</h2>
+        <div class="glacial-glass" style="padding: 4px 8px;">
+          <div class="glacial-status-row" data-state="healthy">
+            <svg class="glacial-status-row-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="12" height="9" rx="1"/><path d="M5 7h6M5 10h4"/></svg>
+            <span class="glacial-status-row-name">api.glacial.dev</span>
+            <span class="glacial-status-row-meta">99.98%</span>
+            <span class="glacial-status-row-dot" aria-label="healthy"></span>
+          </div>
+          <div class="glacial-status-row" data-state="active">
+            <svg class="glacial-status-row-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1v14M1 8h14"/></svg>
+            <span class="glacial-status-row-name">jobs-worker</span>
+            <span class="glacial-status-row-meta">processing 18</span>
+            <span class="glacial-status-row-dot" aria-label="active"></span>
+          </div>
+          <div class="glacial-status-row" data-state="warn">
+            <svg class="glacial-status-row-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1L1 14h14L8 1z"/></svg>
+            <span class="glacial-status-row-name">cdn-edge-04</span>
+            <span class="glacial-status-row-meta">elevated latency</span>
+            <span class="glacial-status-row-dot" aria-label="warning"></span>
+          </div>
+          <div class="glacial-status-row" data-state="error">
+            <svg class="glacial-status-row-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M5 5l6 6M11 5l-6 6"/></svg>
+            <span class="glacial-status-row-name">analytics-pipe</span>
+            <span class="glacial-status-row-meta">last seen 14m ago</span>
+            <span class="glacial-status-row-dot" aria-label="error"></span>
+          </div>
+          <div class="glacial-status-row" data-state="stale">
+            <svg class="glacial-status-row-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 4v4l3 2"/></svg>
+            <span class="glacial-status-row-name">old-cron</span>
+            <span class="glacial-status-row-meta">stale &middot; 3h</span>
+            <span class="glacial-status-row-dot" aria-label="stale"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recent activity table -->
+    <section style="margin-top: 24px;">
+      <h2 class="ex-h3">Recent activity</h2>
+      <div class="glacial-glass" style="padding: 0; overflow: hidden;">
+        <table class="glacial-table">
+          <thead>
+            <tr>
+              <th data-priority="1">When</th>
+              <th data-priority="1">User</th>
+              <th data-priority="2">Action</th>
+              <th data-priority="3">IP</th>
+              <th data-priority="2" class="num">Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>10:42</td><td>maxm</td><td>deploy(api)</td><td>10.0.4.12</td><td class="num">42s</td></tr>
+            <tr><td>10:38</td><td>system</td><td>backup-rotate</td><td>—</td><td class="num">3.1m</td></tr>
+            <tr><td>10:14</td><td>maxm</td><td>config-edit</td><td>10.0.4.12</td><td class="num">8s</td></tr>
+            <tr><td>09:51</td><td>oncall</td><td>ack-incident</td><td>10.0.7.7</td><td class="num">2s</td></tr>
+            <tr><td>09:30</td><td>system</td><td>migration-run</td><td>—</td><td class="num">12.4m</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="_examples.js"></script>
+</body>
+</html>
