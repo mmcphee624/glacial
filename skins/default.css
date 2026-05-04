@@ -1,0 +1,81 @@
+/**
+ * Glacial Default Skin — documentation skin (no-op)
+ * @version 2.0.0
+ *
+ * Loading this file does nothing — it documents the public token contract
+ * so consumers know what they can override. The default tokens are already
+ * defined in glacial.css under :root and [data-theme="dark"].
+ *
+ * Use this file as a reference when authoring your own skin (copy
+ * skins/_template.css to start).
+ */
+
+/* ============================================================
+ * Surface tokens (controlled by glacial.css :root and dark blocks)
+ * ============================================================
+ *   --bg              page background
+ *   --bg-card         glass card surface (translucent)
+ *   --bg-card-hover   glass card hover state
+ *   --bg-header       header surface
+ *   --bg-input        input field surface
+ *
+ * Border tokens
+ * ----------------------------------------
+ *   --border          outer border (translucent)
+ *   --border-card     card border (accent-tinted in light, neutral in dark)
+ *   --border-hover    card hover border
+ *
+ * Text tokens
+ * ----------------------------------------
+ *   --text            body text
+ *   --text-strong     headings, primary content
+ *   --text-secondary  labels, captions
+ *   --text-muted      meta info
+ *   --text-faint      placeholder, dividers
+ *
+ * Accent (the signature brand color)
+ * ----------------------------------------
+ *   --accent          primary brand color (teal in default, swap per skin)
+ *   --accent-bg       accent at low opacity for backgrounds
+ *   --accent-border   accent at medium opacity for borders
+ *
+ * Status (semantic colors)
+ * ----------------------------------------
+ *   --green / --green-bg   success, healthy, completed
+ *   --yellow / --yellow-bg warning, pending, intake, stale
+ *   --red / --red-bg       error, failed, critical
+ *   --blue / --blue-bg     info, review
+ *
+ * Aurora orbs
+ * ----------------------------------------
+ *   --orb-1-color     purple by default
+ *   --orb-2-color     blue by default
+ *   --orb-3-color     teal by default
+ *   --orb-opacity     0 in light, 1 in dark (skins MAY set 0 to disable)
+ *
+ * Effects
+ * ----------------------------------------
+ *   --shadow              box-shadow value (none in dark)
+ *   --blur                backdrop-filter strength (12px on mobile, 8px on
+ *                         coarse pointer)
+ *   --skeleton-shimmer    shimmer color for skeleton loaders
+ *   --glow-low/med/high   text/box-shadow glow intensities for dark mode
+ *
+ * Radii
+ * ----------------------------------------
+ *   --radius-sm           4px (badges, small UI)
+ *   --radius              8px (cards, inputs, buttons)
+ *   --radius-lg           12px (modals, large surfaces)
+ *
+ * Typography stacks
+ * ----------------------------------------
+ *   --font-body           system stack (Apple, Segoe UI, Roboto)
+ *   --font-mono           SF Mono, Menlo, Consolas
+ *
+ * To author a skin: pick which of these tokens you need to override and
+ * copy skins/_template.css. Don't touch the others — that's what the
+ * default skin gives you for free.
+ */
+[data-skin="default"] {
+  /* No overrides — default skin uses glacial.css :root values. */
+}

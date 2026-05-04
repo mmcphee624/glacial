@@ -1,6 +1,7 @@
 /* Glacial Design System — Shared CSS Tokens
+ * @version 2.0.0
  * Import this file into any service for Glacial theming.
- * See DESIGN.md for full specification.
+ * See DESIGN.md for full specification, RECIPES.md for page recipes.
  */
 
 /* ===== Light Theme (default) ===== */
@@ -35,6 +36,17 @@
   --radius: 8px;
   --radius-lg: 12px;
   --orb-opacity: 0;
+  /* v2.0.0 — orb colors are now tokens so skins can override (e.g. warm-serif disables them). */
+  --orb-1-color: #7c3aed;
+  --orb-2-color: #2563eb;
+  --orb-3-color: #14b8a6;
+  /* v2.0.0 — Tier 1 component tokens */
+  --skeleton-shimmer: rgba(255,255,255,0.55);
+  --glow-low: 0 0 6px;
+  --glow-med: 0 0 10px;
+  --glow-high: 0 0 16px;
+  --font-mono: 'SF Mono', Menlo, Consolas, monospace;
+  --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 /* ===== Dark Theme ===== */
@@ -65,6 +77,8 @@
   --blue-bg: rgba(96,165,250,0.08);
   --shadow: none;
   --orb-opacity: 1;
+  /* v2.0.0 — brighter shimmer on dark cards for visibility */
+  --skeleton-shimmer: rgba(255,255,255,0.10);
 }
 
 /* ===== OS Preference Detection ===== */
@@ -96,6 +110,7 @@
     --blue-bg: rgba(96,165,250,0.08);
     --shadow: none;
     --orb-opacity: 1;
+    --skeleton-shimmer: rgba(255,255,255,0.10);
   }
 }
 
@@ -135,21 +150,21 @@
 
 .glacial-aurora .orb-1 {
   width: 600px; height: 600px;
-  background: #7c3aed; opacity: calc(0.15 * var(--orb-opacity));
+  background: var(--orb-1-color); opacity: calc(0.15 * var(--orb-opacity));
   top: -200px; left: -150px;
   animation: glacial-float1 80s ease-in-out infinite;
 }
 
 .glacial-aurora .orb-2 {
   width: 500px; height: 500px;
-  background: #2563eb; opacity: calc(0.10 * var(--orb-opacity));
+  background: var(--orb-2-color); opacity: calc(0.10 * var(--orb-opacity));
   bottom: -150px; right: -100px;
   animation: glacial-float2 60s ease-in-out infinite;
 }
 
 .glacial-aurora .orb-3 {
   width: 400px; height: 400px;
-  background: #14b8a6; opacity: calc(0.08 * var(--orb-opacity));
+  background: var(--orb-3-color); opacity: calc(0.08 * var(--orb-opacity));
   top: 30%; left: 50%;
   animation: glacial-float3 70s ease-in-out infinite;
 }
@@ -254,10 +269,435 @@
   background: var(--accent-bg);
 }
 
-/* ===== Reduced Motion ===== */
+/* ============================================================
+ * v2.0.0 — Tier 1 Components
+ *   See DESIGN.md for state matrix, DNA Checklist, naming contract.
+ *   See RECIPES.md for which page recipes use which components.
+ * ============================================================ */
+
+/* ===== Tables ============================================== */
+.glacial-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13px;
+  font-family: var(--font-body);
+  color: var(--text);
+}
+.glacial-table thead th {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-card);
+  background: var(--bg-header);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  position: sticky;
+  top: 0;
+}
+.glacial-table tbody td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-card);
+  vertical-align: middle;
+}
+.glacial-table tbody tr {
+  transition: background 0.15s;
+}
+.glacial-table tbody tr:hover {
+  background: var(--bg-card-hover);
+}
+.glacial-table tbody tr:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.glacial-table .num,
+.glacial-table td.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+/* Mobile: data-priority hides lower-priority columns at narrower widths */
+@media (max-width: 1023px) {
+  .glacial-table [data-priority="3"] { display: none; }
+}
+@media (max-width: 767px) {
+  .glacial-table [data-priority="2"] { display: none; }
+  .glacial-table thead th { padding: 6px 8px; font-size: 9px; }
+  .glacial-table tbody td { padding: 8px; font-size: 12px; }
+}
+
+/* ===== Alerts ============================================== */
+.glacial-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--border-card);
+  border-left-width: 3px;
+  font-size: 13px;
+  color: var(--text);
+}
+.glacial-alert-info    { border-left-color: var(--blue); background: var(--blue-bg); }
+.glacial-alert-success { border-left-color: var(--green); background: var(--green-bg); }
+.glacial-alert-warn    { border-left-color: var(--yellow); background: var(--yellow-bg); }
+.glacial-alert-error   { border-left-color: var(--red); background: var(--red-bg); }
+.glacial-alert-icon {
+  flex-shrink: 0;
+  width: 16px; height: 16px;
+  margin-top: 1px;
+}
+.glacial-alert-info    .glacial-alert-icon { color: var(--blue); }
+.glacial-alert-success .glacial-alert-icon { color: var(--green); }
+.glacial-alert-warn    .glacial-alert-icon { color: var(--yellow); }
+.glacial-alert-error   .glacial-alert-icon { color: var(--red); }
+.glacial-alert-body { flex: 1; }
+.glacial-alert-title {
+  font-weight: 600;
+  color: var(--text-strong);
+  margin-bottom: 2px;
+}
+.glacial-alert-dismiss {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0 4px;
+  font-size: 16px;
+  line-height: 1;
+  align-self: flex-start;
+}
+.glacial-alert-dismiss:hover { color: var(--text); }
+.glacial-alert-dismiss:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ===== Empty State ========================================= */
+.glacial-empty-state {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--text-secondary);
+}
+.glacial-empty-state-icon {
+  width: 32px; height: 32px;
+  margin: 0 auto 12px;
+  color: var(--text-faint);
+  opacity: 0.7;
+}
+[data-theme="dark"] .glacial-empty-state-icon {
+  color: var(--accent);
+  opacity: 0.5;
+  filter: drop-shadow(var(--glow-low) var(--accent));
+}
+.glacial-empty-state-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-strong);
+  margin: 0 0 4px;
+}
+.glacial-empty-state-caption {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0 0 16px;
+  max-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.5;
+}
+.glacial-empty-state-error .glacial-empty-state-icon { color: var(--red); }
+
+/* ===== Metric Tile ========================================= */
+.glacial-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 16px;
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius);
+  transition: border-color 0.15s, background 0.15s;
+}
+.glacial-metric:hover {
+  border-color: var(--border-hover);
+}
+.glacial-metric-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.glacial-metric-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-strong);
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.glacial-metric-delta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.glacial-metric-delta-up    { color: var(--green); }
+.glacial-metric-delta-down  { color: var(--red); }
+.glacial-metric-delta-flat  { color: var(--text-muted); }
+[data-theme="dark"] .glacial-metric-delta-up   { text-shadow: var(--glow-low) var(--green); }
+[data-theme="dark"] .glacial-metric-delta-down { text-shadow: var(--glow-low) var(--red); }
+.glacial-metric[data-state="loading"] .glacial-metric-value,
+.glacial-metric[data-state="empty"]   .glacial-metric-value {
+  color: var(--text-faint);
+}
+
+/* ===== Breadcrumbs ========================================= */
+.glacial-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+.glacial-breadcrumbs a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 4px 6px;
+  border-radius: var(--radius-sm);
+  transition: color 0.15s, background 0.15s;
+}
+.glacial-breadcrumbs a:hover {
+  color: var(--text-strong);
+  background: var(--accent-bg);
+}
+.glacial-breadcrumbs a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.glacial-breadcrumbs-sep {
+  color: var(--text-faint);
+  user-select: none;
+}
+.glacial-breadcrumbs-current {
+  color: var(--text-strong);
+  padding: 4px 6px;
+}
+@media (max-width: 540px) {
+  /* middle-truncate: hide all middle items, keep first + last */
+  .glacial-breadcrumbs-trunc {
+    display: inline-block;
+    color: var(--text-faint);
+  }
+  .glacial-breadcrumbs > *:not(:first-child):not(:last-child):not(.glacial-breadcrumbs-trunc):not(:nth-child(2)) {
+    display: none;
+  }
+}
+
+/* ===== Filter Bar + Pills ================================== */
+.glacial-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.glacial-filter-bar-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.glacial-filter-bar-group {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.glacial-filter-pill {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: transparent;
+  border: 1px solid var(--border-card);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.glacial-filter-pill:hover {
+  color: var(--text-strong);
+  border-color: var(--border-hover);
+  background: var(--bg-card-hover);
+}
+.glacial-filter-pill[aria-pressed="true"],
+.glacial-filter-pill.is-active {
+  color: var(--accent);
+  border-color: var(--accent-border);
+  background: var(--accent-bg);
+}
+.glacial-filter-pill:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.glacial-filter-pill[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.glacial-filter-pill-count {
+  font-size: 10px;
+  color: var(--text-faint);
+  background: var(--border-card);
+  padding: 1px 5px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+.glacial-filter-pill[aria-pressed="true"] .glacial-filter-pill-count {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+@media (max-width: 540px) {
+  .glacial-filter-bar-group {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+  }
+  .glacial-filter-pill {
+    scroll-snap-align: start;
+    flex-shrink: 0;
+    min-height: 32px;
+  }
+}
+
+/* ===== Status Row ========================================== */
+.glacial-status-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  min-height: 44px;
+  border-radius: var(--radius-sm);
+  transition: background 0.15s;
+}
+.glacial-status-row:hover {
+  background: var(--bg-card-hover);
+}
+.glacial-status-row-icon {
+  flex-shrink: 0;
+  width: 18px; height: 18px;
+  color: var(--text-secondary);
+}
+.glacial-status-row-name {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-strong);
+}
+.glacial-status-row-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+.glacial-status-row-dot {
+  flex-shrink: 0;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+/* Default state = healthy/green */
+.glacial-status-row .glacial-status-row-dot              { background: var(--green); }
+.glacial-status-row[data-state="healthy"] .glacial-status-row-dot { background: var(--green); }
+.glacial-status-row[data-state="active"]  .glacial-status-row-dot { background: var(--accent); }
+.glacial-status-row[data-state="warn"]    .glacial-status-row-dot { background: var(--yellow); }
+.glacial-status-row[data-state="error"]   .glacial-status-row-dot { background: var(--red); }
+.glacial-status-row[data-state="stale"]   .glacial-status-row-dot { background: var(--yellow); }
+.glacial-status-row[data-state="loading"] .glacial-status-row-dot { background: var(--text-muted); }
+.glacial-status-row[data-state="empty"]   .glacial-status-row-dot { background: transparent; border: 1px dashed var(--text-faint); }
+/* Glow in dark mode (no glow on stale — it's intentionally muted) */
+[data-theme="dark"] .glacial-status-row .glacial-status-row-dot                         { box-shadow: var(--glow-med) var(--green); }
+[data-theme="dark"] .glacial-status-row[data-state="active"]  .glacial-status-row-dot   { box-shadow: var(--glow-med) var(--accent); }
+[data-theme="dark"] .glacial-status-row[data-state="warn"]    .glacial-status-row-dot   { box-shadow: var(--glow-low) var(--yellow); }
+[data-theme="dark"] .glacial-status-row[data-state="error"]   .glacial-status-row-dot   { box-shadow: var(--glow-high) var(--red); }
+[data-theme="dark"] .glacial-status-row[data-state="stale"]   .glacial-status-row-dot   { box-shadow: none; opacity: 0.7; }
+[data-theme="dark"] .glacial-status-row[data-state="loading"] .glacial-status-row-dot   { box-shadow: none; }
+
+/* ===== Skeleton (pure CSS, no JS injection) ================ */
+.glacial-skeleton {
+  position: relative;
+  background: var(--bg-card-hover);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  min-height: 1em;
+}
+.glacial-skeleton-text {
+  display: inline-block;
+  width: 100%;
+  height: 1em;
+  vertical-align: middle;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .glacial-skeleton::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--skeleton-shimmer) 50%,
+      transparent 100%
+    );
+    animation: glacial-shimmer 1.5s infinite;
+    animation-delay: 0.2s; /* avoid flash on instant loads */
+    transform: translateX(-100%);
+    will-change: transform;
+  }
+}
+@keyframes glacial-shimmer {
+  100% { transform: translateX(100%); }
+}
+
+/* ============================================================
+ * v2.0.0 — Performance: mobile blur policy
+ *   Reduce backdrop-filter cost on phones (5+ stacked glass cards
+ *   on iOS Safari can drop below 30 FPS at blur(20px)).
+ * ============================================================ */
+@media (max-width: 767px) {
+  :root { --blur: 12px; }
+}
+@media (pointer: coarse) and (max-width: 540px) {
+  :root { --blur: 8px; }
+}
+
+/* ============================================================
+ * Reduced Motion (extended in v2.0.0)
+ * ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   .glacial-aurora .orb,
   .orb {
     animation: none !important;
   }
+  .glacial-skeleton::before { animation: none; }
 }
+

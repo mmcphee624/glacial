@@ -1,0 +1,61 @@
+/**
+ * Glacial Skin Template — copy this to skins/<your-name>.css and modify.
+ * @version 2.0.0
+ *
+ * Skin contract (enforced by scripts/lint-skin.sh):
+ *   Skins MAY ONLY use these selectors:
+ *     - :root  (no — use [data-skin="..."] instead so you don't override the default)
+ *     - [data-skin="<name>"]                              ← light variant
+ *     - [data-skin="<name>"][data-theme="dark"]           ← manual dark
+ *     - @media (prefers-color-scheme: dark) { [data-skin="<name>"]:not([data-theme="light"]) { ... } }
+ *
+ *   Skins MUST NOT target .glacial-* class internals via selectors. Override
+ *   tokens only. If you genuinely need a component-level tweak, add a header
+ *   comment justifying it; the lint script will warn but not fail.
+ *
+ *   Required: every skin must ship all three blocks below (light, manual-dark,
+ *   OS-dark-fallback) so the data-skin × data-theme matrix has no gaps.
+ */
+
+/* ============================================================
+ * <YOUR-SKIN> — light variant
+ * ============================================================ */
+[data-skin="my-skin"] {
+  /* Brand */
+  --accent: #00b8d4;
+  --accent-bg: rgba(0, 184, 212, 0.08);
+  --accent-border: rgba(0, 184, 212, 0.3);
+
+  /* Typography (uncomment to override) */
+  /* --font-body: 'Inter', sans-serif; */
+  /* --font-mono: 'JetBrains Mono', monospace; */
+
+  /* Surfaces (cream / dark / branded) */
+  /* --bg: #f3efe5; */
+  /* --bg-card: rgba(255, 255, 255, 0.7); */
+
+  /* Aurora orbs — set --orb-opacity: 0 to disable */
+  /* --orb-1-color: #7c3aed; */
+  /* --orb-opacity: 0; */
+}
+
+/* ============================================================
+ * <YOUR-SKIN> — manual dark variant (user toggled to dark)
+ * ============================================================ */
+[data-skin="my-skin"][data-theme="dark"] {
+  --accent: #00e5ff;
+  --accent-bg: rgba(0, 229, 255, 0.08);
+  --accent-border: rgba(0, 229, 255, 0.25);
+  /* Override anything that should differ in dark mode */
+}
+
+/* ============================================================
+ * <YOUR-SKIN> — OS dark fallback (no manual choice made)
+ * ============================================================ */
+@media (prefers-color-scheme: dark) {
+  [data-skin="my-skin"]:not([data-theme="light"]) {
+    --accent: #00e5ff;
+    --accent-bg: rgba(0, 229, 255, 0.08);
+    --accent-border: rgba(0, 229, 255, 0.25);
+  }
+}

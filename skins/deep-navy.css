@@ -1,0 +1,152 @@
+/**
+ * Glacial Deep-Navy Skin — finance / serious / oceanic
+ * @version 2.0.0
+ *
+ * Deep navy backgrounds with a gold accent. The look you want when the
+ * domain is "money," "law," or "infrastructure" — finance dashboards,
+ * trading apps, contract management, anything that needs to feel solid
+ * and weighty.
+ *
+ * Aurora orbs in cyan/blue/teal at low opacity in dark mode (subtle deep-
+ * sea atmosphere); off in light mode.
+ */
+
+/* ============================================================
+ * Light variant — pale sky on cream paper, navy ink
+ * ============================================================ */
+[data-skin="deep-navy"] {
+  /* Surfaces — very pale blue-gray */
+  --bg: #eef2f7;
+  --bg-card: rgba(255, 255, 255, 0.72);
+  --bg-card-hover: rgba(255, 255, 255, 0.88);
+  --bg-header: rgba(245, 248, 252, 0.82);
+  --bg-input: rgba(255, 255, 255, 0.85);
+
+  /* Borders — navy-tinted */
+  --border: rgba(20, 40, 80, 0.10);
+  --border-card: rgba(20, 40, 80, 0.13);
+  --border-hover: rgba(20, 40, 80, 0.32);
+
+  /* Text — deep navy on cream */
+  --text: #1f2a44;
+  --text-strong: #0a1226;
+  --text-secondary: #5a6680;
+  --text-muted: #8a92a8;
+  --text-faint: #b8bfd0;
+
+  /* Accent — deep navy (the signature) */
+  --accent: #1a3a72;
+  --accent-bg: rgba(26, 58, 114, 0.08);
+  --accent-border: rgba(26, 58, 114, 0.32);
+
+  /* Status — calibrated for the navy palette */
+  --green: #2d7a4a;
+  --green-bg: rgba(45, 122, 74, 0.10);
+  --yellow: #b87a1a;
+  --yellow-bg: rgba(184, 122, 26, 0.10);
+  --red: #b8323a;
+  --red-bg: rgba(184, 50, 58, 0.10);
+  --blue: #2a5fa0;
+  --blue-bg: rgba(42, 95, 160, 0.10);
+
+  --shadow: 0 2px 12px rgba(20, 40, 80, 0.06);
+  --skeleton-shimmer: rgba(238, 242, 247, 0.85);
+
+  /* Tighter radii — feels more "ledger" than "sketchbook" */
+  --radius-sm: 3px;
+  --radius: 6px;
+  --radius-lg: 10px;
+
+  /* Light mode: orbs off — clean ledger look */
+  --orb-opacity: 0;
+}
+
+/* ============================================================
+ * Dark variant — abyssal, the canonical look
+ * ============================================================ */
+[data-skin="deep-navy"][data-theme="dark"] {
+  /* Surfaces — deep-sea navy */
+  --bg: #0a1428;
+  --bg-card: rgba(120, 180, 240, 0.04);
+  --bg-card-hover: rgba(120, 180, 240, 0.09);
+  --bg-header: rgba(8, 16, 32, 0.92);
+  --bg-input: rgba(120, 180, 240, 0.04);
+
+  --border: rgba(150, 200, 255, 0.10);
+  --border-card: rgba(150, 200, 255, 0.08);
+  --border-hover: rgba(120, 200, 255, 0.32);
+
+  /* Text — soft sky-tinted */
+  --text: #c8d4e8;
+  --text-strong: #f0f4fa;
+  --text-secondary: #8a98b0;
+  --text-muted: #5a6a85;
+  --text-faint: #34425a;
+
+  /* Accent — sky cyan, the lifted version of the deep navy */
+  --accent: #6cb8e8;
+  --accent-bg: rgba(108, 184, 232, 0.10);
+  --accent-border: rgba(108, 184, 232, 0.32);
+
+  /* Status — luminous to read against deep navy */
+  --green: #5cc88c;
+  --green-bg: rgba(92, 200, 140, 0.10);
+  --yellow: #f0c060;
+  --yellow-bg: rgba(240, 192, 96, 0.10);
+  --red: #ff6680;
+  --red-bg: rgba(255, 102, 128, 0.10);
+  --blue: #6cb8e8;
+  --blue-bg: rgba(108, 184, 232, 0.10);
+
+  --shadow: none;
+  --skeleton-shimmer: rgba(150, 200, 255, 0.07);
+
+  --radius-sm: 3px;
+  --radius: 6px;
+  --radius-lg: 10px;
+
+  /* Aurora — deep sea: cyan / sapphire / teal */
+  --orb-1-color: #2c6fa8;
+  --orb-2-color: #4a9fd0;
+  --orb-3-color: #1a8a8a;
+  --orb-opacity: 1;
+}
+
+/* OS dark fallback */
+@media (prefers-color-scheme: dark) {
+  [data-skin="deep-navy"]:not([data-theme="light"]) {
+    --bg: #0a1428;
+    --bg-card: rgba(120, 180, 240, 0.04);
+    --bg-card-hover: rgba(120, 180, 240, 0.09);
+    --bg-header: rgba(8, 16, 32, 0.92);
+    --bg-input: rgba(120, 180, 240, 0.04);
+    --border: rgba(150, 200, 255, 0.10);
+    --border-card: rgba(150, 200, 255, 0.08);
+    --border-hover: rgba(120, 200, 255, 0.32);
+    --text: #c8d4e8;
+    --text-strong: #f0f4fa;
+    --text-secondary: #8a98b0;
+    --text-muted: #5a6a85;
+    --text-faint: #34425a;
+    --accent: #6cb8e8;
+    --accent-bg: rgba(108, 184, 232, 0.10);
+    --accent-border: rgba(108, 184, 232, 0.32);
+    --green: #5cc88c;
+    --green-bg: rgba(92, 200, 140, 0.10);
+    --yellow: #f0c060;
+    --yellow-bg: rgba(240, 192, 96, 0.10);
+    --red: #ff6680;
+    --red-bg: rgba(255, 102, 128, 0.10);
+    --blue: #6cb8e8;
+    --blue-bg: rgba(108, 184, 232, 0.10);
+    --shadow: none;
+    --skeleton-shimmer: rgba(150, 200, 255, 0.07);
+    --radius-sm: 3px;
+    --radius: 6px;
+    --radius-lg: 10px;
+    --orb-1-color: #2c6fa8;
+    --orb-2-color: #4a9fd0;
+    --orb-3-color: #1a8a8a;
+    --orb-opacity: 1;
+  }
+}

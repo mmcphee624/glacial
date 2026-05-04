@@ -1,0 +1,157 @@
+/**
+ * Glacial Warm-Serif Skin — editorial / hospitality / boutique
+ * @version 2.0.0
+ *
+ * Generic serif typography on a warm cream palette with a forest-green
+ * accent. The reusable parts of kent-collection's branded look, abstracted
+ * for any future hospitality, editorial, or content-heavy app.
+ *
+ * Typography requires:
+ *   <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+ *
+ * Aurora orbs are disabled (cream + colored orbs would clash). Set
+ * --orb-opacity: 1 if you want them back.
+ */
+
+/* ============================================================
+ * Light variant
+ * ============================================================ */
+[data-skin="warm-serif"] {
+  /* Typography */
+  --font-body: 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'SF Mono', Menlo, Consolas, monospace;
+
+  /* Surfaces — warm cream */
+  --bg: #f3efe5;
+  --bg-card: rgba(255, 252, 246, 0.72);
+  --bg-card-hover: rgba(255, 252, 246, 0.88);
+  --bg-header: rgba(255, 252, 246, 0.78);
+  --bg-input: rgba(255, 252, 246, 0.85);
+
+  /* Borders — warm green-tinted */
+  --border: rgba(33, 53, 0, 0.08);
+  --border-card: rgba(33, 53, 0, 0.10);
+  --border-hover: rgba(33, 53, 0, 0.22);
+
+  /* Text — soft warm dark */
+  --text: #3a3a32;
+  --text-strong: #1c1f15;
+  --text-secondary: #6a6655;
+  --text-muted: #8a8675;
+  --text-faint: #b0ac9b;
+
+  /* Accent — forest green */
+  --accent: #213500;
+  --accent-bg: rgba(33, 53, 0, 0.06);
+  --accent-border: rgba(33, 53, 0, 0.25);
+
+  /* Status — slightly warmer/desaturated to match the cream palette */
+  --green: #4a7c59;
+  --green-bg: rgba(74, 124, 89, 0.10);
+  --yellow: #b87a2c;
+  --yellow-bg: rgba(184, 122, 44, 0.10);
+  --red: #b03a2e;
+  --red-bg: rgba(176, 58, 46, 0.10);
+  --blue: #4a6b8a;
+  --blue-bg: rgba(74, 107, 138, 0.10);
+
+  /* Effects */
+  --shadow: 0 2px 12px rgba(33, 53, 0, 0.06);
+  --skeleton-shimmer: rgba(255, 252, 246, 0.85);
+
+  /* Aurora — disabled by default; cream + colored orbs would clash */
+  --orb-opacity: 0;
+}
+
+/* Headings get the serif (the rest stays sans for readability).
+ * NOTE: this is a documented exception to the tokens-only contract.
+ * Justification: --font-body would replace ALL text with serif, which is
+ * heavy for body copy. We need a serif for headings only. The skin contract
+ * lint script will warn but not fail this rule. */
+[data-skin="warm-serif"] h1,
+[data-skin="warm-serif"] h2,
+[data-skin="warm-serif"] h3,
+[data-skin="warm-serif"] h4,
+[data-skin="warm-serif"] .glacial-empty-state-title {
+  font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
+  font-weight: 700;
+}
+
+/* ============================================================
+ * Manual dark variant — warm cream → warm dark
+ * ============================================================ */
+[data-skin="warm-serif"][data-theme="dark"] {
+  --bg: #1f1d18;
+  --bg-card: rgba(255, 252, 246, 0.05);
+  --bg-card-hover: rgba(255, 252, 246, 0.09);
+  --bg-header: rgba(20, 18, 14, 0.85);
+  --bg-input: rgba(255, 252, 246, 0.05);
+  --border: rgba(255, 252, 246, 0.08);
+  --border-card: rgba(255, 252, 246, 0.06);
+  --border-hover: rgba(160, 195, 100, 0.25);
+
+  --text: #d8d4c2;
+  --text-strong: #f4f0dc;
+  --text-secondary: #968f78;
+  --text-muted: #6e6856;
+  --text-faint: #4a4538;
+
+  --accent: #a0c364;            /* lifted forest-green for dark legibility */
+  --accent-bg: rgba(160, 195, 100, 0.10);
+  --accent-border: rgba(160, 195, 100, 0.28);
+
+  --green: #88c990;
+  --green-bg: rgba(136, 201, 144, 0.10);
+  --yellow: #e0a854;
+  --yellow-bg: rgba(224, 168, 84, 0.10);
+  --red: #d96b5c;
+  --red-bg: rgba(217, 107, 92, 0.10);
+  --blue: #7fa1c8;
+  --blue-bg: rgba(127, 161, 200, 0.10);
+
+  --shadow: none;
+  --skeleton-shimmer: rgba(255, 252, 246, 0.07);
+
+  /* Orbs stay off — even in dark mode the warm-serif palette doesn't want
+   * purple/blue/teal blobs. Override per-app if you really want them. */
+  --orb-opacity: 0;
+}
+
+/* ============================================================
+ * OS dark fallback (no manual theme choice)
+ * ============================================================ */
+@media (prefers-color-scheme: dark) {
+  [data-skin="warm-serif"]:not([data-theme="light"]) {
+    --bg: #1f1d18;
+    --bg-card: rgba(255, 252, 246, 0.05);
+    --bg-card-hover: rgba(255, 252, 246, 0.09);
+    --bg-header: rgba(20, 18, 14, 0.85);
+    --bg-input: rgba(255, 252, 246, 0.05);
+    --border: rgba(255, 252, 246, 0.08);
+    --border-card: rgba(255, 252, 246, 0.06);
+    --border-hover: rgba(160, 195, 100, 0.25);
+
+    --text: #d8d4c2;
+    --text-strong: #f4f0dc;
+    --text-secondary: #968f78;
+    --text-muted: #6e6856;
+    --text-faint: #4a4538;
+
+    --accent: #a0c364;
+    --accent-bg: rgba(160, 195, 100, 0.10);
+    --accent-border: rgba(160, 195, 100, 0.28);
+
+    --green: #88c990;
+    --green-bg: rgba(136, 201, 144, 0.10);
+    --yellow: #e0a854;
+    --yellow-bg: rgba(224, 168, 84, 0.10);
+    --red: #d96b5c;
+    --red-bg: rgba(217, 107, 92, 0.10);
+    --blue: #7fa1c8;
+    --blue-bg: rgba(127, 161, 200, 0.10);
+
+    --shadow: none;
+    --skeleton-shimmer: rgba(255, 252, 246, 0.07);
+    --orb-opacity: 0;
+  }
+}

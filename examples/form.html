@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Form · Glacial Examples</title>
+  <link rel="stylesheet" href="../glacial.css">
+  <link rel="stylesheet" href="../skins/default.css">
+  <link rel="stylesheet" href="../skins/warm-serif.css">
+  <link rel="stylesheet" href="../skins/midnight-mono.css">
+  <link rel="stylesheet" href="../skins/lavender.css">
+  <link rel="stylesheet" href="../skins/deep-navy.css">
+  <link rel="stylesheet" href="../skins/nord.css">
+  <link rel="stylesheet" href="_examples.css">
+  <script src="../glacial.js"></script>
+</head>
+<body>
+  <header class="glacial-glass-header ex-toolbar">
+    <div class="ex-toolbar-inner">
+      <span class="ex-logo">GLACIAL</span>
+      <nav class="glacial-nav ex-nav">
+        <a href="index.html">index</a>
+        <a href="dashboard.html">dashboard</a>
+        <a href="list.html">list</a>
+        <a href="detail.html">detail</a>
+        <a href="form.html" class="active">form</a>
+        <a href="board.html">board</a>
+        <a href="mobile.html">mobile</a>
+        <a href="skins-preview.html">skins</a>
+      </nav>
+      <div class="ex-controls">
+        <select class="ex-select" data-glacial-skin>
+          <option value="default">default</option>
+          <option value="warm-serif">warm-serif</option>
+          <option value="midnight-mono">midnight-mono</option>
+          <option value="lavender">lavender</option>
+          <option value="deep-navy">deep-navy</option>
+          <option value="nord">nord</option>
+        </select>
+        <button class="glacial-toggle" onclick="glacialToggleTheme()">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="ex-main" style="max-width: 600px;">
+
+    <!-- Recipe: Form
+         Container max-width: 600-700px (focus on input flow)
+         Header: breadcrumbs + title
+         Layout: glass card containing fieldsets → primary action below
+         Components: breadcrumbs · alert · glass card · (form inputs use ex-input demo class)
+    -->
+
+    <nav aria-label="Breadcrumb" class="glacial-breadcrumbs" style="margin: 8px 0 16px;">
+      <a href="index.html">Home</a>
+      <span class="glacial-breadcrumbs-sep">/</span>
+      <a href="list.html">Listings</a>
+      <span class="glacial-breadcrumbs-sep">/</span>
+      <span class="glacial-breadcrumbs-current">New</span>
+    </nav>
+
+    <section class="ex-hero">
+      <h1 class="ex-h1">New Listing</h1>
+      <p class="ex-lede">Add a vehicle to inventory. Required fields are marked with an asterisk.</p>
+    </section>
+
+    <!-- Validation alert (shown after a submit attempt with errors) -->
+    <div class="glacial-alert glacial-alert-error" style="margin: 12px 0;">
+      <svg class="glacial-alert-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M5 5l6 6M11 5l-6 6"/></svg>
+      <div class="glacial-alert-body">
+        <div class="glacial-alert-title">2 fields need attention</div>
+        VIN must be 17 characters. Asking price is required.
+      </div>
+      <button class="glacial-alert-dismiss" aria-label="Dismiss">×</button>
+    </div>
+
+    <form class="glacial-glass" style="padding: 20px;">
+      <h2 class="ex-h3" style="margin-top: 0;">Vehicle</h2>
+
+      <div style="margin-bottom: 14px;">
+        <label class="ex-label" for="f-make">Make &middot; Model *</label>
+        <input class="ex-input" id="f-make" type="text" placeholder="e.g. Honda Civic" value="Mazda MX-5 Miata">
+      </div>
+
+      <div class="ex-row">
+        <div class="ex-col" style="margin-bottom: 14px;">
+          <label class="ex-label" for="f-year">Year *</label>
+          <input class="ex-input" id="f-year" type="number" placeholder="2019" value="2019">
+        </div>
+        <div class="ex-col" style="margin-bottom: 14px;">
+          <label class="ex-label" for="f-mileage">Mileage</label>
+          <input class="ex-input" id="f-mileage" type="number" placeholder="18,900" value="18900">
+        </div>
+      </div>
+
+      <div style="margin-bottom: 14px;">
+        <label class="ex-label" for="f-vin">VIN *</label>
+        <input class="ex-input" id="f-vin" type="text" placeholder="17 characters" value="JM1NDAD7XK030" style="border-color: var(--red); outline-color: var(--red);">
+        <div style="font-size: 11px; color: var(--red); margin-top: 4px; font-family: var(--font-mono);">VIN must be 17 characters &middot; got 13</div>
+      </div>
+
+      <div style="margin-bottom: 14px;">
+        <label class="ex-label" for="f-price">Asking price *</label>
+        <input class="ex-input" id="f-price" type="text" placeholder="$24,800" value="" style="border-color: var(--red); outline-color: var(--red);">
+        <div style="font-size: 11px; color: var(--red); margin-top: 4px; font-family: var(--font-mono);">Required</div>
+      </div>
+
+      <hr class="ex-divider">
+
+      <h2 class="ex-h3">Visibility</h2>
+      <div class="glacial-filter-bar" style="margin: 8px 0;">
+        <div class="glacial-filter-bar-group" role="group" data-multi="false">
+          <button type="button" class="glacial-filter-pill" aria-pressed="true">Public</button>
+          <button type="button" class="glacial-filter-pill">Network only</button>
+          <button type="button" class="glacial-filter-pill">Draft</button>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 8px; margin-top: 20px; flex-wrap: wrap;">
+        <button type="submit" class="glacial-btn glacial-btn-primary">Save listing</button>
+        <button type="button" class="glacial-btn glacial-btn-secondary">Save draft</button>
+        <button type="button" class="glacial-btn glacial-btn-secondary">Cancel</button>
+      </div>
+    </form>
+
+  </main>
+
+  <script src="_examples.js"></script>
+</body>
+</html>

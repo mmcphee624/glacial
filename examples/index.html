@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Glacial Examples · v2.0.0</title>
+  <link rel="stylesheet" href="../glacial.css">
+  <link rel="stylesheet" href="../skins/default.css">
+  <link rel="stylesheet" href="../skins/warm-serif.css">
+  <link rel="stylesheet" href="../skins/midnight-mono.css">
+  <link rel="stylesheet" href="../skins/lavender.css">
+  <link rel="stylesheet" href="../skins/deep-navy.css">
+  <link rel="stylesheet" href="../skins/nord.css">
+  <link rel="stylesheet" href="_examples.css">
+  <script src="../glacial.js"></script>
+</head>
+<body>
+  <header class="glacial-glass-header ex-toolbar">
+    <div class="ex-toolbar-inner">
+      <span class="ex-logo">GLACIAL · v2.0.0</span>
+      <nav class="glacial-nav ex-nav">
+        <a href="dashboard.html">dashboard</a>
+        <a href="list.html">list</a>
+        <a href="detail.html">detail</a>
+        <a href="form.html">form</a>
+        <a href="board.html">board</a>
+        <a href="mobile.html">mobile</a>
+        <a href="skins-preview.html">skins</a>
+      </nav>
+      <div class="ex-controls">
+        <select class="ex-select" data-glacial-skin>
+          <option value="default">default</option>
+          <option value="warm-serif">warm-serif</option>
+          <option value="midnight-mono">midnight-mono</option>
+          <option value="lavender">lavender</option>
+          <option value="deep-navy">deep-navy</option>
+          <option value="nord">nord</option>
+        </select>
+        <button class="glacial-toggle" onclick="glacialToggleTheme()" title="Toggle theme">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="ex-main">
+    <section class="ex-hero">
+      <h1 class="ex-h1">Glacial Examples</h1>
+      <p class="ex-lede">Open each page to see Tier 1 components rendered. Use the skin and theme selectors above &mdash; all pages share the choice.</p>
+    </section>
+
+    <section class="ex-grid">
+      <a href="dashboard.html" class="glacial-glass ex-card">
+        <span class="glacial-badge glacial-badge-accent">RECIPE</span>
+        <h2 class="ex-card-title">Dashboard</h2>
+        <p class="ex-card-desc">Metric tiles, status rows, alerts, breadcrumbs, skeleton-to-real loading swap.</p>
+      </a>
+      <a href="list.html" class="glacial-glass ex-card">
+        <span class="glacial-badge glacial-badge-accent">RECIPE</span>
+        <h2 class="ex-card-title">List / Index</h2>
+        <p class="ex-card-desc">Responsive table with mobile column hiding, filter bar with pill groups.</p>
+      </a>
+      <a href="detail.html" class="glacial-glass ex-card">
+        <span class="glacial-badge glacial-badge-accent">RECIPE</span>
+        <h2 class="ex-card-title">Detail</h2>
+        <p class="ex-card-desc">Breadcrumbs, metric, alert, spec grid, status indicators.</p>
+      </a>
+      <a href="form.html" class="glacial-glass ex-card">
+        <span class="glacial-badge glacial-badge-accent">RECIPE</span>
+        <h2 class="ex-card-title">Form</h2>
+        <p class="ex-card-desc">Glass card with input states, validation alert, submit pattern.</p>
+      </a>
+      <a href="board.html" class="glacial-glass ex-card">
+        <span class="glacial-badge glacial-badge-accent">RECIPE</span>
+        <h2 class="ex-card-title">Board</h2>
+        <p class="ex-card-desc">4-column glass cards with badges, filter bar, drag-and-drop hooks.</p>
+      </a>
+      <a href="mobile.html" class="glacial-glass ex-card">
+        <span class="glacial-badge glacial-badge-yellow">MOBILE</span>
+        <h2 class="ex-card-title">Mobile Audit</h2>
+        <p class="ex-card-desc">44px touch targets, breakpoint behavior, scroll-snap pills, truncation.</p>
+      </a>
+      <a href="skins-preview.html" class="glacial-glass ex-card">
+        <span class="glacial-badge glacial-badge-blue">CATALOG</span>
+        <h2 class="ex-card-title">Skins Preview</h2>
+        <p class="ex-card-desc">Default · warm-serif · ctrl rendered side-by-side on the same dashboard.</p>
+      </a>
+    </section>
+
+    <section class="ex-section">
+      <h2 class="ex-h2">Test on your phone</h2>
+      <div class="glacial-glass ex-qr-card">
+        <div class="ex-qr-text">
+          <p class="ex-qr-lede">Open this URL on your phone (same wifi):</p>
+          <code id="ex-local-url" class="ex-url">http://localhost:8000/examples/</code>
+          <p class="ex-qr-hint">If the QR doesn&rsquo;t scan or your phone can&rsquo;t reach the LAN IP, run <code>cloudflared tunnel --url http://localhost:8000</code> in a second terminal and use the <code>*.trycloudflare.com</code> URL it prints.</p>
+        </div>
+        <div class="ex-qr-img" id="ex-qr"></div>
+      </div>
+    </section>
+
+    <section class="ex-section">
+      <h2 class="ex-h2">Debug</h2>
+      <pre class="glacial-glass ex-debug" id="ex-debug">loading...</pre>
+      <p class="ex-debug-hint">This is the output of <code>window.glacial.help()</code>. If <code>data-glacial-loaded</code> is missing, glacial.js didn&rsquo;t run.</p>
+    </section>
+  </main>
+
+  <script src="_examples.js"></script>
+  <script>
+    // Build QR code (inline SVG, no external library) for the current location
+    (function () {
+      var url = window.location.origin + window.location.pathname.replace(/index\.html$/, '');
+      var localUrl = document.getElementById('ex-local-url');
+      if (localUrl) localUrl.textContent = url;
+
+      var qrEl = document.getElementById('ex-qr');
+      if (qrEl) {
+        // Use Google Charts QR API — no extra deps. If offline, falls back to text URL.
+        var img = document.createElement('img');
+        img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + encodeURIComponent(url);
+        img.alt = 'QR code for ' + url;
+        img.width = 180;
+        img.height = 180;
+        img.onerror = function () {
+          qrEl.innerHTML = '<div class="ex-qr-fallback">QR offline — copy URL above</div>';
+        };
+        qrEl.appendChild(img);
+      }
+
+      // Debug box
+      var dbg = document.getElementById('ex-debug');
+      if (dbg && window.glacial) {
+        dbg.textContent = JSON.stringify(window.glacial.help(), null, 2);
+      } else if (dbg) {
+        dbg.textContent = '⚠️ window.glacial is undefined — glacial.js did not load';
+      }
+    })();
+  </script>
+</body>
+</html>

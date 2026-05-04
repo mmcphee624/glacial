@@ -1,0 +1,150 @@
+/**
+ * Glacial Lavender Skin — soft / contemplative / creative
+ * @version 2.0.0
+ *
+ * Pale lavender backgrounds, dusty purple accent, gentle radii.
+ * For journaling, note-taking, creative tools, calm productivity apps.
+ * Reads as "thoughtful and unhurried" without going twee.
+ *
+ * Aurora orbs in lavender/violet/rose — the orbs are the point of the
+ * skin; they make the page feel like dusk.
+ */
+
+/* ============================================================
+ * Light variant
+ * ============================================================ */
+[data-skin="lavender"] {
+  /* Surfaces — pale lavender wash */
+  --bg: #f4f0f9;
+  --bg-card: rgba(255, 255, 255, 0.72);
+  --bg-card-hover: rgba(255, 255, 255, 0.88);
+  --bg-header: rgba(248, 244, 252, 0.78);
+  --bg-input: rgba(255, 255, 255, 0.85);
+
+  /* Borders — violet-tinted */
+  --border: rgba(124, 95, 165, 0.10);
+  --border-card: rgba(124, 95, 165, 0.13);
+  --border-hover: rgba(124, 95, 165, 0.32);
+
+  /* Text — soft cool dark */
+  --text: #3c354a;
+  --text-strong: #1f1a30;
+  --text-secondary: #6a6280;
+  --text-muted: #968fa8;
+  --text-faint: #c4bcd0;
+
+  /* Accent — dusty lavender (legible on white, not cartoonishly purple) */
+  --accent: #7c5fa5;
+  --accent-bg: rgba(124, 95, 165, 0.08);
+  --accent-border: rgba(124, 95, 165, 0.32);
+
+  /* Status — lavender-shifted greens/yellows/reds for harmony */
+  --green: #5a8c70;
+  --green-bg: rgba(90, 140, 112, 0.10);
+  --yellow: #c89e3c;
+  --yellow-bg: rgba(200, 158, 60, 0.10);
+  --red: #c5546a;
+  --red-bg: rgba(197, 84, 106, 0.10);
+  --blue: #6a7caa;
+  --blue-bg: rgba(106, 124, 170, 0.10);
+
+  --shadow: 0 4px 16px rgba(124, 95, 165, 0.07);
+  --skeleton-shimmer: rgba(245, 240, 252, 0.85);
+
+  /* Slightly larger radii — soft personality */
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 16px;
+
+  /* Aurora — lavender / violet / rose, modest opacity */
+  --orb-1-color: #b39bd8;
+  --orb-2-color: #d8a8c8;
+  --orb-3-color: #9d7bc0;
+  --orb-opacity: 0.7;
+}
+
+/* ============================================================
+ * Dark variant — twilight
+ * ============================================================ */
+[data-skin="lavender"][data-theme="dark"] {
+  --bg: #1c1827;
+  --bg-card: rgba(200, 180, 240, 0.05);
+  --bg-card-hover: rgba(200, 180, 240, 0.10);
+  --bg-header: rgba(20, 16, 30, 0.85);
+  --bg-input: rgba(200, 180, 240, 0.05);
+
+  --border: rgba(180, 160, 230, 0.10);
+  --border-card: rgba(180, 160, 230, 0.08);
+  --border-hover: rgba(200, 168, 240, 0.32);
+
+  --text: #d4ccea;
+  --text-strong: #f0eafa;
+  --text-secondary: #968fa8;
+  --text-muted: #6a607a;
+  --text-faint: #443c54;
+
+  --accent: #c8a8f0;          /* lifted lavender for dark legibility */
+  --accent-bg: rgba(200, 168, 240, 0.10);
+  --accent-border: rgba(200, 168, 240, 0.32);
+
+  --green: #88c0a0;
+  --green-bg: rgba(136, 192, 160, 0.10);
+  --yellow: #e8c878;
+  --yellow-bg: rgba(232, 200, 120, 0.10);
+  --red: #e87a92;
+  --red-bg: rgba(232, 122, 146, 0.10);
+  --blue: #8aa0d0;
+  --blue-bg: rgba(138, 160, 208, 0.10);
+
+  --shadow: none;
+  --skeleton-shimmer: rgba(200, 180, 240, 0.07);
+
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 16px;
+
+  /* Twilight orbs — deeper purples + magenta */
+  --orb-1-color: #9d4edd;
+  --orb-2-color: #c77dff;
+  --orb-3-color: #6a4c93;
+  --orb-opacity: 1;
+}
+
+/* OS dark fallback */
+@media (prefers-color-scheme: dark) {
+  [data-skin="lavender"]:not([data-theme="light"]) {
+    --bg: #1c1827;
+    --bg-card: rgba(200, 180, 240, 0.05);
+    --bg-card-hover: rgba(200, 180, 240, 0.10);
+    --bg-header: rgba(20, 16, 30, 0.85);
+    --bg-input: rgba(200, 180, 240, 0.05);
+    --border: rgba(180, 160, 230, 0.10);
+    --border-card: rgba(180, 160, 230, 0.08);
+    --border-hover: rgba(200, 168, 240, 0.32);
+    --text: #d4ccea;
+    --text-strong: #f0eafa;
+    --text-secondary: #968fa8;
+    --text-muted: #6a607a;
+    --text-faint: #443c54;
+    --accent: #c8a8f0;
+    --accent-bg: rgba(200, 168, 240, 0.10);
+    --accent-border: rgba(200, 168, 240, 0.32);
+    --green: #88c0a0;
+    --green-bg: rgba(136, 192, 160, 0.10);
+    --yellow: #e8c878;
+    --yellow-bg: rgba(232, 200, 120, 0.10);
+    --red: #e87a92;
+    --red-bg: rgba(232, 122, 146, 0.10);
+    --blue: #8aa0d0;
+    --blue-bg: rgba(138, 160, 208, 0.10);
+    --shadow: none;
+    --skeleton-shimmer: rgba(200, 180, 240, 0.07);
+    --radius-sm: 6px;
+    --radius: 10px;
+    --radius-lg: 16px;
+    --orb-1-color: #9d4edd;
+    --orb-2-color: #c77dff;
+    --orb-3-color: #6a4c93;
+    --orb-opacity: 1;
+  }
+}
