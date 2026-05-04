@@ -1,5 +1,43 @@
 # Migrating
 
+## v2.1.x → v2.2.0
+
+**No breaking changes.** No tokens or classes added or removed — token
+snapshot diff is empty. All changes are documentation and CI tooling.
+
+### What's new and worth adopting
+
+1. **Read `RECIPES.md` first** if you're starting a new project. Six page
+   recipes are documented end-to-end (dashboard / list / split-view /
+   detail / form / board / tour) with copy-paste anchors into
+   `examples/`. Each recipe explains the *why* of the layout, not just
+   the markup.
+
+2. **Run the CI gates** if you're forking or maintaining a downstream
+   consumer:
+   ```bash
+   ./scripts/snapshot-tokens.sh --check    # tokens.json up to date?
+   ./scripts/diff-tokens.sh main..HEAD     # any silent token renames?
+   ./scripts/lint-skin.sh skins/*.css      # skin contract honored?
+   ```
+   These take seconds and catch drift before it ships.
+
+3. **`SKIN-EXCEPTION:` marker** — if you author a custom skin and need to
+   override a component class internal (the canonical case is swapping
+   headings to a different font but keeping body text), add a comment
+   block above the rule beginning with `SKIN-EXCEPTION:` and a short
+   justification. The lint script recognizes the marker and warns
+   instead of failing. See `skins/warm-serif.css` for the reference
+   implementation.
+
+4. **DESIGN.md is the canonical spec.** It now includes per-component
+   state matrices, the Glacial DNA Checklist, the full skin contract,
+   and the versioning + deprecation policy. Skim the table of contents
+   when you need to understand "what's the contract for X."
+
+### Token names — none renamed
+Every v2.1 token is intact. `tokens.json` is unchanged.
+
 ## v2.0.x → v2.1.0
 
 **No breaking changes.** All v2.0 components unchanged. v2.1 adds three

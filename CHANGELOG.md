@@ -4,6 +4,82 @@ All notable changes to glacial are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] — 2026-05-04
+
+Documentation and CI tooling. No new components, no token changes — but the
+scaffolding now exists to keep future versions honest.
+
+### Added — Decision guide for agents
+- `RECIPES.md` — TL;DR map (pick a recipe in 30 seconds), hello-glacial
+  3-line snippet, starter prompt for new projects, "Which skin?" decision
+  tree, six page recipes (dashboard / list / split-view / detail / form /
+  board / tour) each with When-to-use, container, components, anti-patterns,
+  copy-this link, and Why-this-layout rationale, decision trees for common
+  forks (need a list? need a state? live data? list→detail nav?
+  navigation pattern?), 12-item don't-do list distilled from surveyed
+  consumer projects, skin catalog, full debug checklist, and a complete
+  class index of every public `.glacial-*` class shipped to date.
+
+### Added — Specification expansion
+- `DESIGN.md` rewritten and expanded to canonical-spec status:
+  - Versioning policy (MAJOR / MINOR / PATCH definitions, 1-MINOR-cycle
+    deprecation window before MAJOR removal)
+  - Naming rubric (`.glacial-{name}-{variant}` blocks, `data-state`
+    for semantic states, `data-glacial-*` for behavior hooks, ARIA over
+    `.is-state` over data attributes)
+  - Skin contract (allow-list of selectors, required `data-skin × data-theme`
+    matrix template, `SKIN-EXCEPTION:` marker for justified component-level
+    overrides)
+  - Glacial DNA Checklist (10 hard rules every Tier 1 + Tier 2 component
+    must pass before merging)
+  - Token catalog with one-line purpose per token (matches `tokens.json`)
+  - Per-component spec for all 13 Tier 1 components and 4 Tier 2 components,
+    including state matrices specifying which states ship, which are
+    intentionally out of scope, and how to compose components (e.g. a
+    table's empty state nests `.glacial-empty-state` inside `<tbody>`)
+  - Reduced-motion contract (every animation gates on `prefers-reduced-motion`)
+  - Accessibility coverage matrix
+  - Decisions log expanded with all v2.0, v2.1, and v2.2 decisions
+
+### Added — CI gates
+- `scripts/snapshot-tokens.sh` — extracts every `--*` declaration from
+  `glacial.css` to `tokens.json`. Supports `--check` mode for CI.
+- `scripts/diff-tokens.sh` — fails CI if a token is added or removed
+  without a version bump in the same range. Enforces semver: removals
+  require MAJOR, additions require at least MINOR.
+- `scripts/lint-skin.sh` — enforces the skin contract (selector allow-list).
+  Recognizes `SKIN-EXCEPTION:` comment marker for justified exceptions
+  (e.g. `warm-serif`'s serif-headings-only override).
+- `tokens.json` — public token snapshot, machine-readable. Currently 39
+  tokens declared. Lives under version control as the contract artifact.
+
+### Changed — README
+- 3-line "Hello, glacial" at the top
+- Reading order declared explicitly (agent path vs human path)
+- File table updated for v2.2.0 inventory
+- Adoption prompt rewritten (5 lines, points at RECIPES.md and
+  `glacial.help()` verification, references tagged vendor copy)
+- Theming section documents all three axes (theme / skin / aesthetic)
+  with their JS APIs and URL params
+
+### Changed — `skins/warm-serif.css`
+- Justification comment for the serif-headings rule reformatted to use
+  the `SKIN-EXCEPTION:` marker. The rule itself is unchanged. This makes
+  the lint script recognize the documented exception and warn instead of
+  fail.
+
+### Migration notes (from 2.1.x)
+No breaking changes. No tokens or classes added or removed — `tokens.json`
+diff is empty. All changes are docs and tooling. Adopt the new docs at
+your own pace.
+
+To enable the CI gates in your fork or downstream consumer, run any of:
+```bash
+./scripts/snapshot-tokens.sh --check
+./scripts/diff-tokens.sh main..HEAD
+./scripts/lint-skin.sh skins/*.css
+```
+
 ## [2.1.0] — 2026-05-04
 
 UX winners from the v2.0 variant exploration (PR #2) land as production

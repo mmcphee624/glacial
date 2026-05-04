@@ -63,11 +63,11 @@
   --orb-opacity: 0;
 }
 
-/* Headings get the serif (the rest stays sans for readability).
- * NOTE: this is a documented exception to the tokens-only contract.
- * Justification: --font-body would replace ALL text with serif, which is
- * heavy for body copy. We need a serif for headings only. The skin contract
- * lint script will warn but not fail this rule. */
+/* SKIN-EXCEPTION: serif headings only.
+ * Headings get the serif; body stays sans for readability. --font-body
+ * would replace ALL text with serif, which is too heavy for long body
+ * copy. We need a serif for h1/h2/h3/h4 + .glacial-empty-state-title only.
+ * The skin contract lint warns but doesn't fail because of this header. */
 [data-skin="warm-serif"] h1,
 [data-skin="warm-serif"] h2,
 [data-skin="warm-serif"] h3,
