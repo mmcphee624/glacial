@@ -1,5 +1,5 @@
 /* Glacial Design System — Shared CSS Tokens
- * @version 2.2.0
+ * @version 2.3.0
  * Import this file into any service for Glacial theming.
  * See DESIGN.md for full specification, RECIPES.md for page recipes.
  */
@@ -833,6 +833,128 @@
   .glacial-rail-item-label { display: block; }
   .glacial-rail-item-tip { display: none; }
   .glacial-rail-content { padding: 12px 16px 76px; }
+}
+
+/* ===== Rail Tier 2 — contextual text sub-rail (v2.3.0) =====
+ * Opt-in second tier. Add `.has-secondary` to the shell and a
+ * <nav class="glacial-rail-secondary"> sibling between the rail and content:
+ *
+ *   <div class="glacial-rail-shell has-secondary">
+ *     <aside class="glacial-rail" aria-label="Primary"> … </aside>
+ *     <nav class="glacial-rail-secondary" aria-label="Project sections"> … </nav>
+ *     <main class="glacial-rail-content"> … </main>
+ *   </div>
+ *
+ * Without `.has-secondary` the layout is unchanged (explicit modifier, not
+ * :has(), so older/embedded webviews — e.g. Home Assistant — never break).
+ * CSS-only; reuses existing tokens.
+ *
+ *   DESKTOP                         MOBILE (<768px)
+ *   ┌────┬──────┬──────────┐        ┌──────────────────┐ tier 2 (sticky strip)
+ *   │ T1 │  T2  │ content  │        ├──────────────────┤
+ *   │icon│ text │          │        │     content      │
+ *   │rail│ rail │          │        ├──────────────────┤
+ *   └────┴──────┴──────────┘        │  T1 bottom nav   │ (sticky)
+ *   60px  200px   1fr               └──────────────────┘
+ */
+.glacial-rail-shell.has-secondary {
+  grid-template-columns: 60px 200px 1fr;
+}
+.glacial-rail-secondary {
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border-right: 1px solid var(--border-card);
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  /* Many sections scroll within the column instead of overflowing the shell */
+  position: sticky;
+  top: 0;
+  max-height: 100vh;
+  overflow-y: auto;
+}
+.glacial-rail-secondary-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-faint);
+  padding: 4px 8px 8px;
+  /* Orienting context — truncate a long project name rather than spill */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.glacial-rail-secondary-item {
+  display: block;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 13px;
+  line-height: 1.3;
+  /* Never truncate a nav label — wrap so the destination stays readable */
+  overflow-wrap: break-word;
+  transition: background 0.15s, color 0.15s;
+}
+.glacial-rail-secondary-item:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-strong);
+}
+.glacial-rail-secondary-item:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.glacial-rail-secondary-item.is-active,
+.glacial-rail-secondary-item[aria-current="page"] {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+[data-theme="dark"] .glacial-rail-secondary-item.is-active,
+[data-theme="dark"] .glacial-rail-secondary-item[aria-current="page"] {
+  box-shadow: var(--glow-low) var(--accent);
+}
+
+/* Mobile: tier 2 is a sticky horizontal strip on top, tier 1 stays bottom nav.
+ * DOM order is rail → secondary → content, so reassign grid rows explicitly to
+ * get visual order tier2 / content / tier1. */
+@media (max-width: 767px) {
+  .glacial-rail-shell.has-secondary {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+  }
+  .glacial-rail-shell.has-secondary .glacial-rail-secondary { grid-row: 1; }
+  .glacial-rail-shell.has-secondary .glacial-rail-content   { grid-row: 2; }
+  .glacial-rail-shell.has-secondary .glacial-rail           { grid-row: 3; }
+  .glacial-rail-secondary {
+    flex-direction: row;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    white-space: nowrap;
+    border-right: 0;
+    border-bottom: 1px solid var(--border-card);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    gap: 4px;
+    /* Drop blur on the thin mobile strip — honors the mobile blur policy
+     * (a third animated-behind blur layer isn't worth the frame-rate cost). */
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .glacial-rail-secondary-item {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    /* Meet the 44px touch-target minimum on the strip (desktop stays compact) */
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  .glacial-rail-secondary-title { display: none; }
 }
 
 /* ===== Drawer (right-side panel; bottom sheet on mobile) ===

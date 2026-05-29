@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Two-tier Rail · Glacial Examples</title>
+  <link rel="stylesheet" href="../glacial.css">
+  <link rel="stylesheet" href="../skins/default.css">
+  <link rel="stylesheet" href="../skins/warm-serif.css">
+  <link rel="stylesheet" href="../skins/midnight-mono.css">
+  <link rel="stylesheet" href="../skins/lavender.css">
+  <link rel="stylesheet" href="../skins/deep-navy.css">
+  <link rel="stylesheet" href="../skins/nord.css">
+  <link rel="stylesheet" href="_examples.css">
+  <script src="../glacial.js"></script>
+</head>
+<body>
+
+  <!-- Recipe: Two-tier rail (v2.3.0)
+       Tier 1: global icon rail (unchanged). Tier 2: contextual text sub-rail.
+       `.has-secondary` on the shell opts in; without it the layout is the
+       single-tier rail. Desktop: 60 / 200 / 1fr. Mobile: tier 2 = sticky top
+       strip, tier 1 = bottom nav. CSS-only — no JS behavior for the tier. -->
+
+  <div class="glacial-rail-shell has-secondary" id="shell">
+
+    <!-- Tier 1: global icon rail -->
+    <aside class="glacial-rail" aria-label="Primary">
+      <div class="glacial-rail-brand">CP</div>
+      <a class="glacial-rail-item" href="#" aria-label="Projects">
+        <svg class="glacial-rail-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/><rect x="9" y="9" width="5" height="5"/></svg>
+        <span class="glacial-rail-item-label">Projects</span>
+        <span class="glacial-rail-item-tip">Projects</span>
+      </a>
+      <a class="glacial-rail-item" aria-current="page" href="#" aria-label="Boards">
+        <svg class="glacial-rail-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="3" height="12"/><rect x="6.5" y="2" width="3" height="8"/><rect x="11" y="2" width="3" height="10"/></svg>
+        <span class="glacial-rail-item-label">Boards</span>
+        <span class="glacial-rail-item-tip">Boards</span>
+      </a>
+      <a class="glacial-rail-item" href="#" aria-label="Activity">
+        <svg class="glacial-rail-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 4v4l3 2"/></svg>
+        <span class="glacial-rail-item-label">Activity</span>
+        <span class="glacial-rail-item-tip">Activity</span>
+      </a>
+      <a class="glacial-rail-item" href="#" aria-label="Settings">
+        <svg class="glacial-rail-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="2"/><path d="M8 1v3M8 12v3M1 8h3M12 8h3"/></svg>
+        <span class="glacial-rail-item-label">Settings</span>
+        <span class="glacial-rail-item-tip">Settings</span>
+      </a>
+      <span class="glacial-rail-spacer"></span>
+      <button class="glacial-rail-item" onclick="glacialToggleTheme()" style="background:transparent;border:0;cursor:pointer;" aria-label="Toggle theme">
+        ◐
+        <span class="glacial-rail-item-tip">Toggle theme</span>
+      </button>
+    </aside>
+
+    <!-- Tier 2: contextual text sub-rail. Long title demonstrates ellipsis;
+         "Timeline & Milestones" demonstrates label wrapping. -->
+    <nav class="glacial-rail-secondary" aria-label="Project sections">
+      <div class="glacial-rail-secondary-title">Q3 Infrastructure Migration</div>
+      <a class="glacial-rail-secondary-item" aria-current="page" href="#">Board</a>
+      <a class="glacial-rail-secondary-item" href="#">Ideas</a>
+      <a class="glacial-rail-secondary-item" href="#">Timeline &amp; Milestones</a>
+      <a class="glacial-rail-secondary-item" href="#">Brief</a>
+      <a class="glacial-rail-secondary-item" href="#">Context</a>
+      <a class="glacial-rail-secondary-item" href="#">Members</a>
+      <a class="glacial-rail-secondary-item" href="#">Files</a>
+      <a class="glacial-rail-secondary-item" href="#">Settings</a>
+    </nav>
+
+    <!-- Content -->
+    <main class="glacial-rail-content">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+        <select class="ex-select" data-glacial-skin>
+          <option value="default">default</option>
+          <option value="warm-serif">warm-serif</option>
+          <option value="midnight-mono">midnight-mono</option>
+          <option value="lavender">lavender</option>
+          <option value="deep-navy">deep-navy</option>
+          <option value="nord">nord</option>
+        </select>
+        <button class="glacial-btn glacial-btn-secondary" onclick="document.getElementById('shell').classList.toggle('has-secondary')">Toggle .has-secondary</button>
+        <a class="glacial-btn glacial-btn-secondary" href="index.html">← examples</a>
+      </div>
+
+      <h1 class="ex-h1">Two-tier rail</h1>
+      <p class="ex-lede">Tier 1 is the global icon rail. Tier 2 is the contextual sub-rail for the active project. Toggle <code>.has-secondary</code> above to see the single-tier fallback. Resize below 768px: tier 2 becomes a sticky top strip and tier 1 drops to a bottom nav.</p>
+
+      <section class="ex-grid-4" style="margin-top:16px;">
+        <div class="glacial-metric"><span class="glacial-metric-label">Open</span><span class="glacial-metric-value">23</span></div>
+        <div class="glacial-metric"><span class="glacial-metric-label">In review</span><span class="glacial-metric-value">7</span></div>
+        <div class="glacial-metric"><span class="glacial-metric-label">Blocked</span><span class="glacial-metric-value">2</span></div>
+        <div class="glacial-metric"><span class="glacial-metric-label">Shipped</span><span class="glacial-metric-value">141</span></div>
+      </section>
+
+      <h2 class="ex-h3" style="margin-top:16px;">Recent activity</h2>
+      <div class="glacial-glass" style="padding:4px 8px;">
+        <div class="glacial-status-row" data-state="active"><span class="glacial-status-row-name">migrate-db-pool</span><span class="glacial-status-row-meta">in progress</span><span class="glacial-status-row-dot"></span></div>
+        <div class="glacial-status-row" data-state="healthy"><span class="glacial-status-row-name">cutover-checklist</span><span class="glacial-status-row-meta">done</span><span class="glacial-status-row-dot"></span></div>
+        <div class="glacial-status-row" data-state="warn"><span class="glacial-status-row-name">rollback-plan</span><span class="glacial-status-row-meta">needs review</span><span class="glacial-status-row-dot"></span></div>
+      </div>
+    </main>
+
+  </div>
+
+  <script src="_examples.js"></script>
+  <script>
+    // Mobile orientation contract: scroll the active sub-rail item into view so
+    // the current section is visible on the horizontal strip (glacial is zero-JS;
+    // this is the consumer's responsibility — shown here for the example).
+    (function () {
+      var active = document.querySelector('.glacial-rail-secondary [aria-current="page"]');
+      if (active && active.scrollIntoView) {
+        active.scrollIntoView({ inline: 'center', block: 'nearest' });
+      }
+    })();
+  </script>
+</body>
+</html>
