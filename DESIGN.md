@@ -9,7 +9,7 @@ Agent path:  README → RECIPES.md → examples → DESIGN.md (you are here)
 Human path:  README → examples → DESIGN.md → RECIPES.md (optional)
 ```
 
-Current version: **`2.2.0`** — see [`VERSION`](./VERSION) and [`CHANGELOG.md`](./CHANGELOG.md).
+Current version: **`2.3.0`** — see [`VERSION`](./VERSION) and [`CHANGELOG.md`](./CHANGELOG.md).
 
 ---
 
@@ -607,6 +607,40 @@ These are top-of-page nav (top bar pattern). For the responsive rail/bottom-nav,
 | Focus-visible | 2px accent outline |
 | Tooltip on touch device | Hidden (`@media (hover: none)`) |
 
+#### `.glacial-rail-secondary` — contextual text sub-rail (v2.3.0)
+
+Opt-in second tier for two-level navigation: a global icon rail (Tier 1) plus a contextual, text-labeled sub-rail (Tier 2) for the active section/project. Add `.has-secondary` to the shell and a `<nav class="glacial-rail-secondary">` sibling between the rail and content.
+
+```html
+<div class="glacial-rail-shell has-secondary">
+  <aside class="glacial-rail" aria-label="Primary"> ...icon rail... </aside>
+  <nav class="glacial-rail-secondary" aria-label="Project sections">
+    <div class="glacial-rail-secondary-title">Project name</div>
+    <a class="glacial-rail-secondary-item" aria-current="page" href="...">Board</a>
+    <a class="glacial-rail-secondary-item" href="...">Ideas</a>
+  </nav>
+  <main class="glacial-rail-content">...</main>
+</div>
+```
+
+`.has-secondary` is a **shell modifier**: without it, the layout is the single-tier rail, unchanged. It's an explicit class (not a `:has()` auto-detect) so older/embedded webviews glacial is vendored into — e.g. Home Assistant dashboards — never get a broken layout. Tier 1 (`aria-label="Primary"`) and Tier 2 (`aria-label="Project sections"`) are two distinct landmarks; `aria-current="page"` marks the active item in both.
+
+| Breakpoint | Layout |
+|-----------|--------|
+| ≥768px | 3 columns: `60px 200px 1fr` (rail / sub-rail / content). Sub-rail is a glass surface (`backdrop-filter`), sticky, and scrolls vertically (`overflow-y:auto`) when sections exceed the viewport. |
+| <768px | Tier 2 becomes a sticky, horizontally-scrolling strip at the top (`scroll-snap`); Tier 1 stays the bottom nav; content sits between. The sub-rail **drops `backdrop-filter`** here (mobile blur policy) and the title is hidden. |
+
+| Element / state | Behavior |
+|---|---|
+| `.glacial-rail-secondary-title` | Mono uppercase label, `--text-faint`. Truncates with ellipsis (orienting context, single line). |
+| `.glacial-rail-secondary-item` | `--text-secondary`; **wraps** rather than truncating (never hide a nav target). |
+| Hover | `--bg-card-hover` background, `--text-strong` color |
+| Active (`.is-active` / `aria-current="page"`) | `--accent-bg` background, `--accent` color; `--glow-low` accent shadow in dark mode |
+| Focus-visible | 2px accent outline |
+| Mobile touch target | `min-height:44px` on the strip (desktop stays compact) |
+
+**Consumer contract (mobile orientation):** glacial ships no JS for this tier. On mount, the consuming app should `scrollIntoView({inline:'center'})` the active `[aria-current="page"]` item so the current section is visible on the horizontal strip. See `examples/rail-dual.html`.
+
 ### `.glacial-drawer` — right panel / bottom sheet
 
 ```html
@@ -808,3 +842,5 @@ HA's theme system doesn't support animated backgrounds or `backdrop-filter` nati
 | 2026-05-04 | Cmd+K palette helper | `glacialPalette()` injects DOM, auto-binds Cmd+K, supports sections + filtering + keyboard nav. Hint badge hidden on `(pointer: coarse)`. |
 | 2026-05-04 | Skin contract enforced via lint | `scripts/lint-skin.sh` blocks non-token overrides. `SKIN-EXCEPTION:` marker allows justified exceptions (warm-serif's serif headings). |
 | 2026-05-04 | Token contract enforced via diff | `scripts/diff-tokens.sh` blocks token renames without a version bump. `tokens.json` is the public snapshot. |
+| 2026-05-29 | Two-tier rail (v2.3.0) | `.glacial-rail-secondary` + `.has-secondary` shell modifier adds a contextual text sub-rail composing with the icon rail. Explicit modifier over `:has()` for older-webview compat. Mobile: sticky top strip, blur dropped, 44px targets, scroll-snap; sub-rail labels wrap, title ellipses. Reuses existing tokens (no new tokens). |
+| 2026-05-29 | CLASSES guard added | `scripts/check-classes.sh` asserts every `CLASSES[]` name in glacial.js has a matching `.<name>` selector in glacial.css — catches typos in the debug list. |

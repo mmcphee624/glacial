@@ -4,6 +4,33 @@ All notable changes to glacial are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.0] — 2026-05-29
+
+Additive: a second navigation tier. Composes with the existing rail; no token
+changes, no breaking changes. Unblocks control-pane's two-level nav.
+
+### Added — Two-tier rail
+- `.glacial-rail-secondary` — contextual, text-labeled sub-rail that pairs with
+  the Tier 1 icon rail. Opt in with the `.has-secondary` shell modifier; without
+  it the layout is the single-tier rail, unchanged. New classes:
+  `.glacial-rail-secondary`, `.glacial-rail-secondary-title`,
+  `.glacial-rail-secondary-item`.
+  - Desktop: `60px 200px 1fr` grid. Sub-rail is a glass surface, sticky, and
+    scrolls vertically when sections overflow. Title truncates with ellipsis;
+    section labels wrap (never truncate a nav target).
+  - Mobile (<768px): sub-rail becomes a sticky, scroll-snapping top strip; Tier 1
+    stays the bottom nav. Strip drops `backdrop-filter` (mobile blur policy) and
+    items meet the 44px touch-target minimum. Title hidden.
+  - Two distinct landmarks (`aria-label="Primary"` / `"Project sections"`),
+    `aria-current="page"` in both tiers. Explicit modifier chosen over `:has()`
+    for older/embedded-webview compatibility.
+- `examples/rail-dual.html` — dual-rail reference (real glacial classes), with a
+  `.has-secondary` toggle and long title/label to demonstrate overflow.
+
+### Added — Tooling
+- `scripts/check-classes.sh` — asserts every `CLASSES[]` name in `glacial.js` has
+  a matching `.<name>` selector in `glacial.css`.
+
 ## [2.2.0] — 2026-05-04
 
 Documentation and CI tooling. No new components, no token changes — but the
