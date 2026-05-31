@@ -370,7 +370,7 @@ When your page looks wrong:
 
 ## Class index
 
-Every public `.glacial-*` class shipped in v2.2.0:
+Every public `.glacial-*` class shipped in v2.4.0:
 
 ### Core (v1.0.0)
 - `.glacial-glass` — frosted glass card surface
@@ -401,7 +401,22 @@ Every public `.glacial-*` class shipped in v2.2.0:
 - `.glacial-split-row` + `-title` / `-meta` (+ `.is-selected` / `aria-current="true"`)
 - `.glacial-split-detail` + `.glacial-split-back` + `.glacial-split-empty`
 - `.glacial-palette-overlay` + `.glacial-palette` + `-input` / `-list` / `-section` / `-item` / `-empty` (DOM injected by `glacialPalette()`)
-- `.glacial-h1` / `.glacial-h2` — opt-in monospace heading utility (mostly for hybrid aesthetic)
+- `.glacial-h1` / `.glacial-h2` — heading utility (fluid `--text-*` scale; mono+uppercase under hybrid)
+
+### Tier 2.5 (v2.3.0)
+- `.glacial-rail-secondary` + `-title` / `-item` — contextual text sub-rail; add `.has-secondary` to `.glacial-rail-shell`
+
+### Tier 3 (v2.4.0)
+- **Forms:** `.glacial-field` + `-label` / `-hint` / `-error`; `.glacial-input` / `.glacial-textarea` / `.glacial-select`; `.glacial-checkbox` / `.glacial-radio` / `.glacial-switch` (errors via `aria-invalid="true"`)
+- **Modal:** `.glacial-modal` + `.glacial-modal-overlay` + `-header` / `-title` / `-close` / `-body` / `-footer`
+- **Dropdown:** `.glacial-dropdown` + `.glacial-menu` + `.glacial-menu-item` / `.glacial-menu-separator`
+- **Tabs:** `.glacial-tabs` + `.glacial-tab-list` + `.glacial-tab` + `.glacial-tab-panel`
+- **Toast:** `.glacial-toast-region` + `.glacial-toast` (+ `-info`/`-success`/`-warn`/`-error`) + `-message` / `-action` / `-close`
+- **Accordion:** `.glacial-accordion` + `.glacial-accordion-item` (`<details>`) + `-trigger` (`<summary>`) + `-panel`
+- **Feedback:** `.glacial-progress` + `.glacial-progress-bar`; `.glacial-spinner`
+- **Avatar:** `.glacial-avatar` + `.glacial-avatar-group`
+- **Pagination:** `.glacial-pagination` + `.glacial-pagination-item` (`aria-current="page"` for current)
+- **Tooltip:** attribute-only — `[data-glacial-tooltip="text"]`
 
 ### Behavior hooks (data attributes)
 - `data-theme="light|dark"` on `<html>` — forces theme
@@ -414,12 +429,20 @@ Every public `.glacial-*` class shipped in v2.2.0:
 - `data-open="true|false"` on `.glacial-drawer` and `.glacial-drawer-overlay` — open state
 - `data-glacial-drawer-close="<id>"` — declarative close hook on a button or link
 - `data-glacial-skin` (no value) on a `<select>` — auto-wired skin picker (see `_examples.js`)
+- `data-glacial-modal-open="<id>"` / `data-glacial-modal-close="<id?>"` — declarative modal open/close (v2.4.0)
+- `data-glacial-tabs` on a tab container — auto-wires roles + arrow-key nav (v2.4.0)
+- `data-glacial-menu="<id?>"` on a trigger — toggles its `.glacial-menu` (v2.4.0)
+- `data-glacial-tooltip="<text>"` on any element — hover/focus tooltip (v2.4.0)
+- `has-secondary` (class) on `.glacial-rail-shell` — enables the two-tier rail (v2.3.0)
 
 ### JS API
 - `window.glacialToggleTheme()` → light ↔ dark
 - `window.glacialSetSkin(name)` → set `<html data-skin>` and persist
 - `window.glacialSetAesthetic(name | null)` → set/clear `<html data-aesthetic>`
+- `window.glacialOnThemeChange(cb)` → subscribe to theme/skin/aesthetic changes; returns unsubscribe (v2.4.0)
 - `window.glacialOpenDrawer(idOrEl)` / `window.glacialCloseDrawer(idOrEl?)`
+- `window.glacialOpenModal(idOrEl)` / `window.glacialCloseModal(idOrEl?)` (v2.4.0)
+- `window.glacialToast({ message, variant, timeout, action })` → returns a dismiss fn (v2.4.0)
 - `window.glacialPalette({ items, onSelect, placeholder, shortcut })` → returns `{ open, close, isOpen, setItems }`
 - `window.glacial.help()` → full state object
-- `window.glacial.{toggleTheme, setSkin, setAesthetic, openDrawer, closeDrawer, palette, version}` → namespaced API
+- `window.glacial.{toggleTheme, setSkin, setAesthetic, onThemeChange, openDrawer, closeDrawer, openModal, closeModal, toast, palette, version}` → namespaced API

@@ -77,32 +77,54 @@
     <form class="glacial-glass" style="padding: 20px;">
       <h2 class="ex-h3" style="margin-top: 0;">Vehicle</h2>
 
-      <div style="margin-bottom: 14px;">
-        <label class="ex-label" for="f-make">Make &middot; Model *</label>
-        <input class="ex-input" id="f-make" type="text" placeholder="e.g. Honda Civic" value="Mazda MX-5 Miata">
+      <div class="glacial-field">
+        <label class="glacial-field-label" for="f-make">Make &middot; Model *</label>
+        <input class="glacial-input" id="f-make" type="text" placeholder="e.g. Honda Civic" value="Mazda MX-5 Miata">
       </div>
 
       <div class="ex-row">
-        <div class="ex-col" style="margin-bottom: 14px;">
-          <label class="ex-label" for="f-year">Year *</label>
-          <input class="ex-input" id="f-year" type="number" placeholder="2019" value="2019">
+        <div class="glacial-field">
+          <label class="glacial-field-label" for="f-year">Year *</label>
+          <input class="glacial-input" id="f-year" type="number" placeholder="2019" value="2019">
         </div>
-        <div class="ex-col" style="margin-bottom: 14px;">
-          <label class="ex-label" for="f-mileage">Mileage</label>
-          <input class="ex-input" id="f-mileage" type="number" placeholder="18,900" value="18900">
+        <div class="glacial-field">
+          <label class="glacial-field-label" for="f-mileage">Mileage</label>
+          <input class="glacial-input" id="f-mileage" type="number" placeholder="18,900" value="18900">
         </div>
       </div>
 
-      <div style="margin-bottom: 14px;">
-        <label class="ex-label" for="f-vin">VIN *</label>
-        <input class="ex-input" id="f-vin" type="text" placeholder="17 characters" value="JM1NDAD7XK030" style="border-color: var(--red); outline-color: var(--red);">
-        <div style="font-size: 11px; color: var(--red); margin-top: 4px; font-family: var(--font-mono);">VIN must be 17 characters &middot; got 13</div>
+      <div class="glacial-field">
+        <label class="glacial-field-label" for="f-vin">VIN *</label>
+        <input class="glacial-input" id="f-vin" type="text" placeholder="17 characters" value="JM1NDAD7XK030" aria-invalid="true" aria-describedby="f-vin-err">
+        <span class="glacial-field-error" id="f-vin-err">VIN must be 17 characters &middot; got 13</span>
       </div>
 
-      <div style="margin-bottom: 14px;">
-        <label class="ex-label" for="f-price">Asking price *</label>
-        <input class="ex-input" id="f-price" type="text" placeholder="$24,800" value="" style="border-color: var(--red); outline-color: var(--red);">
-        <div style="font-size: 11px; color: var(--red); margin-top: 4px; font-family: var(--font-mono);">Required</div>
+      <div class="glacial-field">
+        <label class="glacial-field-label" for="f-price">Asking price *</label>
+        <input class="glacial-input" id="f-price" type="text" placeholder="$24,800" value="" aria-invalid="true" aria-describedby="f-price-err">
+        <span class="glacial-field-error" id="f-price-err">Required</span>
+      </div>
+
+      <div class="ex-row">
+        <div class="glacial-field">
+          <label class="glacial-field-label" for="f-condition">Condition</label>
+          <select class="glacial-select" id="f-condition">
+            <option>Excellent</option>
+            <option>Good</option>
+            <option>Fair</option>
+            <option>Project</option>
+          </select>
+        </div>
+        <div class="glacial-field">
+          <label class="glacial-field-label" for="f-listed">List date</label>
+          <input class="glacial-input" id="f-listed" type="date" value="2026-05-30">
+        </div>
+      </div>
+
+      <div class="glacial-field">
+        <label class="glacial-field-label" for="f-notes">Notes</label>
+        <textarea class="glacial-textarea" id="f-notes" placeholder="Anything a buyer should know"></textarea>
+        <span class="glacial-field-hint">Markdown supported. Shown on the public listing.</span>
       </div>
 
       <hr class="ex-divider">
@@ -115,6 +137,15 @@
           <button type="button" class="glacial-filter-pill">Draft</button>
         </div>
       </div>
+
+      <label style="display: flex; align-items: center; gap: 10px; margin: 12px 0;">
+        <input class="glacial-switch" type="checkbox" id="f-featured" checked>
+        <span style="font-size: 13px; color: var(--text);">Feature on homepage</span>
+      </label>
+      <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+        <input class="glacial-checkbox" type="checkbox" id="f-terms">
+        <span style="font-size: 13px; color: var(--text);">I confirm the details are accurate</span>
+      </label>
 
       <div style="display: flex; gap: 8px; margin-top: 20px; flex-wrap: wrap;">
         <button type="submit" class="glacial-btn glacial-btn-primary">Save listing</button>

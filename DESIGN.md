@@ -9,7 +9,7 @@ Agent path:  README → RECIPES.md → examples → DESIGN.md (you are here)
 Human path:  README → examples → DESIGN.md → RECIPES.md (optional)
 ```
 
-Current version: **`2.3.0`** — see [`VERSION`](./VERSION) and [`CHANGELOG.md`](./CHANGELOG.md).
+Current version: **`2.4.0`** — see [`VERSION`](./VERSION) and [`CHANGELOG.md`](./CHANGELOG.md).
 
 ---
 
@@ -78,6 +78,16 @@ JavaScript-driven behavior uses `data-glacial-*` attributes:
 | `data-glacial-loaded="<version>"` | Set by `glacial.js` on `<html>` to confirm load |
 | `data-glacial-drawer-close="<id>"` | Declarative drawer-close hook on any clickable element |
 | `data-glacial-skin` | Auto-wires a `<select>` element to the skin picker (used in examples) |
+| `data-glacial-modal-open="<id>"` | (v2.4.0) Declarative modal-open hook on any clickable element |
+| `data-glacial-modal-close="<id?>"` | (v2.4.0) Declarative modal-close hook |
+| `data-glacial-tabs` | (v2.4.0) Auto-wires a tab container (`.glacial-tab` + `.glacial-tab-panel`) |
+| `data-glacial-menu="<id?>"` | (v2.4.0) Trigger that toggles its `.glacial-menu` (next sibling or by id) |
+| `data-glacial-tooltip="<text>"` | (v2.4.0) Decorative tooltip on hover/focus (pair with `aria-label`) |
+
+Change event (v2.4.0): `glacial.js` dispatches a `glacial:change` `CustomEvent` on
+`document` whenever theme / skin / aesthetic changes (`detail = { theme, skin, aesthetic }`).
+Subscribe with `glacialOnThemeChange(cb)` (returns an unsubscribe fn) instead of
+observing `<html>`.
 
 App code that hooks into glacial should also use the `data-glacial-*` namespace to keep the contract clear.
 
@@ -272,6 +282,31 @@ Hybrid aesthetic tightens these to 3 / 6 / 10. `midnight-mono` tightens to 2 / 4
 | `--font-mono` | SF Mono, Menlo, Consolas |
 
 ---
+
+### Spacing scale (v2.4.0)
+
+Theme-invariant tokens on a 4px base. Use them in component padding/gaps so skins
+and apps can retune density by overriding tokens instead of editing components.
+
+| Token | Value | | Token | Value |
+|-------|-------|-|-------|-------|
+| `--space-2xs` | 2px | | `--space-lg` | 24px |
+| `--space-xs` | 4px | | `--space-xl` | 32px |
+| `--space-sm` | 8px | | `--space-2xl` | 48px |
+| `--space-md` | 16px | | `--space-3xl` | 64px |
+
+### Fluid type scale (v2.4.0)
+
+`clamp()`-based, scaling between ~360px and ~1240px viewports — readable on phones
+and ultra-wide screens with no JS. Used by `.glacial-h1` / `.glacial-h2`; available
+to consumers.
+
+| Token | Range | Token | Range |
+|-------|-------|-------|-------|
+| `--text-xs` | 11→12px | `--text-lg` | 17→20px |
+| `--text-sm` | 13→14px | `--text-xl` | 20→24px |
+| `--text-base` | 15→16px | `--text-2xl` | 24→32px |
+| | | `--text-3xl` | 30→44px |
 
 ## Spacing & Layout
 
@@ -744,6 +779,59 @@ Returns `{ open, close, isOpen, setItems }`.
 
 ---
 
+## Component Specifications — Tier 3 (v2.4.0)
+
+Forms, overlays, and feedback. All tokens-only, reduced-motion-aware, and built
+on native elements/ARIA where possible. See `examples/components.html` and
+`examples/form.html`.
+
+### Forms
+
+```html
+<div class="glacial-field">
+  <label class="glacial-field-label" for="email">Email</label>
+  <input class="glacial-input" id="email" type="email" aria-invalid="true" aria-describedby="email-err">
+  <span class="glacial-field-error" id="email-err">Enter a valid address</span>
+</div>
+```
+
+| Class | Notes |
+|-------|-------|
+| `.glacial-field` (+ `-label` / `-hint` / `-error`) | Group wrapper. Render `-error` only when invalid; pair with `aria-invalid` on the control. |
+| `.glacial-input` / `.glacial-textarea` / `.glacial-select` | Glass-input surfaces. `.glacial-select` styles a real `<select>` (chevron via data-URI). Native `input[type=date]` themed. |
+| `.glacial-checkbox` / `.glacial-radio` | Native control, themed via `accent-color`. |
+| `.glacial-switch` | `<input type="checkbox" class="glacial-switch">` restyled as a toggle. |
+
+| State | Behavior |
+|-------|----------|
+| Hover | `--border-hover` border |
+| Focus-visible | `--accent` border + accent-bg ring (accent glow in dark) |
+| Disabled (`[disabled]`) | 50% opacity, `not-allowed` |
+| Invalid (`[aria-invalid="true"]`) | `--red` border; red ring on focus |
+| Checked (switch/checkbox) | `--accent` fill |
+
+### Overlays & interactive
+
+| Component | Classes / hook | Behavior |
+|-----------|----------------|----------|
+| Modal | `.glacial-modal` (+ overlay/header/title/close/body/footer) · `glacialOpenModal` / `glacialCloseModal` · `[data-glacial-modal-open]` | `role="dialog"`, shared focus trap, Esc / overlay-click / `[data-glacial-modal-close]` close, focus restored on close |
+| Toast | `.glacial-toast` (+ region) · `glacialToast({ message, variant, timeout, action })` | Injected into an `aria-live="polite"` region; variants map to alert colors; auto-dismiss (default 4s) |
+| Tabs | `.glacial-tab-list` / `.glacial-tab` / `.glacial-tab-panel` · `[data-glacial-tabs]` | Roles tablist/tab/tabpanel, `aria-selected`, arrow/Home/End nav, panels toggle `hidden` |
+| Menu | `.glacial-dropdown` / `.glacial-menu` / `.glacial-menu-item` · `[data-glacial-menu]` | Toggle, `aria-expanded`, Esc / outside-click close, arrow-key nav (items must be `<button>`/`<a>`) |
+| Tooltip | `[data-glacial-tooltip="text"]` | `::after` on hover + focus-visible. Decorative — pair with `aria-label` for SR. |
+| Accordion | `.glacial-accordion-item` (`<details>`) / `-trigger` (`<summary>`) / `-panel` | Native disclosure, zero-JS |
+| Progress / Spinner | `.glacial-progress` (+ `-bar`) / `.glacial-spinner` | Determinate bar (set `width`); spinner gated by reduced-motion |
+| Avatar | `.glacial-avatar` (+ `-group`) | Image or initials; group overlaps with a `--bg` ring |
+| Pagination | `.glacial-pagination` (+ `-item`) | `[aria-current="page"]` for the current page; `[disabled]`/`[aria-disabled]` |
+
+### Layout — container queries
+
+`.glacial-rail-shell` (`container-name: glacial-shell`) and `.glacial-rail-content`
+(`glacial-content`) are query containers. A `.glacial-split-view` inside the
+content area collapses on the container's width, not the viewport — so it stacks
+when a rail/sub-rail narrows the content area even on a wide screen. The viewport
+`@media` at `<768px` remains the fallback for split-views outside a glacial container.
+
 ## Motion
 
 - **Approach:** Minimal-functional + aurora atmosphere
@@ -773,8 +861,10 @@ Every animation in glacial respects `@media (prefers-reduced-motion: reduce)`:
 | **Touch targets** | 44×44px minimum on rail, status-row, drawer-close. Bottom-nav rail items are 56×48px. |
 | **Color contrast** | WCAG AA verified for default skin (text on bg, accent on bg). Skin authors are responsible for verifying contrast on their palette. The lavender skin's dusty `#7c5fa5` accent on white = 4.6:1 (AA). |
 | **Reduced motion** | Honored — see contract above |
-| **ARIA** | `aria-current="page"` on rail/breadcrumb active items. `aria-pressed` on filter pills. `role="dialog" aria-modal="true"` on drawers. `role="group"` on filter-bar groups. `aria-label` on icon-only items. |
-| **Semantic HTML** | `<nav>` for breadcrumbs and rail. `<aside>` for drawer and split-list. `<dialog>`-style behavior on drawer (with focus trap). |
+| **High contrast** (v2.4.0) | `@media (prefers-contrast: more)` remaps tokens: blur off (`--blur: 0`), surfaces solidify, borders strengthen, `--text-muted`/`--text-faint` collapse into `--text-secondary`, and the aurora is disabled in dark mode. Because it's a pure token remap, every component (and any consumer CSS using tokens) inherits it. |
+| **ARIA** | `aria-current="page"` on rail/breadcrumb active items. `aria-pressed` on filter pills. `role="dialog" aria-modal="true"` on drawers/modals. `aria-invalid` on bad form fields. `role="tablist/tab/tabpanel"` + `aria-selected` on tabs. `aria-expanded` on menu triggers. `aria-live="polite"` on the toast region. `aria-label` on icon-only items. |
+| **Form labels** | Visible `.glacial-field-label` (no placeholder-as-label); errors via `aria-invalid` + `aria-describedby` to a `.glacial-field-error`. |
+| **Semantic HTML** | `<nav>` for breadcrumbs and rail. `<aside>` for drawer and split-list. `<details>` for accordion. Native `<select>`/`<input>` kept for forms. Focus trap on drawer + modal. |
 
 ---
 
@@ -844,3 +934,9 @@ HA's theme system doesn't support animated backgrounds or `backdrop-filter` nati
 | 2026-05-04 | Token contract enforced via diff | `scripts/diff-tokens.sh` blocks token renames without a version bump. `tokens.json` is the public snapshot. |
 | 2026-05-29 | Two-tier rail (v2.3.0) | `.glacial-rail-secondary` + `.has-secondary` shell modifier adds a contextual text sub-rail composing with the icon rail. Explicit modifier over `:has()` for older-webview compat. Mobile: sticky top strip, blur dropped, 44px targets, scroll-snap; sub-rail labels wrap, title ellipses. Reuses existing tokens (no new tokens). |
 | 2026-05-29 | CLASSES guard added | `scripts/check-classes.sh` asserts every `CLASSES[]` name in glacial.js has a matching `.<name>` selector in glacial.css — catches typos in the debug list. |
+| 2026-05-31 | Tier 3 components (v2.4.0) | Forms, modal, toast, tabs, menu, tooltip, accordion, progress/spinner, avatar, pagination. Internal-tool surveys showed every consumer reimplementing form inputs + a dialog. Native elements/ARIA where possible; drawer focus-trap extracted to a shared `trapFocus`. |
+| 2026-05-31 | Spacing + fluid type tokens | The documented spacing scale was hardcoded as px in components; now tokenized (`--space-*`) so skins can retune density. Added a `clamp()` fluid type scale (`--text-*`). |
+| 2026-05-31 | prefers-contrast safeguard | Glass+blur is the worst case for contrast. Implemented as a pure token remap (blur off, surfaces solid, aurora off in dark) so it propagates without per-component overrides. |
+| 2026-05-31 | Theme-change event | `glacial:change` CustomEvent + `glacialOnThemeChange()` replace consumer MutationObservers on `<html>`. |
+| 2026-05-31 | Container queries for split-view | `.glacial-rail-content` is a query container; nested split-views collapse on content width, not viewport. Viewport `@media` kept as fallback. |
+| 2026-05-31 | CI + contract test | `.github/workflows/ci.yml` runs all gates; `scripts/check-contract.mjs` (pure Node) enforces CLASSES⊆CSS, declared token refs, and the no-color-literal DNA rule. Zero-build kept — no npm/bundler. |

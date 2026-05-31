@@ -4,6 +4,57 @@ All notable changes to glacial are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.0] — 2026-05-31
+
+Tier 3: forms, overlays, and feedback components, plus a high-contrast
+safeguard and CI. Additive — no token removals, no breaking changes.
+
+### Added — Tokens & accessibility
+- **Spacing scale** tokens (`--space-2xs` … `--space-3xl`, 4px base) and a
+  **fluid type scale** (`--text-xs` … `--text-3xl`, `clamp()`-based). Skins and
+  apps can now adjust density/scale by overriding tokens.
+- **`prefers-contrast: more` safeguard** — remaps surface/border/text tokens to
+  high-contrast values, kills `--blur`, and disables the aurora in dark mode.
+  Pure token remap, so every component inherits it (DNA #5 intact).
+- **`glacial:change` event** + `glacialOnThemeChange(cb)` — fires on theme /
+  skin / aesthetic change so consumers stop polling or observing `<html>`.
+
+### Added — Form components
+- `.glacial-field` (+ `-label` / `-hint` / `-error`), `.glacial-input`,
+  `.glacial-textarea`, `.glacial-select` (styled native), `.glacial-checkbox`,
+  `.glacial-radio`, `.glacial-switch`. States via `:focus-visible` (accent ring
+  + dark glow), `[disabled]`, `:checked`, and `[aria-invalid="true"]`. Native
+  `input[type=date]` themed (no custom picker). `examples/form.html` migrated
+  off the `ex-*` demo classes to the real components.
+
+### Added — Overlay & interactive components
+- `.glacial-modal` (+ overlay/header/title/close/body/footer) with shared focus
+  trap, Esc / overlay-click / `[data-glacial-modal-close]` close, and
+  `[data-glacial-modal-open]`. JS: `glacialOpenModal` / `glacialCloseModal`.
+- `.glacial-toast` (+ region) via `glacialToast({ message, variant, timeout, action })`,
+  announced through an `aria-live` region.
+- `.glacial-tabs` / `-tab-list` / `-tab` / `-tab-panel`, auto-wired by
+  `[data-glacial-tabs]` (roles, arrow/Home/End keys, `aria-selected`).
+- `.glacial-dropdown` / `.glacial-menu` / `-menu-item`, auto-wired by
+  `[data-glacial-menu]` (Esc / outside-click close, arrow-key navigation).
+- `.glacial-tooltip` via `[data-glacial-tooltip]` (hover + focus-visible).
+- `.glacial-accordion` (+ item/trigger/panel) on native `<details>` (zero-JS).
+- `.glacial-progress` (+ bar), `.glacial-spinner` (reduced-motion gated),
+  `.glacial-avatar` (+ group), `.glacial-pagination` (+ item).
+- Drawer focus-trap refactored into a shared `trapFocus()` (reused by the modal).
+
+### Added — Layout
+- Container queries: `.glacial-rail-shell` and `.glacial-rail-content` are named
+  containers (`glacial-shell` / `glacial-content`); a `.glacial-split-view`
+  nested in the content area now collapses on its container width, not just the
+  viewport. Viewport `@media` stays as the fallback.
+
+### Added — Tooling & docs
+- `.github/workflows/ci.yml` runs every gate on push/PR.
+- `scripts/check-contract.mjs` (pure Node): CLASSES[] ⊆ CSS, every `var(--x)`
+  declared, and no chromatic color literals in component bodies (DNA #5).
+- New `CONTRIBUTING.md`; `examples/components.html` gallery for the Tier 3 set.
+
 ## [2.3.0] — 2026-05-29
 
 Additive: a second navigation tier. Composes with the existing rail; no token
