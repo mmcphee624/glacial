@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Tier 3 Components · Glacial Examples</title>
+  <link rel="stylesheet" href="../glacial.css">
+  <link rel="stylesheet" href="../skins/default.css">
+  <link rel="stylesheet" href="../skins/warm-serif.css">
+  <link rel="stylesheet" href="../skins/midnight-mono.css">
+  <link rel="stylesheet" href="../skins/lavender.css">
+  <link rel="stylesheet" href="../skins/deep-navy.css">
+  <link rel="stylesheet" href="../skins/nord.css">
+  <link rel="stylesheet" href="_examples.css">
+  <script src="../glacial.js"></script>
+</head>
+<body>
+  <header class="glacial-glass-header ex-toolbar">
+    <div class="ex-toolbar-inner">
+      <span class="ex-logo">GLACIAL · TIER 3</span>
+      <nav class="glacial-nav ex-nav">
+        <a href="index.html">index</a>
+        <a href="form.html">form</a>
+        <a href="components.html" class="active">components</a>
+        <a href="rail-dual.html">rail</a>
+        <a href="skins-preview.html">skins</a>
+      </nav>
+      <div class="ex-controls">
+        <select class="ex-select" data-glacial-skin>
+          <option value="default">default</option>
+          <option value="warm-serif">warm-serif</option>
+          <option value="midnight-mono">midnight-mono</option>
+          <option value="lavender">lavender</option>
+          <option value="deep-navy">deep-navy</option>
+          <option value="nord">nord</option>
+        </select>
+        <button class="glacial-toggle" onclick="glacialToggleTheme()" title="Toggle theme">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="ex-main" style="max-width: 760px;">
+    <section class="ex-hero">
+      <h1 class="glacial-h1">Tier 3 components</h1>
+      <p class="ex-lede">Forms, overlays, and feedback (v2.4.0). Toggle skins/theme above; try keyboard nav (Tab, Esc, arrows). Forms have their own page — see <a href="form.html">form</a>.</p>
+    </section>
+
+    <!-- Modal + Toast -->
+    <section class="ex-section">
+      <h2 class="glacial-h2">Modal &amp; toast</h2>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="glacial-btn glacial-btn-primary" data-glacial-modal-open="demo-modal">Open modal</button>
+        <button class="glacial-btn glacial-btn-secondary" onclick="glacialToast({message:'Listing saved', variant:'success'})">Success toast</button>
+        <button class="glacial-btn glacial-btn-secondary" onclick="glacialToast({message:'Could not reach server', variant:'error', action:{label:'Retry', onClick:function(){}}})">Error toast + action</button>
+      </div>
+    </section>
+
+    <!-- Tabs -->
+    <section class="ex-section">
+      <h2 class="glacial-h2">Tabs</h2>
+      <div data-glacial-tabs>
+        <div class="glacial-tab-list">
+          <button class="glacial-tab" aria-controls="tp-1" aria-selected="true">Overview</button>
+          <button class="glacial-tab" aria-controls="tp-2">Activity</button>
+          <button class="glacial-tab" aria-controls="tp-3">Settings</button>
+        </div>
+        <div class="glacial-tab-panel" id="tp-1">Overview panel — arrow keys move between tabs.</div>
+        <div class="glacial-tab-panel" id="tp-2">Activity panel — recent events would render here.</div>
+        <div class="glacial-tab-panel" id="tp-3">Settings panel — configuration lives here.</div>
+      </div>
+    </section>
+
+    <!-- Dropdown + Tooltip -->
+    <section class="ex-section">
+      <h2 class="glacial-h2">Dropdown &amp; tooltip</h2>
+      <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap;">
+        <div class="glacial-dropdown">
+          <button class="glacial-btn glacial-btn-secondary" data-glacial-menu aria-haspopup="true" aria-expanded="false">Actions ▾</button>
+          <div class="glacial-menu">
+            <button class="glacial-menu-item">Edit</button>
+            <button class="glacial-menu-item">Duplicate</button>
+            <div class="glacial-menu-separator"></div>
+            <button class="glacial-menu-item">Delete</button>
+          </div>
+        </div>
+        <button class="glacial-btn glacial-btn-secondary" data-glacial-tooltip="Keyboard: ⌘K" aria-label="Command palette">Hover or focus me</button>
+      </div>
+    </section>
+
+    <!-- Accordion -->
+    <section class="ex-section">
+      <h2 class="glacial-h2">Accordion</h2>
+      <div class="glacial-accordion">
+        <details class="glacial-accordion-item" open>
+          <summary class="glacial-accordion-trigger">What is glacial?</summary>
+          <div class="glacial-accordion-panel">A glass-morphism design system, vendored as raw CSS + JS.</div>
+        </details>
+        <details class="glacial-accordion-item">
+          <summary class="glacial-accordion-trigger">Does it need a build step?</summary>
+          <div class="glacial-accordion-panel">No — link two files. Native <code>&lt;details&gt;</code> powers this accordion with zero JS.</div>
+        </details>
+      </div>
+    </section>
+
+    <!-- Progress, spinner -->
+    <section class="ex-section">
+      <h2 class="glacial-h2">Progress &amp; spinner</h2>
+      <div class="glacial-progress" role="progressbar" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100" style="margin-bottom:12px;">
+        <div class="glacial-progress-bar" style="width:62%;"></div>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span class="glacial-spinner" aria-label="Loading" role="status"></span>
+        <span style="font-size:13px; color:var(--text-secondary);">Loading…</span>
+      </div>
+    </section>
+
+    <!-- Avatars + pagination -->
+    <section class="ex-section">
+      <h2 class="glacial-h2">Avatars &amp; pagination</h2>
+      <div class="glacial-avatar-group" style="margin-bottom:12px;">
+        <span class="glacial-avatar">MM</span>
+        <span class="glacial-avatar">JL</span>
+        <span class="glacial-avatar">AR</span>
+        <span class="glacial-avatar">+5</span>
+      </div>
+      <nav class="glacial-pagination" aria-label="Pagination">
+        <a class="glacial-pagination-item" href="#" aria-disabled="true">‹</a>
+        <a class="glacial-pagination-item" href="#">1</a>
+        <a class="glacial-pagination-item" href="#" aria-current="page">2</a>
+        <a class="glacial-pagination-item" href="#">3</a>
+        <a class="glacial-pagination-item" href="#">›</a>
+      </nav>
+    </section>
+  </main>
+
+  <!-- Modal markup (hidden until opened) -->
+  <div class="glacial-modal-overlay" data-open="false">
+    <div class="glacial-modal" id="demo-modal" role="dialog" aria-modal="true" aria-labelledby="demo-modal-title">
+      <header class="glacial-modal-header">
+        <h2 class="glacial-modal-title" id="demo-modal-title">Delete listing?</h2>
+        <button class="glacial-modal-close" data-glacial-modal-close aria-label="Close">×</button>
+      </header>
+      <div class="glacial-modal-body">This can't be undone. The listing and its history will be removed.</div>
+      <footer class="glacial-modal-footer">
+        <button class="glacial-btn glacial-btn-secondary" data-glacial-modal-close>Cancel</button>
+        <button class="glacial-btn glacial-btn-primary" data-glacial-modal-close>Delete</button>
+      </footer>
+    </div>
+  </div>
+
+  <script src="_examples.js"></script>
+</body>
+</html>

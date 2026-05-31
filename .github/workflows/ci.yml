@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # diff-tokens compares against the previous commit
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: tokens.json is in sync with glacial.css
+        run: bash scripts/snapshot-tokens.sh --check
+
+      - name: token renames carry a version bump
+        run: bash scripts/diff-tokens.sh
+
+      - name: skin contract (token-only overrides)
+        run: bash scripts/lint-skin.sh
+
+      - name: CLASSES[] subset of CSS selectors
+        run: bash scripts/check-classes.sh
+
+      - name: contract (classes, token refs, no stray color literals)
+        run: node scripts/check-contract.mjs
+
+      - name: glacial.js parses
+        run: node --check glacial.js

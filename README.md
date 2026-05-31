@@ -27,24 +27,25 @@ Three lines. That's the whole getting-started.
 
 | File | Purpose |
 |------|---------|
-| `glacial.css` | Tokens, glass effect, aurora orbs, Tier 1 + Tier 2 components, mobile blur policy |
-| `glacial.js` | Theme + skin + aesthetic toggle, debug surface, drawer + Cmd+K palette helpers |
+| `glacial.css` | Tokens (color, spacing, fluid type), glass effect, aurora orbs, Tier 1–3 components, prefers-contrast safeguard, mobile blur policy |
+| `glacial.js` | Theme + skin + aesthetic toggle, change event, debug surface, drawer / modal / toast / tabs / menu / Cmd+K helpers |
 | `skins/*.css` | 6 brand variants (default, warm-serif, midnight-mono, lavender, deep-navy, nord) |
 | `RECIPES.md` | Decision guide for agents — page recipes, anti-patterns, debug checklist |
 | `DESIGN.md` | Full token catalog, skin contract, state matrices, DNA Checklist, versioning policy |
+| `CONTRIBUTING.md` | How to add a component or skin (naming rubric, DNA checklist, gates) |
 | `MIGRATING.md` | Version-to-version upgrade notes |
 | `CHANGELOG.md` | Per-release change log |
 | `examples/` | Static HTML reference for every component and recipe |
-| `scripts/` | Token contract + skin contract CI gates |
+| `scripts/` | Token + skin + class + contract CI gates |
 | `ha-theme/glacial.yaml` | Home Assistant theme mapping |
 | `tokens.json` | Public token snapshot (machine-readable) |
-| `VERSION` | Current version (`2.3.0`) |
+| `VERSION` | Current version (`2.4.0`) |
 
 ## Adopting in a new project
 
 Paste this into the agent working in the new repo:
 
-> Adopt glacial: vendor a tagged copy of `mmcphee624/glacial` v2.3.0 to `vendor/glacial/` (curl `https://github.com/mmcphee624/glacial/archive/v2.3.0.tar.gz`, extract). Link `vendor/glacial/glacial.css` and `vendor/glacial/glacial.js` from your app shell. Read `vendor/glacial/RECIPES.md` and pick the recipe matching the page you're building. Don't override `--accent` directly — write a skin under `vendor/glacial/skins/` if you need rebranding. Verify by checking `<html data-glacial-loaded>` is set and `window.glacial.help()` returns `{version: "2.3.0"}`.
+> Adopt glacial: vendor a tagged copy of `mmcphee624/glacial` v2.4.0 to `vendor/glacial/` (curl `https://github.com/mmcphee624/glacial/archive/v2.4.0.tar.gz`, extract). Link `vendor/glacial/glacial.css` and `vendor/glacial/glacial.js` from your app shell. Read `vendor/glacial/RECIPES.md` and pick the recipe matching the page you're building. Don't override `--accent` directly — write a skin under `vendor/glacial/skins/` if you need rebranding. Verify by checking `<html data-glacial-loaded>` is set and `window.glacial.help()` returns `{version: "2.4.0"}`.
 
 ## Theming
 

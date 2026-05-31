@@ -1,5 +1,42 @@
 # Migrating
 
+## v2.3.x → v2.4.0
+
+**No breaking changes.** Purely additive: 15 new tokens (8 spacing, 7 fluid
+type), the Tier 3 component set, a high-contrast safeguard, a change event, and
+CI. Existing markup renders identically. Re-vendor and you're done.
+
+### What's new and worth adopting
+
+1. **Form components.** Replace any hand-rolled inputs with `.glacial-input`,
+   `.glacial-textarea`, `.glacial-select`, `.glacial-checkbox`, `.glacial-radio`,
+   `.glacial-switch`, wrapped in `.glacial-field` with a `.glacial-field-label`.
+   Mark errors with `aria-invalid="true"` on the control and a
+   `.glacial-field-error` message — the red border is automatic. If you were
+   faking inputs with local classes (the old `examples/form.html` used `ex-*`),
+   migrate them now.
+
+2. **Overlays.** `.glacial-modal` (`glacialOpenModal(id)` / `glacialCloseModal()`),
+   `glacialToast({ message, variant })`, `[data-glacial-tabs]`,
+   `[data-glacial-menu]`, `[data-glacial-tooltip]`, and `<details
+   class="glacial-accordion-item">`. All keyboard-accessible and
+   reduced-motion-aware out of the box.
+
+3. **Stop observing `<html>`.** Replace any MutationObserver/poll on
+   `data-theme` with:
+   ```js
+   glacialOnThemeChange(function (d) { /* d.theme, d.skin, d.aesthetic */ });
+   ```
+
+4. **High contrast comes free.** Users with `prefers-contrast: more` now get
+   solid surfaces, stronger borders, and no aurora — no work on your side, as
+   long as your custom CSS references glacial tokens rather than hardcoded
+   colors.
+
+5. **New gate.** If you fork or maintain glacial, CI now runs
+   `node scripts/check-contract.mjs` (classes ⊆ CSS, token refs declared, no
+   stray color literals) alongside the existing bash gates. See `CONTRIBUTING.md`.
+
 ## v2.1.x → v2.2.0
 
 **No breaking changes.** No tokens or classes added or removed — token

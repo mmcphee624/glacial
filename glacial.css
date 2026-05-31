@@ -1,5 +1,5 @@
 /* Glacial Design System — Shared CSS Tokens
- * @version 2.3.0
+ * @version 2.4.0
  * Import this file into any service for Glacial theming.
  * See DESIGN.md for full specification, RECIPES.md for page recipes.
  */
@@ -47,6 +47,25 @@
   --glow-high: 0 0 16px;
   --font-mono: 'SF Mono', Menlo, Consolas, monospace;
   --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* v2.4.0 — spacing scale (theme-invariant; base unit 4px). Lets skins/apps
+   * adjust density by overriding tokens instead of per-component padding. */
+  --space-2xs: 2px;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  /* v2.4.0 — fluid type scale (clamp: min @ 360px → max @ ~1240px). Keeps
+   * headings readable on ultra-wide screens without a JS resize handler. */
+  --text-xs: clamp(0.6875rem, 0.66rem + 0.14vw, 0.75rem);
+  --text-sm: clamp(0.8125rem, 0.78rem + 0.16vw, 0.875rem);
+  --text-base: clamp(0.9375rem, 0.9rem + 0.2vw, 1rem);
+  --text-lg: clamp(1.0625rem, 0.99rem + 0.3vw, 1.25rem);
+  --text-xl: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --text-2xl: clamp(1.5rem, 1.2rem + 1.3vw, 2rem);
+  --text-3xl: clamp(1.875rem, 1.4rem + 2vw, 2.75rem);
 }
 
 /* ===== Dark Theme ===== */
@@ -111,6 +130,64 @@
     --shadow: none;
     --orb-opacity: 1;
     --skeleton-shimmer: rgba(255,255,255,0.10);
+  }
+}
+
+/* ============================================================
+ * v2.4.0 — High-contrast safeguard (prefers-contrast: more)
+ *   Frosted glass + blur is the worst case for contrast. Rather than
+ *   override every component, remap the tokens: kill blur, solidify
+ *   surfaces, strengthen borders, collapse muted/faint text into
+ *   --text-secondary, and disable the aurora. DNA rule #5 stays intact
+ *   (components still reference tokens only).
+ * ============================================================ */
+@media (prefers-contrast: more) {
+  :root {
+    --blur: 0px;
+    --bg-card: rgba(255, 255, 255, 0.94);
+    --bg-card-hover: #ffffff;
+    --bg-header: rgba(255, 255, 255, 0.96);
+    --bg-input: #ffffff;
+    --border: rgba(0, 0, 0, 0.4);
+    --border-card: rgba(0, 0, 0, 0.45);
+    --border-hover: var(--accent);
+    --text: #1a1a22;
+    --text-secondary: #2a2a32;
+    --text-muted: var(--text-secondary);
+    --text-faint: var(--text-secondary);
+    --shadow: 0 0 0 1px rgba(0, 0, 0, 0.55);
+  }
+  [data-theme="dark"] {
+    --blur: 0px;
+    --bg-card: rgba(255, 255, 255, 0.16);
+    --bg-card-hover: rgba(255, 255, 255, 0.26);
+    --bg-header: #0c0c0f;
+    --bg-input: rgba(255, 255, 255, 0.14);
+    --border: rgba(255, 255, 255, 0.5);
+    --border-card: rgba(255, 255, 255, 0.5);
+    --border-hover: var(--accent);
+    --text: #f0f0f5;
+    --text-secondary: #d8d8e0;
+    --text-muted: var(--text-secondary);
+    --text-faint: var(--text-secondary);
+    --orb-opacity: 0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --blur: 0px;
+      --bg-card: rgba(255, 255, 255, 0.16);
+      --bg-card-hover: rgba(255, 255, 255, 0.26);
+      --bg-header: #0c0c0f;
+      --bg-input: rgba(255, 255, 255, 0.14);
+      --border: rgba(255, 255, 255, 0.5);
+      --border-card: rgba(255, 255, 255, 0.5);
+      --border-hover: var(--accent);
+      --text: #f0f0f5;
+      --text-secondary: #d8d8e0;
+      --text-muted: var(--text-secondary);
+      --text-faint: var(--text-secondary);
+      --orb-opacity: 0;
+    }
   }
 }
 
@@ -712,6 +789,9 @@
   display: grid;
   grid-template-columns: 60px 1fr;
   min-height: 100vh;
+  /* v2.4.0 — named container so nested components can query the shell width. */
+  container-type: inline-size;
+  container-name: glacial-shell;
 }
 .glacial-rail {
   background: var(--bg-card);
@@ -801,7 +881,15 @@
   .glacial-rail-item:hover .glacial-rail-item-tip { opacity: 1; }
 }
 .glacial-rail-spacer { flex: 1; }
-.glacial-rail-content { padding: 16px 20px; }
+.glacial-rail-content {
+  padding: 16px 20px;
+  /* v2.4.0 — container context so nested layouts (e.g. .glacial-split-view)
+   * respond to the content area's width, not the viewport. This is what makes
+   * a split-view collapse when a sidebar/sub-rail eats horizontal space, even
+   * on a wide screen. */
+  container-type: inline-size;
+  container-name: glacial-content;
+}
 
 /* Mobile transform: vertical rail becomes a horizontal bottom nav */
 @media (max-width: 767px) {
@@ -1179,6 +1267,18 @@
   .glacial-split-view[data-mobile-view="detail"] .glacial-split-list { display: none; }
 }
 
+/* v2.4.0 — container-query collapse: a .glacial-split-view inside a
+ * .glacial-rail-content (the glacial-content container) stacks when ITS
+ * container is narrow, even on a wide viewport. The viewport @media above
+ * stays as the fallback for split-views not inside a glacial container. */
+@container glacial-content (max-width: 700px) {
+  .glacial-split-view { grid-template-columns: 1fr; }
+  .glacial-split-list { border-right: 0; }
+  .glacial-split-back { display: inline-flex; }
+  .glacial-split-view:not([data-mobile-view="detail"]) .glacial-split-detail { display: none; }
+  .glacial-split-view[data-mobile-view="detail"] .glacial-split-list { display: none; }
+}
+
 /* ===== Cmd+K Palette (injected DOM) ========================
  * Markup is created by glacialPalette({ items, onSelect }).
  */
@@ -1356,5 +1456,525 @@
     animation: none !important;
   }
   .glacial-skeleton::before { animation: none; }
+}
+
+/* ============================================================
+ * v2.4.0 — Tier 3 Components
+ *   Forms, overlays, feedback. See DESIGN.md for the per-component
+ *   state matrices and RECIPES.md for usage. Tokens only (DNA #5);
+ *   pure #fff / black scrims are the only literals.
+ * ============================================================ */
+
+/* ===== Forms =============================================== */
+.glacial-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-md);
+}
+.glacial-field-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.glacial-field-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.glacial-field-error {
+  /* Render only when there's an error (like .glacial-alert). Paired with
+   * aria-invalid="true" on the control, which draws the red border below. */
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--red);
+}
+
+.glacial-input,
+.glacial-textarea,
+.glacial-select {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text-strong);
+  background: var(--bg-input);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  width: 100%;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.glacial-input::placeholder,
+.glacial-textarea::placeholder { color: var(--text-faint); }
+.glacial-input:hover,
+.glacial-textarea:hover,
+.glacial-select:hover { border-color: var(--border-hover); }
+.glacial-input:focus-visible,
+.glacial-textarea:focus-visible,
+.glacial-select:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-bg);
+}
+[data-theme="dark"] .glacial-input:focus-visible,
+[data-theme="dark"] .glacial-textarea:focus-visible,
+[data-theme="dark"] .glacial-select:focus-visible {
+  box-shadow: 0 0 0 1px var(--accent), var(--glow-low) var(--accent);
+}
+.glacial-input[disabled],
+.glacial-textarea[disabled],
+.glacial-select[disabled] { opacity: 0.5; cursor: not-allowed; }
+.glacial-input[aria-invalid="true"],
+.glacial-textarea[aria-invalid="true"],
+.glacial-select[aria-invalid="true"] { border-color: var(--red); }
+.glacial-input[aria-invalid="true"]:focus-visible,
+.glacial-textarea[aria-invalid="true"]:focus-visible,
+.glacial-select[aria-invalid="true"]:focus-visible { box-shadow: 0 0 0 3px var(--red-bg); }
+
+.glacial-textarea { min-height: 80px; resize: vertical; }
+
+/* Native date input: theme the picker indicator, no custom calendar. */
+.glacial-input[type="date"]::-webkit-calendar-picker-indicator { cursor: pointer; opacity: 0.65; }
+[data-theme="dark"] .glacial-input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); }
+
+/* Styled native select — chevron is a url()-encoded SVG (neutral gray, both
+ * themes); the control stays a real <select> for accessibility. */
+.glacial-select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 28px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 16 16' fill='none' stroke='%23888' stroke-width='1.75'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+/* Checkbox + radio: keep the native control, theme via accent-color. */
+.glacial-checkbox,
+.glacial-radio {
+  accent-color: var(--accent);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+.glacial-checkbox:focus-visible,
+.glacial-radio:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.glacial-checkbox[disabled],
+.glacial-radio[disabled] { opacity: 0.5; cursor: not-allowed; }
+
+/* Switch: a checkbox restyled as a toggle (appearance:none + ::before thumb). */
+.glacial-switch {
+  appearance: none;
+  -webkit-appearance: none;
+  flex-shrink: 0;
+  width: 36px;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--border-card);
+  border: 1px solid var(--border);
+  position: relative;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.glacial-switch::before {
+  content: "";
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--bg-card-hover);
+  transition: transform 0.15s;
+}
+.glacial-switch:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.glacial-switch:checked::before {
+  transform: translateX(16px);
+  background: #fff;
+}
+.glacial-switch:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.glacial-switch[disabled] { opacity: 0.5; cursor: not-allowed; }
+[data-theme="dark"] .glacial-switch:checked { box-shadow: var(--glow-low) var(--accent); }
+
+@media (prefers-reduced-motion: reduce) {
+  .glacial-switch,
+  .glacial-switch::before { transition: none; }
+}
+
+/* ===== Modal / Dialog ====================================== */
+.glacial-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.glacial-modal-overlay[data-open="true"] { opacity: 1; pointer-events: auto; }
+.glacial-modal {
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  width: 480px;
+  max-width: 100%;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  transform: translateY(8px) scale(0.98);
+  transition: transform 0.2s ease-out;
+}
+.glacial-modal-overlay[data-open="true"] .glacial-modal { transform: none; }
+.glacial-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-card);
+  flex-shrink: 0;
+}
+.glacial-modal-title { font-size: 15px; font-weight: 700; color: var(--text-strong); margin: 0; }
+.glacial-modal-close {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  width: 32px;
+  height: 32px;
+  font-size: 18px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s, border-color 0.15s;
+}
+.glacial-modal-close:hover { color: var(--text); border-color: var(--accent-border); }
+.glacial-modal-close:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.glacial-modal-body { padding: 20px; overflow-y: auto; flex: 1; color: var(--text); font-size: 14px; }
+.glacial-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 20px;
+  border-top: 1px solid var(--border-card);
+  flex-shrink: 0;
+}
+@media (max-width: 540px) { .glacial-modal { width: 100%; } }
+@media (prefers-reduced-motion: reduce) {
+  .glacial-modal-overlay,
+  .glacial-modal { transition: none; }
+}
+
+/* ===== Tooltip ============================================= */
+/* Add data-glacial-tooltip="text" to any element. Pair with an aria-label
+ * for screen readers — the tooltip itself is decorative (::after). */
+[data-glacial-tooltip] { position: relative; }
+[data-glacial-tooltip]::after {
+  content: attr(data-glacial-tooltip);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--text-strong);
+  color: var(--bg);
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  z-index: 120;
+}
+@media (hover: hover) {
+  [data-glacial-tooltip]:hover::after { opacity: 1; }
+}
+[data-glacial-tooltip]:focus-visible::after { opacity: 1; }
+
+/* ===== Dropdown / Menu ===================================== */
+.glacial-dropdown { position: relative; display: inline-block; }
+.glacial-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 180px;
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  padding: 4px;
+  z-index: 130;
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+  transition: opacity 0.12s, transform 0.12s;
+}
+.glacial-menu[data-open="true"] { opacity: 1; transform: none; pointer-events: auto; }
+.glacial-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text);
+  font-size: 13px;
+  font-family: var(--font-body);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+.glacial-menu-item:hover,
+.glacial-menu-item:focus-visible {
+  background: var(--accent-bg);
+  color: var(--accent);
+  outline: none;
+}
+.glacial-menu-separator { height: 1px; background: var(--border-card); margin: 4px 0; }
+@media (prefers-reduced-motion: reduce) { .glacial-menu { transition: none; } }
+
+/* ===== Tabs ================================================ */
+.glacial-tabs { display: block; }
+.glacial-tab-list {
+  display: flex;
+  gap: 2px;
+  border-bottom: 1px solid var(--border-card);
+}
+.glacial-tab {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  border: 0;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.15s, border-color 0.15s;
+}
+.glacial-tab:hover { color: var(--text-strong); }
+.glacial-tab[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); }
+.glacial-tab:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: var(--radius-sm); }
+[data-theme="dark"] .glacial-tab[aria-selected="true"] { text-shadow: var(--glow-low) var(--accent); }
+.glacial-tab-panel { padding: 16px 0; color: var(--text); }
+.glacial-tab-panel[hidden] { display: none; }
+
+/* ===== Toast =============================================== */
+.glacial-toast-region {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 360px;
+  pointer-events: none;
+}
+.glacial-toast {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--border-card);
+  border-left-width: 3px;
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  color: var(--text);
+  font-size: 13px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  pointer-events: auto;
+  animation: glacial-toast-in 0.2s ease-out;
+}
+.glacial-toast[data-leaving="true"] { animation: glacial-toast-out 0.2s ease-in forwards; }
+.glacial-toast-info    { border-left-color: var(--blue); }
+.glacial-toast-success { border-left-color: var(--green); }
+.glacial-toast-warn    { border-left-color: var(--yellow); }
+.glacial-toast-error   { border-left-color: var(--red); }
+.glacial-toast-message { flex: 1; }
+.glacial-toast-action {
+  background: transparent;
+  border: 0;
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 2px 4px;
+}
+.glacial-toast-close {
+  background: transparent;
+  border: 0;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  padding: 0 2px;
+}
+.glacial-toast-close:hover { color: var(--text); }
+@keyframes glacial-toast-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes glacial-toast-out { to { opacity: 0; transform: translateY(8px); } }
+@media (prefers-reduced-motion: reduce) {
+  .glacial-toast,
+  .glacial-toast[data-leaving="true"] { animation: none; }
+}
+
+/* ===== Accordion (native <details>) ======================== */
+.glacial-accordion { display: flex; flex-direction: column; gap: 4px; }
+.glacial-accordion-item {
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  overflow: hidden;
+}
+.glacial-accordion-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 14px;
+  cursor: pointer;
+  list-style: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.glacial-accordion-trigger::-webkit-details-marker { display: none; }
+.glacial-accordion-trigger::after {
+  content: "\25be"; /* ▾ */
+  color: var(--text-muted);
+  transition: transform 0.15s;
+}
+.glacial-accordion-item[open] .glacial-accordion-trigger::after { transform: rotate(180deg); }
+.glacial-accordion-trigger:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.glacial-accordion-panel { padding: 0 14px 14px; color: var(--text); font-size: 13px; }
+@media (prefers-reduced-motion: reduce) { .glacial-accordion-trigger::after { transition: none; } }
+
+/* ===== Progress + Spinner ================================== */
+.glacial-progress {
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--border-card);
+  overflow: hidden;
+}
+.glacial-progress-bar {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+[data-theme="dark"] .glacial-progress-bar { box-shadow: var(--glow-low) var(--accent); }
+.glacial-spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--border-card);
+  border-top-color: var(--accent);
+  animation: glacial-spin 0.7s linear infinite;
+}
+@keyframes glacial-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .glacial-spinner { animation-duration: 1.4s; }
+  .glacial-progress-bar { transition: none; }
+}
+
+/* ===== Avatar ============================================== */
+.glacial-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 1px solid var(--border-card);
+}
+.glacial-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.glacial-avatar-group { display: inline-flex; }
+.glacial-avatar-group .glacial-avatar { margin-left: -8px; border: 2px solid var(--bg); }
+.glacial-avatar-group .glacial-avatar:first-child { margin-left: 0; }
+
+/* ===== Pagination ========================================== */
+.glacial-pagination { display: flex; align-items: center; gap: 4px; }
+.glacial-pagination-item {
+  min-width: 32px;
+  height: 32px;
+  padding: 0 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.glacial-pagination-item:hover {
+  color: var(--text-strong);
+  border-color: var(--border-hover);
+  background: var(--bg-card-hover);
+}
+.glacial-pagination-item[aria-current="page"] {
+  color: var(--accent);
+  border-color: var(--accent-border);
+  background: var(--accent-bg);
+}
+.glacial-pagination-item:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.glacial-pagination-item[disabled],
+.glacial-pagination-item[aria-disabled="true"] { opacity: 0.4; pointer-events: none; }
+
+/* ===== Heading utilities (fluid type) ====================== */
+/* Opt-in display headings using the v2.4.0 fluid --text-* scale. The hybrid
+ * aesthetic adds mono uppercase on top of these. */
+.glacial-h1 {
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: var(--text-strong);
+  line-height: 1.15;
+  margin: 0 0 var(--space-sm);
+}
+.glacial-h2 {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--text-strong);
+  line-height: 1.2;
+  margin: 0 0 var(--space-xs);
 }
 
