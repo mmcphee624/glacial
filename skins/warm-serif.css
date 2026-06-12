@@ -44,6 +44,7 @@
   --accent: #213500;
   --accent-bg: rgba(33, 53, 0, 0.06);
   --accent-border: rgba(33, 53, 0, 0.25);
+  --btn-primary-text: #fff;   /* 13.3:1 on the forest green (dark text would be 1.5:1) */
 
   /* Status — slightly warmer/desaturated to match the cream palette */
   --green: #4a7c59;
@@ -99,6 +100,7 @@
   --accent: #a0c364;            /* lifted forest-green for dark legibility */
   --accent-bg: rgba(160, 195, 100, 0.10);
   --accent-border: rgba(160, 195, 100, 0.28);
+  --btn-primary-text: #0a0a0a;  /* 9.9:1 on the lifted accent */
 
   --green: #88c990;
   --green-bg: rgba(136, 201, 144, 0.10);
@@ -140,6 +142,7 @@
     --accent: #a0c364;
     --accent-bg: rgba(160, 195, 100, 0.10);
     --accent-border: rgba(160, 195, 100, 0.28);
+    --btn-primary-text: #0a0a0a;
 
     --green: #88c990;
     --green-bg: rgba(136, 201, 144, 0.10);

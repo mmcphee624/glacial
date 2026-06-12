@@ -37,6 +37,7 @@
   --accent: #7c5fa5;
   --accent-bg: rgba(124, 95, 165, 0.08);
   --accent-border: rgba(124, 95, 165, 0.32);
+  --btn-primary-text: #fff;   /* 5.2:1 on the dusty accent (dark text only hits 3.8:1) */
 
   /* Status — lavender-shifted greens/yellows/reds for harmony */
   --green: #5a8c70;
@@ -86,6 +87,7 @@
   --accent: #c8a8f0;          /* lifted lavender for dark legibility */
   --accent-bg: rgba(200, 168, 240, 0.10);
   --accent-border: rgba(200, 168, 240, 0.32);
+  --btn-primary-text: #0a0a0a;  /* 9.7:1 on the lifted accent */
 
   --green: #88c0a0;
   --green-bg: rgba(136, 192, 160, 0.10);
@@ -129,6 +131,7 @@
     --accent: #c8a8f0;
     --accent-bg: rgba(200, 168, 240, 0.10);
     --accent-border: rgba(200, 168, 240, 0.32);
+    --btn-primary-text: #0a0a0a;
     --green: #88c0a0;
     --green-bg: rgba(136, 192, 160, 0.10);
     --yellow: #e8c878;

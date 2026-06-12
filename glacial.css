@@ -1,5 +1,5 @@
 /* Glacial Design System — Shared CSS Tokens
- * @version 2.4.0
+ * @version 2.5.0
  * Import this file into any service for Glacial theming.
  * See DESIGN.md for full specification, RECIPES.md for page recipes.
  */
@@ -22,6 +22,9 @@
   --accent: #00b8d4;
   --accent-bg: rgba(0,184,212,0.08);
   --accent-border: rgba(0,184,212,0.3);
+  /* v2.5.0 — text on accent-filled surfaces (.glacial-btn-primary). Dark text
+   * on the bright teal (8.3:1); skins with dark accents override to #fff. */
+  --btn-primary-text: #0a0a0a;
   --green: #16a34a;
   --green-bg: rgba(22,163,74,0.1);
   --yellow: #d97706;
@@ -290,7 +293,7 @@
 
 .glacial-btn-primary {
   background: var(--accent);
-  color: #fff;
+  color: var(--btn-primary-text);
   border-color: var(--accent);
 }
 .glacial-btn-primary:hover {

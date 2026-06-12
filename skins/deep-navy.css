@@ -38,6 +38,7 @@
   --accent: #1a3a72;
   --accent-bg: rgba(26, 58, 114, 0.08);
   --accent-border: rgba(26, 58, 114, 0.32);
+  --btn-primary-text: #fff;   /* 11.1:1 on the deep navy (dark text would be 1.8:1) */
 
   /* Status — calibrated for the navy palette */
   --green: #2d7a4a;
@@ -87,6 +88,7 @@
   --accent: #6cb8e8;
   --accent-bg: rgba(108, 184, 232, 0.10);
   --accent-border: rgba(108, 184, 232, 0.32);
+  --btn-primary-text: #0a0a0a;  /* 9.1:1 on the sky cyan */
 
   /* Status — luminous to read against deep navy */
   --green: #5cc88c;
@@ -131,6 +133,7 @@
     --accent: #6cb8e8;
     --accent-bg: rgba(108, 184, 232, 0.10);
     --accent-border: rgba(108, 184, 232, 0.32);
+    --btn-primary-text: #0a0a0a;
     --green: #5cc88c;
     --green-bg: rgba(92, 200, 140, 0.10);
     --yellow: #f0c060;

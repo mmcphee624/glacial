@@ -25,6 +25,9 @@
   --accent: #00b8d4;
   --accent-bg: rgba(0, 184, 212, 0.08);
   --accent-border: rgba(0, 184, 212, 0.3);
+  /* Text on accent fills (.glacial-btn-primary). Default #0a0a0a suits bright
+   * accents; set #fff if your accent is dark. Keep ≥4.5:1 vs --accent. */
+  --btn-primary-text: #0a0a0a;
 
   /* Typography (uncomment to override) */
   /* --font-body: 'Inter', sans-serif; */
@@ -46,6 +49,7 @@
   --accent: #00e5ff;
   --accent-bg: rgba(0, 229, 255, 0.08);
   --accent-border: rgba(0, 229, 255, 0.25);
+  --btn-primary-text: #0a0a0a;  /* re-pick if your dark accent differs */
   /* Override anything that should differ in dark mode */
 }
 
@@ -57,5 +61,6 @@
     --accent: #00e5ff;
     --accent-bg: rgba(0, 229, 255, 0.08);
     --accent-border: rgba(0, 229, 255, 0.25);
+    --btn-primary-text: #0a0a0a;
   }
 }
