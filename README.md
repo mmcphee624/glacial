@@ -39,13 +39,13 @@ Three lines. That's the whole getting-started.
 | `scripts/` | Token + skin + class + contract CI gates |
 | `ha-theme/glacial.yaml` | Home Assistant theme mapping |
 | `tokens.json` | Public token snapshot (machine-readable) |
-| `VERSION` | Current version (`2.4.0`) |
+| `VERSION` | Current version (`2.5.0`) |
 
 ## Adopting in a new project
 
 Paste this into the agent working in the new repo:
 
-> Adopt glacial: vendor a tagged copy of `mmcphee624/glacial` v2.4.0 to `vendor/glacial/` (curl `https://github.com/mmcphee624/glacial/archive/v2.4.0.tar.gz`, extract). Link `vendor/glacial/glacial.css` and `vendor/glacial/glacial.js` from your app shell. Read `vendor/glacial/RECIPES.md` and pick the recipe matching the page you're building. Don't override `--accent` directly — write a skin under `vendor/glacial/skins/` if you need rebranding. Verify by checking `<html data-glacial-loaded>` is set and `window.glacial.help()` returns `{version: "2.4.0"}`.
+> Adopt glacial: vendor a tagged copy of `mmcphee624/glacial` v2.5.0 to `vendor/glacial/` (curl `https://github.com/mmcphee624/glacial/archive/v2.5.0.tar.gz`, extract). Link `vendor/glacial/glacial.css` and `vendor/glacial/glacial.js` from your app shell. Read `vendor/glacial/RECIPES.md` and pick the recipe matching the page you're building. Don't override `--accent` directly — write a skin under `vendor/glacial/skins/` if you need rebranding. Verify by checking `<html data-glacial-loaded>` is set and `window.glacial.help()` returns `{version: "2.5.0"}`.
 
 ## Theming
 

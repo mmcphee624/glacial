@@ -1,6 +1,6 @@
 /**
  * Glacial Design System — Theme + Skin + Aesthetic + Aurora + Debug + Tier 2/3 helpers
- * @version 2.4.0
+ * @version 2.5.0
  *
  * Include via <script src="glacial.js"></script>
  * Provides:
@@ -16,7 +16,7 @@
  *   - window.glacialToast({ message, variant })   (v2.4.0)
  *   - window.glacial.help()
  *
- * Sets <html data-glacial-loaded="2.4.0"> before first paint.
+ * Sets <html data-glacial-loaded="2.5.0"> before first paint.
  *
  * Theme/skin priority (highest first):
  *   1. URL params:  ?theme=light|dark · ?skin=<name>
@@ -30,7 +30,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '2.4.0';
+  var VERSION = '2.5.0';
 
   // ===== Storage with graceful degradation =====
   // Try cookie first (persistent across tabs); fall back to sessionStorage

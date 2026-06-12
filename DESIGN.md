@@ -9,7 +9,7 @@ Agent path:  README → RECIPES.md → examples → DESIGN.md (you are here)
 Human path:  README → examples → DESIGN.md → RECIPES.md (optional)
 ```
 
-Current version: **`2.4.0`** — see [`VERSION`](./VERSION) and [`CHANGELOG.md`](./CHANGELOG.md).
+Current version: **`2.5.0`** — see [`VERSION`](./VERSION) and [`CHANGELOG.md`](./CHANGELOG.md).
 
 ---
 
@@ -241,6 +241,7 @@ Public tokens (snapshot in `tokens.json`). Skins may override these freely.
 | `--accent` | Primary brand color (teal in default; swap per skin) |
 | `--accent-bg` | Accent at low opacity for backgrounds |
 | `--accent-border` | Accent at medium opacity for borders |
+| `--btn-primary-text` | (v2.5.0) Text on accent fills (`.glacial-btn-primary`). `#0a0a0a` by default; skins with dark accents set `#fff`. Must hold ≥4.5:1 against `--accent` (WCAG AA) |
 
 ### Status (semantic colors — consistent across themes, values shift for dark readability)
 | Token | Semantics |
@@ -584,7 +585,7 @@ Every Tier 1 component below has a state matrix specifying which states ship and
 
 | State | Behavior |
 |-------|----------|
-| Default | Rounded, 13px weight 600, primary = accent fill, secondary = transparent + accent text |
+| Default | Rounded, 13px weight 600, primary = accent fill + `--btn-primary-text` label (v2.5.0, WCAG AA per skin), secondary = transparent + accent text |
 | Hover (primary) | `filter: brightness(1.1)` |
 | Hover (secondary) | `--accent-bg` background |
 | Focus-visible | Native browser outline + accent (Tier 3 work: explicit `:focus-visible` ring) |
@@ -940,3 +941,4 @@ HA's theme system doesn't support animated backgrounds or `backdrop-filter` nati
 | 2026-05-31 | Theme-change event | `glacial:change` CustomEvent + `glacialOnThemeChange()` replace consumer MutationObservers on `<html>`. |
 | 2026-05-31 | Container queries for split-view | `.glacial-rail-content` is a query container; nested split-views collapse on content width, not viewport. Viewport `@media` kept as fallback. |
 | 2026-05-31 | CI + contract test | `.github/workflows/ci.yml` runs all gates; `scripts/check-contract.mjs` (pure Node) enforces CLASSES⊆CSS, declared token refs, and the no-color-literal DNA rule. Zero-build kept — no npm/bundler. |
+| 2026-06-11 | Primary-button text tokenized (v2.5.0) | `.glacial-btn-primary` hardcoded `#fff`, which only hit ~2.4:1 on the default teal (WCAG AA fail). New `--btn-primary-text` token (default `#0a0a0a`, 8.3:1); each skin picks the AA-passing side per variant (lavender/deep-navy/warm-serif use `#fff` in light). CTRL idea #63. |

@@ -38,6 +38,9 @@
  *   --accent          primary brand color (teal in default, swap per skin)
  *   --accent-bg       accent at low opacity for backgrounds
  *   --accent-border   accent at medium opacity for borders
+ *   --btn-primary-text  text on accent fills (.glacial-btn-primary). #0a0a0a
+ *                     by default; skins with dark accents set #fff. Keep it
+ *                     ≥4.5:1 against --accent (WCAG AA)
  *
  * Status (semantic colors)
  * ----------------------------------------

@@ -4,6 +4,30 @@ All notable changes to glacial are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.0] — 2026-06-11
+
+Accessibility fix: primary-button text color is now a token. Additive — no
+token removals, no breaking changes (MINOR: new public token per the
+versioning policy, even though the change is a contrast bugfix). CTRL idea #63.
+
+### Added — Tokens & accessibility
+- **`--btn-primary-text`** — text color on accent-filled surfaces
+  (`.glacial-btn-primary`). Defaults to `#0a0a0a`: the hardcoded `#fff` only
+  reached ~2.4:1 on the default teal `--accent` (`#00b8d4`), failing WCAG AA
+  for normal text; dark text hits 8.3:1 (12.9:1 on the dark-theme `#00e5ff`).
+  Skins now pick the AA-passing side per variant:
+  - `lavender` — `#fff` in light (5.2:1 on `#7c5fa5`), `#0a0a0a` in dark (9.7:1)
+  - `deep-navy` — `#fff` in light (11.1:1 on `#1a3a72`), `#0a0a0a` in dark (9.1:1)
+  - `warm-serif` — `#fff` in light (13.3:1 on `#213500`), `#0a0a0a` in dark (9.9:1)
+  - `nord` / `midnight-mono` — inherit the `#0a0a0a` default (4.9:1 / 4.75:1
+    light, 9.9:1 / 14.8:1 dark)
+
+### Fixed
+- `.glacial-btn-primary` no longer hardcodes `color: #fff`; it reads
+  `var(--btn-primary-text)` so every skin × theme combination meets WCAG AA
+  (≥4.5:1). `skins/_template.css` and `skins/default.css` document the new
+  contract entry.
+
 ## [2.4.0] — 2026-05-31
 
 Tier 3: forms, overlays, and feedback components, plus a high-contrast
