@@ -45,7 +45,7 @@ cloudflared tunnel --url http://localhost:8000
 Every example page has a persistent `[skin]` and `[theme]` selector in the header (cookie-backed, mirrors `glacialToggleTheme()`). You can also override via URL params:
 
 - `examples/dashboard.html?skin=warm-serif&theme=dark`
-- `examples/skins-preview.html?skin=ctrl`
+- `examples/skins-preview.html?skin=nord`
 
 URL params take precedence over cookies for that page load.
 
@@ -67,7 +67,7 @@ To verify components respect `prefers-reduced-motion`:
 | `form.html` | Form recipe | breadcrumbs, alert, glass card with inputs |
 | `board.html` | Board recipe | 4-column glass cards, badges, filter-bar |
 | `mobile.html` | Mobile audit | 44px touch-target check, table column-hide, filter-bar scroll-snap, breadcrumb truncation |
-| `skins-preview.html` | (catalog) | Same dashboard rendered under default / warm-serif / ctrl side-by-side |
+| `skins-preview.html` | (catalog) | Same dashboard rendered under the built-in skins side-by-side |
 
 ## Verification
 
@@ -75,7 +75,7 @@ Run through this checklist before merging glacial v2:
 
 - [ ] Every page renders correctly in light + dark
 - [ ] Every page renders correctly with `?skin=warm-serif` (cream + serif headings)
-- [ ] Every page renders correctly with `?skin=ctrl` (teal default + extensions)
+- [ ] Every page renders correctly with `?skin=nord` (arctic frost + muted blue)
 - [ ] Reduced-motion: orbs absent, skeleton static
 - [ ] Mobile: tables hide priority-2 columns at <768px; touch targets ≥44px in `mobile.html`
 - [ ] DevTools console shows `[glacial] v2.0.0 loaded · theme=… · skin=… · aurora=…`

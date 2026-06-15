@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Continuity (v2.6) · Glacial Examples</title>
+  <link rel="stylesheet" href="../glacial.css">
+  <link rel="stylesheet" href="../skins/default.css">
+  <link rel="stylesheet" href="../skins/warm-serif.css">
+  <link rel="stylesheet" href="../skins/midnight-mono.css">
+  <link rel="stylesheet" href="../skins/lavender.css">
+  <link rel="stylesheet" href="../skins/deep-navy.css">
+  <link rel="stylesheet" href="../skins/nord.css">
+  <link rel="stylesheet" href="_examples.css">
+  <script src="../glacial.js"></script>
+</head>
+<body>
+  <header class="glacial-glass-header ex-toolbar">
+    <div class="ex-toolbar-inner">
+      <span class="ex-logo">GLACIAL · v2.6</span>
+      <nav class="glacial-nav ex-nav">
+        <a href="index.html">index</a>
+        <a href="components.html">components</a>
+        <a href="v2.6-continuity.html" class="active">continuity</a>
+        <a href="skins-preview.html">skins</a>
+      </nav>
+      <div class="ex-controls">
+        <!-- The settings cog replaces the bespoke skin <select> + theme button. -->
+        <span id="settings-mount"></span>
+      </div>
+    </div>
+  </header>
+
+  <main class="ex-main" style="max-width: 860px;">
+    <section class="ex-hero">
+      <h1 class="glacial-h1">UI continuity (v2.6)</h1>
+      <p class="ex-lede">
+        The shared mechanisms that make separate surfaces feel like one product:
+        a single <strong>settings cog</strong> (theme + skin swatches + aesthetic),
+        a data-driven <strong>app switcher</strong>, an opt-in shared theme cookie,
+        and live cross-tab sync. All additive &mdash; nothing changes for existing
+        consumers until they opt in.
+      </p>
+    </section>
+
+    <!-- Settings cog -->
+    <section class="ex-section">
+      <h2 class="glacial-h2">Settings cog</h2>
+      <p class="ex-fact" style="font-size:14px; line-height:1.6;">
+        Click the cog in the header. Theme is a light/dark/auto segmented control;
+        the skin row renders swatches of each built-in skin&rsquo;s own tokens
+        (every swatch carries <code>data-skin</code>, so its color is that skin&rsquo;s
+        <code>--accent</code> over its <code>--bg</code> &mdash; never hardcoded).
+        The aesthetic toggle flips polished &harr; hybrid. Mount it with:
+      </p>
+      <pre class="glacial-glass ex-debug">glacialMountSettings('#settings-mount');</pre>
+    </section>
+
+    <!-- App switcher -->
+    <section class="ex-section">
+      <h2 class="glacial-h2">App switcher</h2>
+      <p class="ex-fact" style="font-size:14px; line-height:1.6;">
+        A data-driven launcher. Pass a list of services; each becomes a
+        <code>.glacial-tile</code> with an optional status dot
+        (<code>green</code>/<code>yellow</code>/<code>red</code>). The list below is
+        placeholder data only.
+      </p>
+      <div id="switcher-mount"></div>
+    </section>
+
+    <!-- Shared config -->
+    <section class="ex-section">
+      <h2 class="glacial-h2">Cross-surface config (opt-in)</h2>
+      <p class="ex-fact" style="font-size:14px; line-height:1.6;">
+        Set these before glacial.js loads (window global or <code>&lt;meta&gt;</code>):
+      </p>
+      <pre class="glacial-glass ex-debug">&lt;script&gt;
+  window.GLACIAL_COOKIE_DOMAIN = '.example.home'; // share cookies across subdomains
+  window.GLACIAL_SHARED_THEME  = true;            // one glacial-theme cookie, migrates old picks
+  window.GLACIAL_DEFAULT_THEME = 'dark';          // durable default until the user picks
+&lt;/script&gt;</pre>
+      <p class="ex-fact" style="font-size:13px; line-height:1.6; color: var(--text-secondary);">
+        Live cross-tab sync (BroadcastChannel) is <strong>same-origin only</strong>.
+        Different surfaces (subdomains) pick up a sibling&rsquo;s choice from the
+        shared cookie on the <em>next</em> load, not live.
+      </p>
+    </section>
+
+    <!-- Debug -->
+    <section class="ex-section">
+      <h2 class="glacial-h2">Debug</h2>
+      <pre class="glacial-glass ex-debug" id="ex-debug">loading...</pre>
+      <p class="ex-debug-hint">Output of <code>window.glacial.help()</code>.</p>
+    </section>
+  </main>
+
+  <script src="_examples.js"></script>
+  <script>
+    // Mount the shared settings cog into the header.
+    glacialMountSettings('#settings-mount');
+
+    // Render the app switcher with PLACEHOLDER services only (no real list).
+    glacialAppSwitcher({
+      target: '#switcher-mount',
+      services: [
+        { name: 'Service A', url: 'https://example.com', description: 'A placeholder internal tool.', status: 'green', group: 'Internal' },
+        { name: 'Service B', url: 'https://example.com', description: 'Another placeholder surface.', status: 'yellow', group: 'Internal' },
+        { name: 'Service C', url: 'https://example.com', description: 'Sample dashboard.', status: 'red', group: 'Internal' },
+        { name: 'Docs', url: 'https://example.com', description: 'Reference site.', group: 'External' },
+        { name: 'Status', url: 'https://example.com', description: 'Uptime page.', group: 'External' }
+      ]
+    });
+
+    // Debug box.
+    var dbg = document.getElementById('ex-debug');
+    if (dbg && window.glacial) {
+      dbg.textContent = JSON.stringify(window.glacial.help(), null, 2);
+      glacialOnThemeChange(function () {
+        dbg.textContent = JSON.stringify(window.glacial.help(), null, 2);
+      });
+    } else if (dbg) {
+      dbg.textContent = 'window.glacial is undefined — glacial.js did not load';
+    }
+  </script>
+</body>
+</html>

@@ -1,5 +1,65 @@
 # Migrating
 
+## v2.5.x → v2.6.0
+
+**No breaking changes.** Purely additive: cross-surface config, cross-tab live
+sync, and two new components. Existing markup and behavior are unchanged — every
+new mechanism is **opt-in and off by default**. Re-vendor and nothing moves
+until you flip a flag.
+
+### Cross-surface config (set before `glacial.js` loads)
+
+Each reads a `window` global first, then a `<meta name="...">` with the same
+kebab-case name. Leave them unset to keep current behavior.
+
+1. **`GLACIAL_COOKIE_DOMAIN`** — share glacial's cookies across sibling
+   subdomains. When set, the cookie string gains `;domain=<value>` (e.g.
+   `.example.home`), so a theme/skin pick on one surface is visible to the
+   others. Unset ⇒ the cookie is host-only as before.
+
+2. **`GLACIAL_SHARED_THEME`** — truthy ⇒ glacial writes a single `glacial-theme`
+   cookie instead of the per-service `{service}-theme`. Reads check **both**
+   names (shared first, then the legacy per-service name), so a user's existing
+   saved theme migrates automatically — no re-pick — and the OS-preference
+   listener won't auto-flip a migrated user. Combine with
+   `GLACIAL_COOKIE_DOMAIN` to share one theme across every surface.
+
+3. **`GLACIAL_DEFAULT_THEME`** (`'light'` | `'dark'`) — a durable default applied
+   until the user makes a real pick. Precedence in `getTheme()` is now
+   URL `?theme=` > persisted cookie > `GLACIAL_DEFAULT_THEME` > OS preference,
+   and the OS listener short-circuits when a default is set (an OS light/dark
+   toggle no longer reverts your forced default). A real user pick writes a
+   cookie and wins.
+
+   ```html
+   <script>
+     window.GLACIAL_COOKIE_DOMAIN = '.example.home';
+     window.GLACIAL_SHARED_THEME  = true;
+     window.GLACIAL_DEFAULT_THEME = 'dark';
+   </script>
+   <script src="vendor/glacial/glacial.js"></script>
+   ```
+
+### Cross-tab live sync
+
+Theme / skin / aesthetic changes now broadcast to other **same-origin** tabs
+over `BroadcastChannel('glacial')`, which re-apply and re-emit `glacial:change`.
+No setup; degrades to a no-op where BroadcastChannel is unavailable.
+**Same-origin only** — a different surface (subdomain) picks up the change from
+the shared cookie on its next load, not live.
+
+### New components
+
+4. **Settings cog.** `glacialMountSettings('#slot')` injects a cog + popover
+   with a theme segmented control, a skin swatch picker (each swatch renders its
+   own skin's tokens), and an aesthetic toggle. It drives the existing
+   `glacialToggleTheme` / `glacialSetSkin` / `glacialSetAesthetic` setters — drop
+   it in to replace a hand-rolled theme/skin control.
+
+5. **App switcher.** `glacialAppSwitcher({ services, target })` renders
+   `.glacial-tile` launchers (optional `status` dot, optional `group` heading).
+   Supply your own service list.
+
 ## v2.3.x → v2.4.0
 
 **No breaking changes.** Purely additive: 15 new tokens (8 spacing, 7 fluid
@@ -178,7 +238,7 @@ Every v2.0 token is intact. Two new tokens are added; nothing changed.
 2. **Pick a skin** (optional). v2 introduces `<html data-skin="...">` for brand variants. Your v1 app uses the default skin implicitly. To rebrand, add a skin file:
    ```html
    <link rel="stylesheet" href="vendor/glacial/glacial.css">
-   <link rel="stylesheet" href="vendor/glacial/skins/warm-serif.css">  <!-- or ctrl, or your own -->
+   <link rel="stylesheet" href="vendor/glacial/skins/warm-serif.css">  <!-- or another built-in, or your own -->
    ```
    Then set `<html data-skin="warm-serif">`.
 
