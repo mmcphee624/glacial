@@ -4,11 +4,54 @@ All notable changes to glacial are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.0] — 2026-06-15
+
+UI continuity: the generic mechanisms that make separate surfaces feel like one
+product — a shared theme/skin pick that can ride across surfaces, one settings
+affordance, and a shared app switcher. Fully additive — no token or class
+removals, every new behavior is opt-in and off by default (MINOR).
+
+### Added — Cross-surface config (all opt-in, off by default)
+- **`GLACIAL_COOKIE_DOMAIN`** (`window` global or `<meta name="glacial-cookie-domain">`)
+  — when set, glacial's cookies gain `;domain=<value>` so a theme/skin pick rides
+  along to sibling subdomains. Unset ⇒ cookie string unchanged.
+- **`GLACIAL_SHARED_THEME`** — truthy ⇒ writes a single `glacial-theme` cookie
+  instead of the per-service `{service}-theme`. Reads honor both names
+  (`readThemeCookie()` = shared, then legacy per-service), so an already-saved
+  theme **migrates without a re-pick** and the OS listener won't auto-switch a
+  migrated user.
+- **`GLACIAL_DEFAULT_THEME`** (`'light'`/`'dark'`) — a durable default theme.
+  `getTheme()` precedence is now URL `?theme=` > persisted cookie >
+  `GLACIAL_DEFAULT_THEME` > OS preference. The OS-preference listener
+  short-circuits when a default is set, so an OS light/dark toggle doesn't revert
+  the forced default; a real user pick (cookie) still wins.
+
+### Added — Cross-tab live sync
+- Theme / skin / aesthetic changes post `{ theme, skin, aesthetic }` to a
+  `BroadcastChannel('glacial')`; other **same-origin** tabs re-apply the
+  attributes and re-emit `glacial:change`. Guarded for browsers without
+  BroadcastChannel (no-op). This is live sync only — cross-surface persistence
+  comes from the shared cookie on the next load.
+
+### Added — Components
+- **`glacial-settings`** (Tier 1) — a cog button + popover with a theme
+  segmented control (light/dark/auto), a skin picker rendered as swatches of each
+  built-in skin's own `[data-skin]` tokens, and an aesthetic toggle. Mount via
+  `glacialMountSettings(targetSelector, opts?)`. Controls drive the existing
+  `glacialToggleTheme` / `glacialSetSkin` / `glacialSetAesthetic` setters.
+- **`glacial-app-switcher` + `glacial-tile`** (Tier 2) — a data-driven launcher.
+  `glacialAppSwitcher({ services: [{ name, url, description, status?, group? }], target })`
+  renders tiles with an optional status dot (`--green`/`--yellow`/`--red`).
+- New `glacialMountSettings` and `glacialAppSwitcher` are exposed on the
+  `window.glacial` debug object; all new classes are registered in `CLASSES[]`.
+- `examples/v2.6-continuity.html` demonstrates the cog, swatches, and switcher
+  (placeholder services only).
+
 ## [2.5.0] — 2026-06-11
 
 Accessibility fix: primary-button text color is now a token. Additive — no
 token removals, no breaking changes (MINOR: new public token per the
-versioning policy, even though the change is a contrast bugfix). CTRL idea #63.
+versioning policy, even though the change is a contrast bugfix).
 
 ### Added — Tokens & accessibility
 - **`--btn-primary-text`** — text color on accent-filled surfaces
@@ -293,7 +336,7 @@ components, see `MIGRATING.md` and `examples/v2.1-tour.html`.
 ### Added — Examples
 - `examples/dashboard.html`, `list.html`, `detail.html`, `form.html`, `board.html` — page-type recipes
 - `examples/mobile.html` — touch target audit + responsive showcase
-- `examples/skins-preview.html` — default / warm-serif / ctrl side-by-side with live skin switcher
+- `examples/skins-preview.html` — built-in skins side-by-side with live skin switcher
 - All examples include a persistent skin+theme toggle (cookie-backed)
 - URL params override cookies: `?skin=warm-serif&theme=dark`
 

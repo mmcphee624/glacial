@@ -1,6 +1,6 @@
 /**
  * Glacial Design System — Theme + Skin + Aesthetic + Aurora + Debug + Tier 2/3 helpers
- * @version 2.5.0
+ * @version 2.6.0
  *
  * Include via <script src="glacial.js"></script>
  * Provides:
@@ -14,23 +14,71 @@
  *   - window.glacialOpenModal(idOrEl)             (v2.4.0)
  *   - window.glacialCloseModal(idOrEl?)           (v2.4.0)
  *   - window.glacialToast({ message, variant })   (v2.4.0)
+ *   - window.glacialMountSettings(target, opts?)  (v2.6.0 — cog + theme/skin/aesthetic popover)
+ *   - window.glacialAppSwitcher({ services, target }) (v2.6.0 — app launcher tiles)
  *   - window.glacial.help()
  *
- * Sets <html data-glacial-loaded="2.5.0"> before first paint.
+ * Sets <html data-glacial-loaded="2.6.0"> before first paint.
  *
  * Theme/skin priority (highest first):
  *   1. URL params:  ?theme=light|dark · ?skin=<name>
- *   2. Cookie:      {service}-theme · glacial-skin
- *   3. OS pref:     prefers-color-scheme (theme only; skin defaults to "default")
+ *   2. Cookie:      {service}-theme (or shared glacial-theme) · glacial-skin
+ *   3. GLACIAL_DEFAULT_THEME (durable forced default, theme only)   (v2.6.0)
+ *   4. OS pref:     prefers-color-scheme (theme only; skin defaults to "default")
+ *
+ * Optional config (window globals or <meta name="..."> equivalents — all default
+ * off, so existing consumers are unchanged):
+ *   - GLACIAL_COOKIE_DOMAIN — share cookies across sibling subdomains      (v2.6.0)
+ *   - GLACIAL_SHARED_THEME  — use one `glacial-theme` cookie, not per-service (v2.6.0)
+ *   - GLACIAL_DEFAULT_THEME — 'light'|'dark' forced default until a user picks (v2.6.0)
  *
  * Storage degrades gracefully: cookie → sessionStorage → in-memory if both blocked.
+ * Same-origin tabs stay live in sync via BroadcastChannel('glacial') (v2.6.0);
+ * cross-surface persistence comes from the shared cookie on the NEXT load, not
+ * live sync.
  *
  * See DESIGN.md for full specification.
  */
 (function () {
   'use strict';
 
-  var VERSION = '2.5.0';
+  var VERSION = '2.6.0';
+
+  // ===== Optional config (v2.6.0) =====
+  // Read from a window global, falling back to <meta name="..."> content. All
+  // unset by default ⇒ behavior unchanged for existing consumers. These are the
+  // ONLY config inputs glacial reads; everything else stays zero-config.
+  function configValue(globalKey, metaName) {
+    try {
+      if (typeof window[globalKey] !== 'undefined' && window[globalKey] !== null) {
+        return window[globalKey];
+      }
+    } catch (e) {}
+    try {
+      var meta = document.querySelector('meta[name="' + metaName + '"]');
+      if (meta) {
+        var c = meta.getAttribute('content');
+        return c === null ? null : c;
+      }
+    } catch (e) {}
+    return null;
+  }
+  function configTruthy(globalKey, metaName) {
+    var v = configValue(globalKey, metaName);
+    if (v === null) return false;
+    if (typeof v === 'string') {
+      var low = v.toLowerCase();
+      return !(low === '' || low === 'false' || low === '0' || low === 'off' || low === 'no');
+    }
+    return !!v;
+  }
+
+  var COOKIE_DOMAIN = configValue('GLACIAL_COOKIE_DOMAIN', 'glacial-cookie-domain');
+  var SHARED_THEME = configTruthy('GLACIAL_SHARED_THEME', 'glacial-shared-theme');
+  var DEFAULT_THEME = (function () {
+    var v = configValue('GLACIAL_DEFAULT_THEME', 'glacial-default-theme');
+    return (v === 'light' || v === 'dark') ? v : null;
+  })();
 
   // ===== Storage with graceful degradation =====
   // Try cookie first (persistent across tabs); fall back to sessionStorage
@@ -45,7 +93,11 @@
   }
   function setCookie(name, value) {
     try {
-      document.cookie = name + '=' + value + ';path=/;max-age=31536000;SameSite=Lax';
+      var cookie = name + '=' + value + ';path=/;max-age=31536000;SameSite=Lax';
+      // v2.6.0 — opt-in shared-cookie domain (e.g. ".example.home") so a theme
+      // pick on one surface rides along to sibling subdomains. Unset ⇒ unchanged.
+      if (COOKIE_DOMAIN) cookie += ';domain=' + COOKIE_DOMAIN;
+      document.cookie = cookie;
       return true;
     } catch (e) { return false; }
   }
@@ -81,33 +133,91 @@
       var host = window.location.hostname;
       var parts = host.split('.');
       if (parts.length > 1 && parts[parts.length - 1] === 'home') {
-        return parts[0]; // "ctrl" from "ctrl.home"
+        return parts[0]; // "app" from "app.home"
       }
     } catch (e) {}
     return 'glacial';
   })();
 
+  // Per-service theme cookie name (v1-compatible). v2.6.0 — when GLACIAL_SHARED_THEME
+  // is on, WRITES go to the single shared 'glacial-theme' name instead, so a theme
+  // pick is one cookie across surfaces. THEME_WRITE_COOKIE is what writers use;
+  // readThemeCookie() reads both (shared first, then the legacy per-service name)
+  // so an already-saved theme migrates without a re-pick.
   var THEME_COOKIE = serviceName + '-theme';
+  var SHARED_THEME_COOKIE = 'glacial-theme';
+  var THEME_WRITE_COOKIE = SHARED_THEME ? SHARED_THEME_COOKIE : THEME_COOKIE;
   var SKIN_COOKIE = 'glacial-skin'; // project-wide, NOT per-service
   var AESTHETIC_COOKIE = 'glacial-aesthetic'; // v2.1.0 — project-wide
+
+  // v2.6.0 — read the persisted theme honoring both the shared and per-service
+  // cookie names. Shared wins (it's the migrated/authoritative value); the
+  // per-service name is the legacy fallback so existing users keep their pick.
+  function readThemeCookie() {
+    return readPersisted(SHARED_THEME_COOKIE) || readPersisted(THEME_COOKIE);
+  }
 
   // ===== Change event (v2.4.0) =====
   // Dispatched on <document> whenever theme / skin / aesthetic changes (boot,
   // public setters, and OS-preference switches). Consumers can listen via
   // document.addEventListener('glacial:change', fn) or window.glacialOnThemeChange(fn).
   // detail = { theme, skin, aesthetic }. Saves apps from polling/MutationObserver.
-  function emitChange() {
-    try {
-      var el = document.documentElement;
-      document.dispatchEvent(new CustomEvent('glacial:change', {
-        detail: {
-          theme: el.getAttribute('data-theme'),
-          skin: el.getAttribute('data-skin'),
-          aesthetic: el.getAttribute('data-aesthetic')
-        }
-      }));
-    } catch (e) {}
+  function currentState() {
+    var el = document.documentElement;
+    return {
+      theme: el.getAttribute('data-theme'),
+      skin: el.getAttribute('data-skin'),
+      aesthetic: el.getAttribute('data-aesthetic')
+    };
   }
+  function emitChange() {
+    emitChangeInternal(true);
+  }
+  // fromLocal=false suppresses re-broadcast (used when re-applying a message that
+  // arrived over the channel, so two tabs don't ping-pong forever).
+  function emitChangeInternal(fromLocal) {
+    try {
+      document.dispatchEvent(new CustomEvent('glacial:change', { detail: currentState() }));
+    } catch (e) {}
+    if (fromLocal) broadcastState();
+  }
+
+  // ===== Cross-tab live sync (v2.6.0) =====
+  // Mirror theme/skin/aesthetic to other SAME-ORIGIN tabs in real time over a
+  // BroadcastChannel. This is live-sync only; cross-surface (different subdomain)
+  // persistence comes from the shared cookie on the next load, NOT from here.
+  // Degrades to a no-op where BroadcastChannel is unavailable.
+  var glacialChannel = null;
+  function broadcastState() {
+    if (!glacialChannel) return;
+    try { glacialChannel.postMessage(currentState()); } catch (e) {}
+  }
+  (function setupChannel() {
+    if (typeof BroadcastChannel === 'undefined') return;
+    try {
+      glacialChannel = new BroadcastChannel('glacial');
+      glacialChannel.addEventListener('message', function (e) {
+        var s = e.data || {};
+        var el = document.documentElement;
+        var changed = false;
+        if ((s.theme === 'light' || s.theme === 'dark') && el.getAttribute('data-theme') !== s.theme) {
+          el.setAttribute('data-theme', s.theme); changed = true;
+        }
+        if (s.skin && el.getAttribute('data-skin') !== s.skin) {
+          el.setAttribute('data-skin', s.skin); changed = true;
+        }
+        var curAes = el.getAttribute('data-aesthetic');
+        var nextAes = s.aesthetic || null;
+        if (curAes !== nextAes) {
+          if (nextAes) el.setAttribute('data-aesthetic', nextAes);
+          else el.removeAttribute('data-aesthetic');
+          changed = true;
+        }
+        // Re-emit glacial:change so app listeners update, but DON'T re-broadcast.
+        if (changed) emitChangeInternal(false);
+      });
+    } catch (e) { glacialChannel = null; }
+  })();
 
   // ===== Theme =====
   function getOSTheme() {
@@ -119,7 +229,9 @@
     return 'light';
   }
   function getTheme() {
-    return getURLParam('theme') || readPersisted(THEME_COOKIE) || getOSTheme();
+    // Precedence: URL ?theme= > persisted cookie > GLACIAL_DEFAULT_THEME > OS pref.
+    // A real user pick writes a cookie, so it outranks the forced default.
+    return getURLParam('theme') || readThemeCookie() || DEFAULT_THEME || getOSTheme();
   }
   function applyTheme(theme) {
     if (theme !== 'light' && theme !== 'dark') return;
@@ -161,7 +273,7 @@
     var current = document.documentElement.getAttribute('data-theme') || getTheme();
     var next = current === 'dark' ? 'light' : 'dark';
     applyTheme(next);
-    writePersisted(THEME_COOKIE, next);
+    writePersisted(THEME_WRITE_COOKIE, next);
     return next;
   };
 
@@ -233,7 +345,11 @@
     if (window.matchMedia) {
       var mql = window.matchMedia('(prefers-color-scheme: dark)');
       var listener = function (e) {
-        if (!readPersisted(THEME_COOKIE) && !getURLParam('theme')) {
+        // Only auto-switch when the user hasn't pinned a theme by any means:
+        // no cookie (shared or per-service), no URL override, and no forced
+        // GLACIAL_DEFAULT_THEME — otherwise an OS light/dark flip would revert
+        // a migrated user or override the durable default.
+        if (!readThemeCookie() && !getURLParam('theme') && !DEFAULT_THEME) {
           applyTheme(e.matches ? 'dark' : 'light');
         }
       };
@@ -674,6 +790,280 @@
     initAllTabs();
   }
 
+  // ===== Settings cog (v2.6.0) — Tier 1 =====
+  // glacialMountSettings(targetSelector | el, opts?) injects a cog button whose
+  // popover holds: a theme segmented control (light/dark/auto), a skin picker of
+  // swatches (each rendering its own [data-skin] tokens), and an aesthetic toggle.
+  // Controls drive the existing public setters — no private state of its own.
+  // opts: { skins: ['default', ...], aesthetics: [{ value, label }], label }.
+  var GLACIAL_BUILTIN_SKINS = ['default', 'warm-serif', 'midnight-mono', 'lavender', 'deep-navy', 'nord'];
+
+  function resolveTarget(target) {
+    if (!target) return null;
+    if (typeof target === 'string') return document.querySelector(target);
+    if (target.nodeType === 1) return target;
+    return null;
+  }
+
+  window.glacialMountSettings = function (target, opts) {
+    opts = opts || {};
+    var host = resolveTarget(target);
+    if (!host) { console.warn('[glacial] Settings target not found:', target); return null; }
+
+    var skins = opts.skins || GLACIAL_BUILTIN_SKINS;
+    var aesthetics = opts.aesthetics || [
+      { value: '', label: 'Polished' },
+      { value: 'hybrid', label: 'Hybrid' }
+    ];
+
+    var root = document.createElement('div');
+    root.className = 'glacial-settings';
+
+    var cog = document.createElement('button');
+    cog.type = 'button';
+    cog.className = 'glacial-settings-cog';
+    cog.setAttribute('aria-label', opts.label || 'Settings');
+    cog.setAttribute('aria-expanded', 'false');
+    cog.setAttribute('aria-haspopup', 'true');
+    cog.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>';
+
+    var pop = document.createElement('div');
+    pop.className = 'glacial-settings-popover';
+    pop.setAttribute('data-open', 'false');
+    pop.setAttribute('role', 'dialog');
+    pop.setAttribute('aria-label', 'Appearance settings');
+
+    // --- Theme segmented control (light / dark / auto) ---
+    var themeGroup = document.createElement('div');
+    themeGroup.className = 'glacial-settings-group';
+    var themeLabel = document.createElement('div');
+    themeLabel.className = 'glacial-settings-label';
+    themeLabel.textContent = 'Theme';
+    themeGroup.appendChild(themeLabel);
+    var seg = document.createElement('div');
+    seg.className = 'glacial-settings-segmented';
+    seg.setAttribute('role', 'group');
+    seg.setAttribute('aria-label', 'Theme');
+    var THEME_OPTS = [
+      { value: 'light', label: 'Light' },
+      { value: 'dark', label: 'Dark' },
+      { value: 'auto', label: 'Auto' }
+    ];
+    var segBtns = {};
+    THEME_OPTS.forEach(function (o) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'glacial-settings-seg';
+      b.textContent = o.label;
+      b.setAttribute('data-value', o.value);
+      b.addEventListener('click', function () {
+        if (o.value === 'auto') {
+          // Clear the pin and fall back to OS preference. Clear BOTH cookie names
+          // (shared + legacy per-service) so a migrated user — who may still hold
+          // the old per-service cookie that readThemeCookie() falls back to —
+          // fully unpins rather than reverting to the stale value.
+          writePersisted(SHARED_THEME_COOKIE, '');
+          writePersisted(THEME_COOKIE, '');
+          applyTheme(getOSTheme());
+        } else {
+          // Pin explicitly: write the cookie AND apply, even when the resolved
+          // theme already matches (e.g. clicking "Light" while in auto+OS-light).
+          // glacialToggleTheme() only flips relative to current, so it'd no-op
+          // there and leave the choice unpersisted.
+          applyTheme(o.value);
+          writePersisted(THEME_WRITE_COOKIE, o.value);
+        }
+        syncSeg();
+      });
+      seg.appendChild(b);
+      segBtns[o.value] = b;
+    });
+    themeGroup.appendChild(seg);
+    pop.appendChild(themeGroup);
+
+    function syncSeg() {
+      var pinned = readThemeCookie();
+      var active = pinned ? document.documentElement.getAttribute('data-theme') : 'auto';
+      Object.keys(segBtns).forEach(function (v) {
+        var on = v === active;
+        segBtns[v].setAttribute('aria-pressed', on ? 'true' : 'false');
+        segBtns[v].classList.toggle('is-active', on);
+      });
+    }
+
+    // --- Skin swatch picker ---
+    var skinGroup = document.createElement('div');
+    skinGroup.className = 'glacial-settings-group';
+    var skinLabel = document.createElement('div');
+    skinLabel.className = 'glacial-settings-label';
+    skinLabel.textContent = 'Skin';
+    skinGroup.appendChild(skinLabel);
+    var swatches = document.createElement('div');
+    swatches.className = 'glacial-settings-skins';
+    var skinBtns = {};
+    skins.forEach(function (name) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'glacial-settings-swatch';
+      // Scope the swatch to the skin's own tokens — var(--accent)/var(--bg)
+      // resolve under [data-skin] (see glacial.css), never a hardcoded color.
+      b.setAttribute('data-skin', name);
+      b.setAttribute('aria-label', name);
+      b.setAttribute('title', name);
+      b.addEventListener('click', function () {
+        window.glacialSetSkin(name);
+        syncSkins();
+      });
+      swatches.appendChild(b);
+      skinBtns[name] = b;
+    });
+    skinGroup.appendChild(swatches);
+    pop.appendChild(skinGroup);
+
+    function syncSkins() {
+      var cur = document.documentElement.getAttribute('data-skin') || 'default';
+      Object.keys(skinBtns).forEach(function (n) {
+        var on = n === cur;
+        skinBtns[n].setAttribute('aria-pressed', on ? 'true' : 'false');
+        skinBtns[n].classList.toggle('is-active', on);
+      });
+    }
+
+    // --- Aesthetic toggle ---
+    var aesGroup = document.createElement('div');
+    aesGroup.className = 'glacial-settings-group';
+    var aesLabel = document.createElement('div');
+    aesLabel.className = 'glacial-settings-label';
+    aesLabel.textContent = 'Aesthetic';
+    aesGroup.appendChild(aesLabel);
+    var aesSeg = document.createElement('div');
+    aesSeg.className = 'glacial-settings-segmented';
+    aesSeg.setAttribute('role', 'group');
+    aesSeg.setAttribute('aria-label', 'Aesthetic');
+    var aesBtns = {};
+    aesthetics.forEach(function (o) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'glacial-settings-seg';
+      b.textContent = o.label;
+      b.setAttribute('data-value', o.value);
+      b.addEventListener('click', function () {
+        window.glacialSetAesthetic(o.value || null);
+        syncAes();
+      });
+      aesSeg.appendChild(b);
+      aesBtns[o.value] = b;
+    });
+    aesGroup.appendChild(aesSeg);
+    pop.appendChild(aesGroup);
+
+    function syncAes() {
+      var cur = document.documentElement.getAttribute('data-aesthetic') || '';
+      Object.keys(aesBtns).forEach(function (v) {
+        var on = v === cur;
+        aesBtns[v].setAttribute('aria-pressed', on ? 'true' : 'false');
+        aesBtns[v].classList.toggle('is-active', on);
+      });
+    }
+
+    function syncAll() { syncSeg(); syncSkins(); syncAes(); }
+
+    function openPop() {
+      pop.setAttribute('data-open', 'true');
+      cog.setAttribute('aria-expanded', 'true');
+      syncAll();
+    }
+    function closePop() {
+      pop.setAttribute('data-open', 'false');
+      cog.setAttribute('aria-expanded', 'false');
+    }
+    function isOpen() { return pop.getAttribute('data-open') === 'true'; }
+
+    cog.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (isOpen()) closePop(); else openPop();
+    });
+    // Keep the popover open when interacting inside it.
+    pop.addEventListener('click', function (e) { e.stopPropagation(); });
+    document.addEventListener('click', function () { if (isOpen()) closePop(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && isOpen()) { closePop(); cog.focus(); }
+    });
+    // Stay in sync when theme/skin/aesthetic change from anywhere (other tabs,
+    // a Cmd+K command, the OS listener).
+    document.addEventListener('glacial:change', function () { if (isOpen()) syncAll(); });
+
+    root.appendChild(cog);
+    root.appendChild(pop);
+    host.appendChild(root);
+    syncAll();
+    return { open: openPop, close: closePop, root: root };
+  };
+
+  // ===== App switcher (v2.6.0) — Tier 2 =====
+  // glacialAppSwitcher({ services: [{ name, url, description, status?, group? }], target })
+  // renders data-driven .glacial-tile launchers. status ∈ green|yellow|red drives
+  // the status dot (existing --green/--yellow/--red tokens). group buckets tiles
+  // under a heading. Returns the rendered container.
+  window.glacialAppSwitcher = function (config) {
+    config = config || {};
+    var services = config.services || [];
+    var host = resolveTarget(config.target);
+    if (!host) { console.warn('[glacial] App-switcher target not found:', config.target); return null; }
+
+    var grid = document.createElement('div');
+    grid.className = 'glacial-app-switcher';
+
+    var STATUS = { green: 1, yellow: 1, red: 1 };
+    var byGroup = {};
+    var order = [];
+    services.forEach(function (s) {
+      var g = s.group || '';
+      if (!byGroup[g]) { byGroup[g] = []; order.push(g); }
+      byGroup[g].push(s);
+    });
+
+    order.forEach(function (g) {
+      if (g) {
+        var heading = document.createElement('div');
+        heading.className = 'glacial-app-switcher-group';
+        heading.textContent = g;
+        grid.appendChild(heading);
+      }
+      var row = document.createElement('div');
+      row.className = 'glacial-app-switcher-row';
+      byGroup[g].forEach(function (s) {
+        var tile = document.createElement('a');
+        tile.className = 'glacial-tile';
+        tile.href = s.url || '#';
+
+        if (s.status && STATUS[s.status]) {
+          var dot = document.createElement('span');
+          dot.className = 'glacial-tile-status glacial-tile-status-' + s.status;
+          dot.setAttribute('aria-hidden', 'true');
+          tile.appendChild(dot);
+        }
+
+        var name = document.createElement('span');
+        name.className = 'glacial-tile-name';
+        name.textContent = s.name || '';
+        tile.appendChild(name);
+
+        if (s.description) {
+          var desc = document.createElement('span');
+          desc.className = 'glacial-tile-desc';
+          desc.textContent = s.description;
+          tile.appendChild(desc);
+        }
+        row.appendChild(tile);
+      });
+      grid.appendChild(row);
+    });
+
+    host.appendChild(grid);
+    return grid;
+  };
+
   // ===== Debug surface =====
   // Resolved token snapshot for window.glacial.help()
   function snapshotTokens() {
@@ -733,7 +1123,17 @@
     'glacial-accordion', 'glacial-accordion-item', 'glacial-accordion-trigger', 'glacial-accordion-panel',
     'glacial-progress', 'glacial-progress-bar', 'glacial-spinner',
     'glacial-avatar', 'glacial-avatar-group',
-    'glacial-pagination', 'glacial-pagination-item'
+    'glacial-pagination', 'glacial-pagination-item',
+    // v2.6.0 — Tier 1 settings cog
+    'glacial-settings', 'glacial-settings-cog', 'glacial-settings-popover',
+    'glacial-settings-group', 'glacial-settings-label',
+    'glacial-settings-segmented', 'glacial-settings-seg',
+    'glacial-settings-skins', 'glacial-settings-swatch',
+    // v2.6.0 — Tier 2 app switcher
+    'glacial-app-switcher', 'glacial-app-switcher-group', 'glacial-app-switcher-row',
+    'glacial-tile', 'glacial-tile-status', 'glacial-tile-status-green',
+    'glacial-tile-status-yellow', 'glacial-tile-status-red',
+    'glacial-tile-name', 'glacial-tile-desc'
   ];
 
   window.glacial = {
@@ -758,7 +1158,9 @@
     openModal: window.glacialOpenModal,
     closeModal: window.glacialCloseModal,
     toast: window.glacialToast,
-    palette: window.glacialPalette
+    palette: window.glacialPalette,
+    mountSettings: window.glacialMountSettings,
+    appSwitcher: window.glacialAppSwitcher
   };
 
   // ===== Boot banner =====

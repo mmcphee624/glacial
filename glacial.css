@@ -1,5 +1,5 @@
 /* Glacial Design System — Shared CSS Tokens
- * @version 2.5.0
+ * @version 2.6.0
  * Import this file into any service for Glacial theming.
  * See DESIGN.md for full specification, RECIPES.md for page recipes.
  */
@@ -1979,5 +1979,201 @@
   color: var(--text-strong);
   line-height: 1.2;
   margin: 0 0 var(--space-xs);
+}
+
+/* ===== Settings cog + popover (v2.6.0, Tier 1) =============
+ * A cog button (.glacial-settings-cog) toggling an anchored popover
+ * (.glacial-settings-popover) with a theme segmented control, a skin swatch
+ * picker, and an aesthetic toggle. Injected by glacialMountSettings(). Each
+ * swatch carries its own [data-skin], so var(--accent)/var(--bg) below resolve
+ * to that skin's tokens — never a hardcoded color. */
+.glacial-settings { position: relative; display: inline-block; }
+.glacial-settings-cog {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+.glacial-settings-cog:hover {
+  color: var(--text-strong);
+  border-color: var(--border-hover);
+  background: var(--bg-card-hover);
+}
+.glacial-settings-cog[aria-expanded="true"] {
+  color: var(--accent);
+  border-color: var(--accent-border);
+}
+.glacial-settings-cog:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.glacial-settings-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 210;
+  min-width: 240px;
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+  transition: opacity 0.15s, transform 0.15s;
+}
+.glacial-settings-popover[data-open="true"] {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+.glacial-settings-group { display: flex; flex-direction: column; gap: var(--space-sm); }
+.glacial-settings-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.glacial-settings-segmented {
+  display: inline-flex;
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.glacial-settings-seg {
+  flex: 1;
+  min-height: 32px;
+  padding: 0 12px;
+  border: 0;
+  border-left: 1px solid var(--border-card);
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.glacial-settings-seg:first-child { border-left: 0; }
+.glacial-settings-seg:hover { color: var(--text-strong); background: var(--bg-card-hover); }
+.glacial-settings-seg.is-active,
+.glacial-settings-seg[aria-pressed="true"] {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+.glacial-settings-seg:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.glacial-settings-skins {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+.glacial-settings-swatch {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--border-card);
+  border-radius: 50%;
+  cursor: pointer;
+  /* The swatch element carries [data-skin], so these resolve to THAT skin's
+   * tokens: a bg-ringed dot of its accent. No literal colors. */
+  background:
+    radial-gradient(circle at center, var(--accent) 0 52%, var(--bg) 54% 100%);
+  transition: transform 0.12s, box-shadow 0.12s, border-color 0.12s;
+}
+.glacial-settings-swatch:hover { transform: scale(1.08); border-color: var(--border-hover); }
+.glacial-settings-swatch.is-active,
+.glacial-settings-swatch[aria-pressed="true"] {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-border);
+}
+.glacial-settings-swatch:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 540px) {
+  .glacial-settings-popover { right: 0; left: auto; min-width: 220px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .glacial-settings-popover,
+  .glacial-settings-cog,
+  .glacial-settings-seg,
+  .glacial-settings-swatch { transition: none; }
+  .glacial-settings-swatch:hover { transform: none; }
+}
+
+/* ===== App switcher + tile (v2.6.0, Tier 2) ===============
+ * glacialAppSwitcher({ services, target }) renders .glacial-tile launchers in
+ * .glacial-app-switcher-row buckets (optionally grouped under a heading).
+ * Status dot uses the semantic --green/--yellow/--red tokens. */
+.glacial-app-switcher { display: flex; flex-direction: column; gap: var(--space-lg); }
+.glacial-app-switcher-group {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: calc(-1 * var(--space-sm));
+}
+.glacial-app-switcher-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-md);
+}
+.glacial-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-md);
+  min-height: 88px;
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  text-decoration: none;
+  transition: transform 0.15s, border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+.glacial-tile:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-hover);
+  background: var(--bg-card-hover);
+  box-shadow: var(--shadow);
+}
+.glacial-tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.glacial-tile-status {
+  position: absolute;
+  top: var(--space-md);
+  right: var(--space-md);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.glacial-tile-status-green { background: var(--green); box-shadow: var(--glow-low) var(--green); }
+.glacial-tile-status-yellow { background: var(--yellow); box-shadow: var(--glow-low) var(--yellow); }
+.glacial-tile-status-red { background: var(--red); box-shadow: var(--glow-low) var(--red); }
+.glacial-tile-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-strong);
+  padding-right: 16px;
+}
+.glacial-tile-desc {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+@media (prefers-reduced-motion: reduce) {
+  .glacial-tile { transition: none; }
+  .glacial-tile:hover { transform: none; }
 }
 

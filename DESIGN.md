@@ -910,7 +910,7 @@ HA's theme system doesn't support animated backgrounds or `backdrop-filter` nati
 
 | Date | Decision | Rationale |
 |------|----------|-----------|
-| 2026-04-14 | Glass Hybrid direction chosen | Unifies Scotty/CTRL teal app style with Aurora Glass dashboard effects |
+| 2026-04-14 | Glass Hybrid direction chosen | Unifies a teal app style with Aurora Glass dashboard effects |
 | 2026-04-14 | System fonts kept | Zero latency, native feel, no font management overhead |
 | 2026-04-14 | Dual-theme with aurora | Light mode for day use, dark aurora for night. Toggle persists per-service. |
 | 2026-04-14 | Neon status colors in dark mode | Standard semantic colors get elevated brightness in dark mode for readability on near-black |
@@ -919,7 +919,7 @@ HA's theme system doesn't support animated backgrounds or `backdrop-filter` nati
 | 2026-04-14 | Dashboard keeps 4th orb (amber) | Part of the aurora character, spec includes 3 core orbs but dashboard adds a 4th |
 | 2026-05-03 | Tier 1 components added | Surveys of 5 consumer apps showed identical reimplementation of tables, alerts, breadcrumbs, metrics, etc. Promote to system. |
 | 2026-05-03 | Skin system introduced | Token-only override layer applied via `[data-skin]`. Replaces ad-hoc CSS overrides per-project. |
-| 2026-05-03 | Six skins shipped | default, warm-serif, midnight-mono, lavender, deep-navy, nord. ctrl-specific extensions deferred — ctrl will use a project-local skin file. |
+| 2026-05-03 | Six skins shipped | default, warm-serif, midnight-mono, lavender, deep-navy, nord. App-specific extensions deferred — a consuming app uses a project-local skin file. |
 | 2026-05-03 | Aurora orb tokens | Skins can recolor or disable orbs via `--orb-{1,2,3}-color` and `--orb-opacity` |
 | 2026-05-03 | Mobile blur policy | `--blur` auto-reduces 20→12→8px to keep iOS Safari above 30 FPS with stacked glass |
 | 2026-05-03 | Skeleton shimmer pure CSS | Drop the planned JS injector. CSS is GPU-accelerated, animation-delay avoids flash on instant loads. |
@@ -941,4 +941,4 @@ HA's theme system doesn't support animated backgrounds or `backdrop-filter` nati
 | 2026-05-31 | Theme-change event | `glacial:change` CustomEvent + `glacialOnThemeChange()` replace consumer MutationObservers on `<html>`. |
 | 2026-05-31 | Container queries for split-view | `.glacial-rail-content` is a query container; nested split-views collapse on content width, not viewport. Viewport `@media` kept as fallback. |
 | 2026-05-31 | CI + contract test | `.github/workflows/ci.yml` runs all gates; `scripts/check-contract.mjs` (pure Node) enforces CLASSES⊆CSS, declared token refs, and the no-color-literal DNA rule. Zero-build kept — no npm/bundler. |
-| 2026-06-11 | Primary-button text tokenized (v2.5.0) | `.glacial-btn-primary` hardcoded `#fff`, which only hit ~2.4:1 on the default teal (WCAG AA fail). New `--btn-primary-text` token (default `#0a0a0a`, 8.3:1); each skin picks the AA-passing side per variant (lavender/deep-navy/warm-serif use `#fff` in light). CTRL idea #63. |
+| 2026-06-11 | Primary-button text tokenized (v2.5.0) | `.glacial-btn-primary` hardcoded `#fff`, which only hit ~2.4:1 on the default teal (WCAG AA fail). New `--btn-primary-text` token (default `#0a0a0a`, 8.3:1); each skin picks the AA-passing side per variant (lavender/deep-navy/warm-serif use `#fff` in light). |
