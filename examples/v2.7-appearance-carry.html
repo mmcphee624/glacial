@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Appearance carry (v2.7) · Glacial Examples</title>
+  <link rel="stylesheet" href="../glacial.css">
+  <link rel="stylesheet" href="../skins/default.css">
+  <link rel="stylesheet" href="../skins/warm-serif.css">
+  <link rel="stylesheet" href="../skins/midnight-mono.css">
+  <link rel="stylesheet" href="../skins/lavender.css">
+  <link rel="stylesheet" href="../skins/deep-navy.css">
+  <link rel="stylesheet" href="../skins/nord.css">
+  <link rel="stylesheet" href="_examples.css">
+  <script src="../glacial.js"></script>
+</head>
+<body>
+  <header class="glacial-glass-header ex-toolbar">
+    <div class="ex-toolbar-inner">
+      <span class="ex-logo">GLACIAL · v2.7</span>
+      <nav class="glacial-nav ex-nav">
+        <a href="index.html">index</a>
+        <a href="components.html">components</a>
+        <a href="v2.6-continuity.html">continuity</a>
+        <a href="v2.7-appearance-carry.html" class="active">carry</a>
+        <a href="skins-preview.html">skins</a>
+      </nav>
+      <div class="ex-controls">
+        <!-- The settings cog drives the live theme/skin the carry reads. -->
+        <span id="settings-mount"></span>
+      </div>
+    </div>
+  </header>
+
+  <main class="ex-main" style="max-width: 860px;">
+    <section class="ex-hero">
+      <h1 class="glacial-h1">Appearance carry (v2.7)</h1>
+      <p class="ex-lede">
+        A theme/skin pick on one surface <strong>follows the user</strong> to the
+        next, carried as glacial&rsquo;s readable <code>?theme/?skin/?aesthetic</code>
+        URL params through the app switcher &mdash; <strong>at click time</strong>,
+        so the carried pick is always current. No shared cookie, no DNS, no proxy.
+        Pick a skin in the cog, then watch the tile hrefs below update on click.
+      </p>
+    </section>
+
+    <!-- App switcher with carry -->
+    <section class="ex-section">
+      <h2 class="glacial-h2">App switcher (carries appearance)</h2>
+      <p class="ex-fact" style="font-size:14px; line-height:1.6;">
+        Each glacial-aware tile is decorated with the live appearance when you
+        click it. The <strong>Router</strong> tile sets <code>carry: false</code>
+        &mdash; a non-glacial target, so its link is left untouched (no params
+        appended). All services below are <strong>placeholder data</strong>
+        (<code>example.com</code>). The links are <code>preventDefault</code>ed
+        here so you can inspect the decorated <code>href</code> instead of
+        navigating away.
+      </p>
+      <div id="switcher-mount"></div>
+      <pre class="glacial-glass ex-debug" id="carry-out" style="margin-top:12px;">click a tile to see its decorated href…</pre>
+    </section>
+
+    <!-- decorateUrl demo -->
+    <section class="ex-section">
+      <h2 class="glacial-h2">glacialDecorateUrl(url)</h2>
+      <p class="ex-fact" style="font-size:14px; line-height:1.6;">
+        The thin wrapper reads the live <code>theme/skin/aesthetic</code> off
+        <code>&lt;html&gt;</code> and appends them, <strong>omitting</strong> any
+        value that equals the destination default. It merges with an existing
+        query, keeps params before a <code>#hash</code>, overwrites a conflicting
+        param, and is idempotent.
+      </p>
+      <pre class="glacial-glass ex-debug">glacialDecorateUrl('https://example.com/x?foo=1#h')
+// → <span id="demo-out">…</span></pre>
+    </section>
+
+    <!-- Config -->
+    <section class="ex-section">
+      <h2 class="glacial-h2">Opt-in config (set before glacial.js loads)</h2>
+      <p class="ex-fact" style="font-size:14px; line-height:1.6;">
+        Window global or a <code>&lt;meta&gt;</code> with the same kebab-case name.
+        All default off/unset:
+      </p>
+      <pre class="glacial-glass ex-debug">&lt;script&gt;
+  window.GLACIAL_SHARED_THEME  = true;        // one glacial-theme cookie + persist carried params
+  window.GLACIAL_DEFAULT_THEME = 'auto';      // follow OS preference
+  window.GLACIAL_DEFAULT_SKIN  = 'deep-navy'; // durable default skin (pre-paint, no FOUC)
+&lt;/script&gt;</pre>
+      <p class="ex-fact" style="font-size:13px; line-height:1.6; color: var(--text-secondary);">
+        With <code>GLACIAL_SHARED_THEME</code> on, a carried-in param is validated
+        against glacial&rsquo;s vocab and persisted to this surface&rsquo;s
+        host-only cookie, so a later cold reload keeps the carried look. Off-vocab
+        values are ignored (no cookie poisoning). v2.6&rsquo;s
+        <code>GLACIAL_COOKIE_DOMAIN</code> was removed (single-label-TLD cookies
+        are rejected by browsers).
+      </p>
+    </section>
+
+    <!-- Debug -->
+    <section class="ex-section">
+      <h2 class="glacial-h2">Debug</h2>
+      <pre class="glacial-glass ex-debug" id="ex-debug">loading...</pre>
+      <p class="ex-debug-hint">Output of <code>window.glacial.help()</code>.</p>
+    </section>
+  </main>
+
+  <script src="_examples.js"></script>
+  <script>
+    // Mount the settings cog so you can change the live theme/skin.
+    glacialMountSettings('#settings-mount');
+
+    // Render the app switcher with PLACEHOLDER services only. The Router tile is
+    // a non-glacial target (carry:false) so its link is never decorated.
+    var grid = glacialAppSwitcher({
+      target: '#switcher-mount',
+      services: [
+        { name: 'Service A', url: 'https://example.com/a?ref=switcher', description: 'A placeholder internal tool.', status: 'green', group: 'Internal' },
+        { name: 'Service B', url: 'https://example.com/b#overview', description: 'Another placeholder surface.', status: 'yellow', group: 'Internal' },
+        { name: 'Service C', url: 'https://example.com/c', description: 'Sample dashboard.', status: 'red', group: 'Internal' },
+        { name: 'Router', url: 'https://example.com/admin', description: 'Non-glacial target — not decorated.', carry: false, group: 'External' }
+      ]
+    });
+
+    // Intercept clicks so we can SHOW the decorated href instead of navigating.
+    // (The switcher's own click handler runs first and rewrites tile.href; we read
+    //  it back here. In a real app you'd just let the navigation happen.)
+    var carryOut = document.getElementById('carry-out');
+    if (grid) {
+      grid.addEventListener('click', function (e) {
+        var tile = e.target.closest && e.target.closest('.glacial-tile');
+        if (!tile) return;
+        e.preventDefault();
+        var nm = tile.querySelector('.glacial-tile-name');
+        carryOut.textContent = (nm ? nm.textContent + '  →  ' : '') + tile.getAttribute('href');
+      });
+    }
+
+    // Live decorateUrl demo, refreshed on every appearance change.
+    function refreshDemo() {
+      var out = document.getElementById('demo-out');
+      if (out && window.glacialDecorateUrl) {
+        out.textContent = window.glacialDecorateUrl('https://example.com/x?foo=1#h');
+      }
+    }
+    refreshDemo();
+
+    // Debug box.
+    var dbg = document.getElementById('ex-debug');
+    function refreshDbg() {
+      if (dbg && window.glacial) dbg.textContent = JSON.stringify(window.glacial.help(), null, 2);
+    }
+    refreshDbg();
+    if (dbg && !window.glacial) dbg.textContent = 'window.glacial is undefined — glacial.js did not load';
+
+    glacialOnThemeChange(function () { refreshDemo(); refreshDbg(); });
+  </script>
+</body>
+</html>

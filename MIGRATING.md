@@ -1,5 +1,96 @@
 # Migrating
 
+## v2.6.x → v2.7.0
+
+**One removal, otherwise additive.** v2.7 replaces v2.6's shared-cookie-domain
+cross-surface sharing with a URL-param **appearance carry**. The only breaking
+item is the removal of `GLACIAL_COOKIE_DOMAIN` (it never worked for the deployments
+it targeted — see the footgun note below). Everything else is opt-in and off by
+default; the carry only auto-applies to app-switcher tiles.
+
+### Why the change
+
+`GLACIAL_COOKIE_DOMAIN` set `;domain=<value>` on glacial's cookies to share a pick
+across sibling subdomains. Browsers **reject** a cookie whose `domain` is a bare
+**single-label TLD** (the host has no registrable dot-separated parent). So for a
+deployment under a made-up internal TLD — e.g. surfaces at `app.lan` and
+`status.lan` trying `domain=.lan` — the cookie write **silently fails**, which in
+v2.6 also broke glacial's own cookie writes on those hosts. There is no
+client-side workaround; only a host-only cookie sticks. (Cookies under a normal
+registrable domain like `app.example.com` with `domain=.example.com` were fine —
+but the single-label-TLD case was the one we shipped for, hence the pivot.)
+
+### What replaces it: appearance carry
+
+glacial already honors `?theme/?skin/?aesthetic` on landing. v2.7 adds the write
+half: when the user clicks an app-switcher tile, glacial **decorates** the
+destination URL with the current pick, so it carries to the next surface — no DNS,
+no shared cookie, no proxy.
+
+- **`glacialDecorateUrl(url)`** (also `window.glacial.decorateUrl`) — appends the
+  live `theme`/`skin`/`aesthetic` as glacial's readable params, omitting any value
+  that equals the destination default (clean URLs in the common case). It merges
+  with an existing query, keeps params before a `#hash`, overwrites a conflicting
+  param, is idempotent, and preserves relative + pre-encoded URLs.
+- **App-switcher** decorates tiles **at click time** (so the carried pick is always
+  current). New per-service `carry` flag (default `true`) — set `carry:false` on
+  non-glacial targets (a Pi-hole / Grafana / router admin link) so foreign or
+  canonical URLs aren't decorated. A switcher-level `carryAppearance:false`
+  disables it globally.
+
+  ```js
+  glacialAppSwitcher({
+    target: '#nav',
+    services: [
+      { name: 'App A', url: 'https://a.example', status: 'green' },            // carries
+      { name: 'App B', url: 'https://b.example', status: 'yellow' },           // carries
+      { name: 'Router', url: 'https://router.example', carry: false }         // not decorated
+    ]
+  });
+  ```
+
+- For your own (non-switcher) outbound links, decorate them yourself at click time
+  — e.g. in a delegated click handler: `a.href = glacialDecorateUrl(a.dataset.url)`.
+
+### New config (set before `glacial.js` loads)
+
+1. **`GLACIAL_DEFAULT_SKIN`** (`window` global or `<meta name="glacial-default-skin">`)
+   — a durable default skin until the user picks. `getSkin()` precedence is now
+   URL `?skin=` > cookie > `GLACIAL_DEFAULT_SKIN` > `'default'`. Read pre-paint, so
+   it applies before first paint (no FOUC), mirroring `GLACIAL_DEFAULT_THEME`.
+
+2. **`GLACIAL_DEFAULT_THEME='auto'`** — `auto` now means "follow OS preference"
+   (identical to leaving it unset), so you can declare it explicitly. `'light'` /
+   `'dark'` still pin a durable default.
+
+   ```html
+   <script>
+     window.GLACIAL_DEFAULT_SKIN  = 'deep-navy'; // durable default skin
+     window.GLACIAL_DEFAULT_THEME = 'auto';      // follow OS (explicit)
+     window.GLACIAL_SHARED_THEME  = true;        // one glacial-theme cookie + persist-on-param
+   </script>
+   <script src="vendor/glacial/glacial.js"></script>
+   ```
+
+### Persist-on-param (opt-in) — security note
+
+When `GLACIAL_SHARED_THEME` is truthy, a carried `?theme/?skin/?aesthetic` param is
+**persisted** to this surface's host-only cookie on boot (so a later cold reload
+keeps the carried look). This means a **crafted link** (e.g. `…?skin=nord`) can set
+an **opted-in** site's appearance for that visitor. This is deliberate and bounded:
+it is **appearance-only** (theme/skin/aesthetic, nothing sensitive), **opt-in**
+(off unless you set `GLACIAL_SHARED_THEME`), and **validated** — the value must be
+in glacial's known vocab (theme ∈ light/dark, skin ∈ the six built-ins, aesthetic ∈
+hybrid) or it is ignored, so the cookie can't be poisoned with junk. With
+shared-theme off (the default), a carried param is ephemeral (applied for that load,
+not persisted).
+
+### Removing `GLACIAL_COOKIE_DOMAIN`
+
+Delete any `GLACIAL_COOKIE_DOMAIN` global/`<meta>`. If you were relying on it for
+cross-surface sharing, set `GLACIAL_SHARED_THEME=true` (and the two defaults above)
+and let the app-switcher carry the pick. If you set it via `<meta>`, remove that tag.
+
 ## v2.5.x → v2.6.0
 
 **No breaking changes.** Purely additive: cross-surface config, cross-tab live

@@ -1,5 +1,5 @@
 /* Glacial Design System — Shared CSS Tokens
- * @version 2.6.0
+ * @version 2.7.0
  * Import this file into any service for Glacial theming.
  * See DESIGN.md for full specification, RECIPES.md for page recipes.
  */
@@ -8,6 +8,10 @@
 :root {
   --bg: #eef1f5;
   --bg-card: rgba(255,255,255,0.6);
+  /* Near-opaque surface for scrim-less floating overlays (settings popover, menu) —
+     derived from the per-theme/per-skin --bg so it stays legible even where an
+     ancestor breaks backdrop-filter. */
+  --bg-overlay: color-mix(in srgb, var(--bg) 95%, transparent);
   --bg-card-hover: rgba(255,255,255,0.78);
   --bg-header: rgba(255,255,255,0.65);
   --bg-input: rgba(255,255,255,0.75);
@@ -1716,7 +1720,7 @@
   top: calc(100% + 4px);
   left: 0;
   min-width: 180px;
-  background: var(--bg-card);
+  background: var(--bg-overlay);
   backdrop-filter: blur(var(--blur));
   -webkit-backdrop-filter: blur(var(--blur));
   border: 1px solid var(--border-card);
@@ -2021,7 +2025,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
-  background: var(--bg-card);
+  background: var(--bg-overlay);
   backdrop-filter: blur(var(--blur));
   -webkit-backdrop-filter: blur(var(--blur));
   border: 1px solid var(--border-card);
