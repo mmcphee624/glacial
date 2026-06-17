@@ -15,7 +15,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '20' # node:test (scripts/test-js.mjs) needs >= 18
 
       - name: tokens.json is in sync with glacial.css
         run: bash scripts/snapshot-tokens.sh --check
@@ -34,3 +34,6 @@ jobs:
 
       - name: glacial.js parses
         run: node --check glacial.js
+
+      - name: JS unit tests (pure decorateUrl core)
+        run: node --test scripts/test-js.mjs

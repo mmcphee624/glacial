@@ -15,9 +15,17 @@ bash scripts/lint-skin.sh                 # skins override tokens only
 bash scripts/check-classes.sh             # CLASSES[] all exist in CSS
 node scripts/check-contract.mjs           # superset: classes, token refs, no color literals
 node --check glacial.js                   # JS parses
+node --test scripts/test-js.mjs           # JS unit tests (pure decorateUrl core)
 ```
 
 CI (`.github/workflows/ci.yml`) runs the same set on every push and PR.
+
+**Node 18+** is required for the unit gate — it uses the built-in `node:test`
+runner (no dev dependencies, in keeping with the zero-build rule). The unit
+suite covers the pure, side-effect-free cores (today: `decorateUrl`, which
+powers the v2.7 cross-surface appearance carry). `glacial.js` exports those cores
+under CommonJS and skips its DOM IIFE when there's no `document`, so requiring it
+from a test is safe. If you add a pure helper, add a `node:test` case for it here.
 
 ## Adding a component
 

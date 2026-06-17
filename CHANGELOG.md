@@ -4,6 +4,69 @@ All notable changes to glacial are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.7.0] — 2026-06-16
+
+Cross-surface appearance carry. A theme/skin pick on one surface follows the user
+as they hop to another, by carrying glacial's existing readable URL params
+(`?theme/?skin/?aesthetic`) through the app-switcher at click time. This replaces
+v2.6's shared-cookie-domain approach (`GLACIAL_COOKIE_DOMAIN`), which was
+empirically broken — browsers reject a cookie scoped to a bare single-label TLD,
+so the `;domain=` write silently failed. Fully additive (MINOR): no token or class
+removals; the carry is opt-out per-link and per-switcher and defaults to on only
+for app-switcher tiles, so existing component usage is unchanged.
+
+### Added — Appearance carry
+- **`glacialDecorateUrl(url)`** (on `window` and `window.glacial.decorateUrl`) —
+  appends the live resolved `theme`/`skin`/`aesthetic` (read off `<html>`) as
+  glacial's readable `?theme/?skin/?aesthetic` params. Merges with any existing
+  query, places params **before** a `#hash`, **overwrites** a conflicting
+  `theme`/`skin`/`aesthetic` already on the URL (current state wins), **omits** a
+  value that equals the destination default (skin == the configured default skin;
+  theme auto/unset; aesthetic unset), is idempotent, and preserves relative and
+  pre-encoded URLs. The pure, side-effect-free core is exported under CommonJS for
+  unit testing.
+- **App-switcher click-time decoration.** `glacialAppSwitcher` now decorates a
+  tile's `url` via `glacialDecorateUrl` **at click time** (never carries a stale
+  pick). New per-service **`carry`** flag (default `true`; set `carry:false` for
+  non-glacial targets so foreign/canonical links aren't decorated) and a
+  switcher-level **`carryAppearance`** option (default `true`) to disable globally.
+- **Persist-on-param (opt-in, validated).** On boot, if a `?theme/?skin/?aesthetic`
+  param is present **and** `GLACIAL_SHARED_THEME` is truthy, the carried value is
+  validated against glacial's known vocab (theme ∈ light/dark; skin ∈ the six
+  built-ins; aesthetic ∈ hybrid) and only then persisted to this surface's
+  host-only cookie, so a later cold reload keeps it. Off-vocab values are ignored
+  (no cookie poisoning). With shared-theme off, a carried param stays ephemeral.
+
+### Added — Config
+- **`GLACIAL_DEFAULT_SKIN`** (`window` global or `<meta name="glacial-default-skin">`)
+  — a durable default skin applied until a user picks. `getSkin()` precedence is now
+  URL `?skin=` > cookie > `GLACIAL_DEFAULT_SKIN` > `'default'`. Read pre-paint in the
+  boot IIFE, so the default skin applies before first paint (no FOUC).
+- **`GLACIAL_DEFAULT_THEME='auto'`** — `auto` now resolves the same as unset (follow
+  OS preference), so a consumer can declare auto explicitly. `'light'`/`'dark'` still
+  pin a durable default.
+
+### Added — Tooling
+- **JS unit gate.** `scripts/test-js.mjs` runs the built-in `node:test` runner
+  (Node 18+, zero dependencies) over the pure `decorateUrl` core — glacial's first
+  JS unit harness — and is wired into CI alongside `check-contract.mjs`.
+- `examples/v2.7-appearance-carry.html` demonstrates the carry with placeholder
+  services (including a `carry:false` tile).
+
+### Fixed
+- **Floating-overlay legibility.** The settings popover (`.glacial-settings-popover`)
+  and dropdown menu (`.glacial-menu`) were `var(--bg-card)` — a ~6%-alpha glass that
+  relies entirely on `backdrop-filter` and bleeds page content through when an
+  ancestor breaks the backdrop-filter containing block. Both now use a new
+  near-opaque **`--bg-overlay`** token (`color-mix` of the per-skin `--bg`), so they
+  stay readable over busy content regardless of backdrop-filter support. Scrim-backed
+  overlays (modal, palette) keep `--bg-card`.
+
+### Removed
+- **`GLACIAL_COOKIE_DOMAIN`** — the v2.6 shared-cookie-domain config is gone (it
+  could not work for a single-label-TLD deployment; see MIGRATING). Cookies are
+  host-only again. Cross-surface continuity now rides the URL-param carry above.
+
 ## [2.6.0] — 2026-06-15
 
 UI continuity: the generic mechanisms that make separate surfaces feel like one

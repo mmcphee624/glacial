@@ -39,13 +39,13 @@ Three lines. That's the whole getting-started.
 | `scripts/` | Token + skin + class + contract CI gates |
 | `ha-theme/glacial.yaml` | Home Assistant theme mapping |
 | `tokens.json` | Public token snapshot (machine-readable) |
-| `VERSION` | Current version (`2.6.0`) |
+| `VERSION` | Current version (`2.7.0`) |
 
 ## Adopting in a new project
 
 Paste this into the agent working in the new repo:
 
-> Adopt glacial: vendor a tagged copy of `mmcphee624/glacial` v2.6.0 to `vendor/glacial/` (curl `https://github.com/mmcphee624/glacial/archive/v2.6.0.tar.gz`, extract). Link `vendor/glacial/glacial.css` and `vendor/glacial/glacial.js` from your app shell. Read `vendor/glacial/RECIPES.md` and pick the recipe matching the page you're building. Don't override `--accent` directly — write a skin under `vendor/glacial/skins/` if you need rebranding. Verify by checking `<html data-glacial-loaded>` is set and `window.glacial.help()` returns `{version: "2.6.0"}`.
+> Adopt glacial: vendor a tagged copy of `mmcphee624/glacial` v2.7.0 to `vendor/glacial/` (curl `https://github.com/mmcphee624/glacial/archive/v2.7.0.tar.gz`, extract). Link `vendor/glacial/glacial.css` and `vendor/glacial/glacial.js` from your app shell. Read `vendor/glacial/RECIPES.md` and pick the recipe matching the page you're building. Don't override `--accent` directly — write a skin under `vendor/glacial/skins/` if you need rebranding. Verify by checking `<html data-glacial-loaded>` is set and `window.glacial.help()` returns `{version: "2.7.0"}`.
 
 ## Theming
 
@@ -73,43 +73,63 @@ Or via URL params for ephemeral previews: `?theme=dark&skin=midnight-mono&aesthe
 
 Or drop in the **settings cog** for a ready-made control surface (theme segmented
 control + skin swatches + aesthetic toggle), and the **app switcher** to launch
-between surfaces:
+between surfaces. App-switcher tiles **carry the current appearance** to the next
+surface (v2.7 — see below):
 
 ```js
 glacialMountSettings('#settings-slot');        // injects the cog + popover
 glacialAppSwitcher({                            // data-driven launcher tiles
   target: '#nav',
   services: [
-    { name: 'App A', url: 'https://a.example', description: 'An internal tool', status: 'green' },
-    { name: 'App B', url: 'https://b.example', description: 'Another surface',  status: 'yellow' }
+    { name: 'App A',  url: 'https://a.example', description: 'An internal tool', status: 'green' },
+    { name: 'App B',  url: 'https://b.example', description: 'Another surface',  status: 'yellow' },
+    { name: 'Router', url: 'https://router.example', carry: false }  // non-glacial → not decorated
   ]
 });
 ```
 
-## Cross-surface continuity (v2.6, opt-in)
+## Cross-surface appearance carry (v2.7, opt-in)
 
-Make separate surfaces feel like one product. All of these default off, so
-existing consumers are unchanged. Set them as a `window` global (or a
-`<meta name="...">` with the same kebab-case name) **before** `glacial.js` loads:
+Make separate surfaces feel like one product: a theme/skin pick on one surface
+**follows the user** to the next, carried as glacial's readable URL params through
+the app-switcher. No shared cookie, no DNS, no proxy.
+
+```js
+// Decorate any outbound URL with the live theme/skin/aesthetic (omitting defaults):
+glacialDecorateUrl('https://b.example/dash?tab=1#top');
+// → 'https://b.example/dash?tab=1&skin=nord#top'  (when nord is the live skin)
+```
+
+The app-switcher calls this **at click time** for every glacial-aware tile, so the
+carried pick is always current. Opt a link out with `carry: false` (per service)
+or the whole switcher out with `carryAppearance: false`.
+
+Optional config — set as a `window` global (or a `<meta name="...">` with the same
+kebab-case name) **before** `glacial.js` loads. All default off/unset:
 
 | Config | Effect |
 |--------|--------|
-| `GLACIAL_COOKIE_DOMAIN` | Append `;domain=<value>` to glacial's cookies so a theme/skin pick rides along to sibling subdomains (e.g. `.example.home`). |
-| `GLACIAL_SHARED_THEME` | Truthy ⇒ write a single `glacial-theme` cookie instead of the per-service `{service}-theme`. Reads honor both, so an already-saved theme migrates without a re-pick. |
-| `GLACIAL_DEFAULT_THEME` | `'light'` / `'dark'` — a durable default applied until the user makes a real pick. Outranks OS preference; a user pick (cookie) outranks it. |
+| `GLACIAL_SHARED_THEME` | Truthy ⇒ write a single `glacial-theme` cookie instead of the per-service `{service}-theme`, **and** persist a carried-in `?theme/?skin/?aesthetic` param (validated against glacial's vocab) so a later cold reload keeps it. Reads honor both cookie names, so an already-saved theme migrates without a re-pick. |
+| `GLACIAL_DEFAULT_THEME` | `'light'` / `'dark'` — a durable default until the user picks (outranks OS preference; a user pick wins). `'auto'` = follow OS (same as unset). |
+| `GLACIAL_DEFAULT_SKIN` | A durable default skin until the user picks. Precedence: URL `?skin=` > cookie > `GLACIAL_DEFAULT_SKIN` > `'default'`. |
 
 ```html
 <script>
-  window.GLACIAL_COOKIE_DOMAIN = '.example.home';
-  window.GLACIAL_SHARED_THEME  = true;
-  window.GLACIAL_DEFAULT_THEME = 'dark';
+  window.GLACIAL_SHARED_THEME  = true;        // one glacial-theme cookie + persist carried params
+  window.GLACIAL_DEFAULT_THEME = 'auto';      // follow OS preference
+  window.GLACIAL_DEFAULT_SKIN  = 'deep-navy'; // durable default skin
 </script>
 <script src="vendor/glacial/glacial.js"></script>
 ```
 
 Same-origin tabs also stay live in sync over `BroadcastChannel('glacial')`.
-Cross-surface (different subdomain) persistence comes from the shared cookie on
-the **next** load, not live sync.
+
+> **Note:** with `GLACIAL_SHARED_THEME` on, a crafted `?skin=` link can set an
+> opted-in site's appearance for that visitor — appearance-only, opt-in, validated
+> against the known vocab (no cookie poisoning), non-sensitive. See `MIGRATING.md`.
+> v2.6's `GLACIAL_COOKIE_DOMAIN` was **removed** in v2.7 (browsers reject a cookie
+> scoped to a bare single-label TLD, so it silently failed) — `MIGRATING.md` has the
+> footgun details.
 
 ## Home Assistant
 

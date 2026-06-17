@@ -22,6 +22,7 @@
         <a href="index.html">index</a>
         <a href="components.html">components</a>
         <a href="v2.6-continuity.html" class="active">continuity</a>
+        <a href="v2.7-appearance-carry.html">carry</a>
         <a href="skins-preview.html">skins</a>
       </nav>
       <div class="ex-controls">
@@ -75,14 +76,15 @@
         Set these before glacial.js loads (window global or <code>&lt;meta&gt;</code>):
       </p>
       <pre class="glacial-glass ex-debug">&lt;script&gt;
-  window.GLACIAL_COOKIE_DOMAIN = '.example.home'; // share cookies across subdomains
   window.GLACIAL_SHARED_THEME  = true;            // one glacial-theme cookie, migrates old picks
-  window.GLACIAL_DEFAULT_THEME = 'dark';          // durable default until the user picks
+  window.GLACIAL_DEFAULT_THEME = 'auto';          // follow OS preference (or 'light'/'dark')
+  window.GLACIAL_DEFAULT_SKIN  = 'deep-navy';     // durable default skin (v2.7)
 &lt;/script&gt;</pre>
       <p class="ex-fact" style="font-size:13px; line-height:1.6; color: var(--text-secondary);">
         Live cross-tab sync (BroadcastChannel) is <strong>same-origin only</strong>.
-        Different surfaces (subdomains) pick up a sibling&rsquo;s choice from the
-        shared cookie on the <em>next</em> load, not live.
+        Cross-surface continuity now rides the <a href="v2.7-appearance-carry.html">URL-param
+        appearance carry (v2.7)</a> &mdash; v2.6&rsquo;s <code>GLACIAL_COOKIE_DOMAIN</code>
+        was removed (browsers reject single-label-TLD cookie domains).
       </p>
     </section>
 

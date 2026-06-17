@@ -1,6 +1,6 @@
 /**
  * Glacial Design System — Theme + Skin + Aesthetic + Aurora + Debug + Tier 2/3 helpers
- * @version 2.6.0
+ * @version 2.7.0
  *
  * Include via <script src="glacial.js"></script>
  * Provides:
@@ -16,33 +16,138 @@
  *   - window.glacialToast({ message, variant })   (v2.4.0)
  *   - window.glacialMountSettings(target, opts?)  (v2.6.0 — cog + theme/skin/aesthetic popover)
  *   - window.glacialAppSwitcher({ services, target }) (v2.6.0 — app launcher tiles)
+ *   - window.glacialDecorateUrl(url)              (v2.7.0 — carry live theme/skin/aesthetic as URL params)
  *   - window.glacial.help()
  *
- * Sets <html data-glacial-loaded="2.6.0"> before first paint.
+ * Sets <html data-glacial-loaded="2.7.0"> before first paint.
  *
  * Theme/skin priority (highest first):
- *   1. URL params:  ?theme=light|dark · ?skin=<name>
+ *   1. URL params:  ?theme=light|dark · ?skin=<name> · ?aesthetic=<name>
  *   2. Cookie:      {service}-theme (or shared glacial-theme) · glacial-skin
- *   3. GLACIAL_DEFAULT_THEME (durable forced default, theme only)   (v2.6.0)
+ *   3. GLACIAL_DEFAULT_THEME ('light'|'dark', or 'auto' = follow OS) / GLACIAL_DEFAULT_SKIN
  *   4. OS pref:     prefers-color-scheme (theme only; skin defaults to "default")
  *
  * Optional config (window globals or <meta name="..."> equivalents — all default
- * off, so existing consumers are unchanged):
- *   - GLACIAL_COOKIE_DOMAIN — share cookies across sibling subdomains      (v2.6.0)
- *   - GLACIAL_SHARED_THEME  — use one `glacial-theme` cookie, not per-service (v2.6.0)
- *   - GLACIAL_DEFAULT_THEME — 'light'|'dark' forced default until a user picks (v2.6.0)
+ * off/unset, so existing consumers are unchanged):
+ *   - GLACIAL_SHARED_THEME  — use one `glacial-theme` cookie, not per-service     (v2.6.0)
+ *   - GLACIAL_DEFAULT_THEME — 'light'|'dark' forced default, or 'auto'=follow OS   (v2.6.0; 'auto' v2.7.0)
+ *   - GLACIAL_DEFAULT_SKIN  — durable default skin until a user picks             (v2.7.0)
+ *
+ * Cross-surface appearance carry (v2.7.0): glacialDecorateUrl(url) appends the
+ * live theme/skin/aesthetic as glacial's readable ?theme/?skin/?aesthetic params,
+ * omitting any value that equals the destination default. The app-switcher
+ * decorates glacial-aware tile URLs at CLICK time, so a hop to a sibling surface
+ * carries the current pick. With GLACIAL_SHARED_THEME on, a carried param is
+ * validated against the known vocab and persisted to this surface's host-only
+ * cookie on the next surface's boot.
  *
  * Storage degrades gracefully: cookie → sessionStorage → in-memory if both blocked.
- * Same-origin tabs stay live in sync via BroadcastChannel('glacial') (v2.6.0);
- * cross-surface persistence comes from the shared cookie on the NEXT load, not
- * live sync.
+ * Same-origin tabs stay live in sync via BroadcastChannel('glacial') (v2.6.0).
  *
  * See DESIGN.md for full specification.
  */
+
+/* =========================================================================
+ * Pure core: decorateUrl  (v2.7.0)
+ * -------------------------------------------------------------------------
+ * Side-effect-free. No DOM, no globals, no cookies — just URL string work, so
+ * it is unit-testable under node:test (see scripts/test-js.mjs). The browser
+ * wrapper window.glacialDecorateUrl reads live <html> state and calls this.
+ *
+ *   glacialDecorateUrlCore(url, { theme, skin, aesthetic, defaults })
+ *
+ * Appends glacial's EXISTING readable params (?theme=&skin=&aesthetic=),
+ * merging with any existing query, placing them BEFORE a #hash. Rules:
+ *   - OVERWRITE any theme/skin/aesthetic already on the URL (current state wins).
+ *   - OMIT a value that equals the destination default:
+ *       · skin      → omit when it === defaults.skin (the configured default skin)
+ *       · theme     → omit when auto/unset (only 'light'/'dark' are written)
+ *       · aesthetic → omit when unset/empty
+ *   - Idempotent: re-decorating an already-decorated URL doesn't double-add.
+ *   - Handles relative URLs and already-encoded values safely.
+ * Returns the original string unchanged if it can't be parsed as a URL.
+ * ========================================================================= */
+var glacialDecorateUrlCore = (function () {
+  'use strict';
+
+  // Split a URL string into [base, query, hash], preserving the base EXACTLY
+  // (scheme/host/path or relative form — leading-slash, ./, //host, bare name,
+  // or empty). We edit only the query, then reassemble, so a relative URL stays
+  // relative and a protocol-relative or fragment-only URL keeps its shape. We
+  // deliberately avoid round-tripping through new URL() with a sentinel base,
+  // which would force an absolute pathname and corrupt relative inputs.
+  function split(url) {
+    var hash = '';
+    var hashAt = url.indexOf('#');
+    if (hashAt !== -1) { hash = url.slice(hashAt); url = url.slice(0, hashAt); }
+    var query = '';
+    var qAt = url.indexOf('?');
+    if (qAt !== -1) { query = url.slice(qAt + 1); url = url.slice(0, qAt); }
+    return { base: url, query: query, hash: hash };
+  }
+
+  function decorate(url, opts) {
+    if (typeof url !== 'string' || url === '') return url;
+    opts = opts || {};
+    var defaults = opts.defaults || {};
+    var defaultSkin = defaults.skin || 'default';
+
+    var parts = split(url);
+    var params;
+    try {
+      params = new URLSearchParams(parts.query);
+    } catch (e) {
+      return url; // unparseable query — leave the URL untouched
+    }
+
+    // theme: only 'light'/'dark' are explicit picks worth carrying. Anything
+    // else (auto/unset/empty) means "no pick" → omit AND clear any stale value.
+    if (opts.theme === 'light' || opts.theme === 'dark') {
+      params.set('theme', opts.theme);
+    } else {
+      params.delete('theme');
+    }
+
+    // skin: carry unless it equals the destination default skin (clean URLs in
+    // the common case). Omit + clear when default/unset.
+    if (opts.skin && opts.skin !== defaultSkin) {
+      params.set('skin', opts.skin);
+    } else {
+      params.delete('skin');
+    }
+
+    // aesthetic: carry only when set (unset === polished default).
+    if (opts.aesthetic) {
+      params.set('aesthetic', opts.aesthetic);
+    } else {
+      params.delete('aesthetic');
+    }
+
+    // Reassemble: base + ?query (only if any params remain) + #hash. Params land
+    // BEFORE the hash; URLSearchParams.toString() encodes values safely, so the
+    // result is correctly merged and idempotent on re-decorate.
+    var qs = params.toString();
+    return parts.base + (qs ? '?' + qs : '') + parts.hash;
+  }
+
+  return decorate;
+})();
+
+// Export the pure core for node:test (CommonJS). When required under node there
+// is no DOM, so the browser IIFE below short-circuits — only the pure function
+// is exposed. In the browser this guard is a no-op (no module global).
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { decorateUrl: glacialDecorateUrlCore };
+}
+
 (function () {
   'use strict';
 
-  var VERSION = '2.6.0';
+  // node/SSR guard: the rest of glacial is DOM-only. Under node:test (require),
+  // there is no document — bail so importing for the pure-core test is safe.
+  if (typeof document === 'undefined') return;
+
+  var VERSION = '2.7.0';
 
   // ===== Optional config (v2.6.0) =====
   // Read from a window global, falling back to <meta name="..."> content. All
@@ -73,11 +178,20 @@
     return !!v;
   }
 
-  var COOKIE_DOMAIN = configValue('GLACIAL_COOKIE_DOMAIN', 'glacial-cookie-domain');
   var SHARED_THEME = configTruthy('GLACIAL_SHARED_THEME', 'glacial-shared-theme');
+  // 'auto' (v2.7.0) means "no forced default — follow OS preference"; treated the
+  // same as unset so a consumer can declare auto explicitly. Only 'light'/'dark'
+  // pin a durable default.
   var DEFAULT_THEME = (function () {
     var v = configValue('GLACIAL_DEFAULT_THEME', 'glacial-default-theme');
     return (v === 'light' || v === 'dark') ? v : null;
+  })();
+  // v2.7.0 — durable default skin until a user picks. Validated to glacial's
+  // skin-name shape (alphanum/dash); anything else is ignored so a bad meta/global
+  // can't set a junk [data-skin].
+  var DEFAULT_SKIN = (function () {
+    var v = configValue('GLACIAL_DEFAULT_SKIN', 'glacial-default-skin');
+    return (typeof v === 'string' && /^[a-z0-9-]+$/i.test(v)) ? v : null;
   })();
 
   // ===== Storage with graceful degradation =====
@@ -93,10 +207,11 @@
   }
   function setCookie(name, value) {
     try {
+      // Host-only cookie (no domain=). v2.6.0's GLACIAL_COOKIE_DOMAIN was removed
+      // in v2.7.0: browsers reject a domain scoped to a bare single-label TLD
+      // (e.g. domain=.lan), which silently broke the write. Cross-surface carry is
+      // now done via URL params (glacialDecorateUrl), not a shared cookie domain.
       var cookie = name + '=' + value + ';path=/;max-age=31536000;SameSite=Lax';
-      // v2.6.0 — opt-in shared-cookie domain (e.g. ".example.home") so a theme
-      // pick on one surface rides along to sibling subdomains. Unset ⇒ unchanged.
-      if (COOKIE_DOMAIN) cookie += ';domain=' + COOKIE_DOMAIN;
       document.cookie = cookie;
       return true;
     } catch (e) { return false; }
@@ -231,6 +346,8 @@
   function getTheme() {
     // Precedence: URL ?theme= > persisted cookie > GLACIAL_DEFAULT_THEME > OS pref.
     // A real user pick writes a cookie, so it outranks the forced default.
+    // GLACIAL_DEFAULT_THEME='auto' (v2.7.0) resolves to null above, so it falls
+    // through to OS preference — identical to leaving the default unset.
     return getURLParam('theme') || readThemeCookie() || DEFAULT_THEME || getOSTheme();
   }
   function applyTheme(theme) {
@@ -240,8 +357,16 @@
   }
 
   // ===== Skin =====
+  // The six built-in skins. Used by the settings swatch picker AND by the v2.7.0
+  // persist-on-param validation (a carried ?skin= must be a known skin before it's
+  // written to the cookie). Custom consumer skins still apply via ?skin=/cookie,
+  // they just aren't auto-persisted from a carried param.
+  var GLACIAL_BUILTIN_SKINS = ['default', 'warm-serif', 'midnight-mono', 'lavender', 'deep-navy', 'nord'];
+
   function getSkin() {
-    return getURLParam('skin') || readPersisted(SKIN_COOKIE) || 'default';
+    // Precedence: URL ?skin= > persisted cookie > GLACIAL_DEFAULT_SKIN > 'default'.
+    // A real user pick writes the cookie, so it outranks the configured default.
+    return getURLParam('skin') || readPersisted(SKIN_COOKIE) || DEFAULT_SKIN || 'default';
   }
   function applySkin(skin) {
     if (!skin) skin = 'default';
@@ -267,6 +392,35 @@
   applySkin(getSkin());
   applyAesthetic(getAesthetic());
   document.documentElement.setAttribute('data-glacial-loaded', VERSION);
+
+  // ===== Persist-on-param (v2.7.0, opt-in via GLACIAL_SHARED_THEME) =====
+  // When appearance is carried in via a ?theme/?skin/?aesthetic param AND this
+  // consumer opted into shared appearance, persist the carried pick to THIS
+  // surface's host-only cookie so a later cold reload keeps it (otherwise a
+  // carried param is ephemeral — applied for this load only). Every value is
+  // VALIDATED against glacial's known vocab first; anything off-vocab is ignored
+  // so a crafted link can't poison the cookie with junk. This is appearance-only,
+  // opt-in, and non-sensitive.
+  (function persistCarriedParams() {
+    if (!SHARED_THEME) return;
+    var VALID_AESTHETICS = { hybrid: 1 };
+    try {
+      var pTheme = getURLParam('theme');
+      if (pTheme === 'light' || pTheme === 'dark') {
+        writePersisted(THEME_WRITE_COOKIE, pTheme);
+      }
+      var pSkin = getURLParam('skin');
+      // Only persist a known built-in skin (reuses glacial's skin vocab); the
+      // alphanum/dash shape from glacialSetSkin is implied by the allow-list.
+      if (pSkin && GLACIAL_BUILTIN_SKINS.indexOf(pSkin) !== -1) {
+        writePersisted(SKIN_COOKIE, pSkin);
+      }
+      var pAes = getURLParam('aesthetic');
+      if (pAes && VALID_AESTHETICS[pAes]) {
+        writePersisted(AESTHETIC_COOKIE, pAes);
+      }
+    } catch (e) {}
+  })();
 
   // ===== Public API =====
   window.glacialToggleTheme = function () {
@@ -309,6 +463,28 @@
     var handler = function (e) { cb(e.detail); };
     document.addEventListener('glacial:change', handler);
     return function () { document.removeEventListener('glacial:change', handler); };
+  };
+
+  // ===== Appearance carry (v2.7.0) =====
+  // glacialDecorateUrl(url) appends the LIVE resolved theme/skin/aesthetic (read
+  // off <html>) as glacial's readable ?theme/?skin/?aesthetic params, omitting a
+  // value that equals this consumer's configured default skin (or auto/unset
+  // theme/aesthetic). Thin wrapper over the pure glacialDecorateUrlCore so a hop
+  // to a sibling surface carries the current pick. Use it on outbound glacial-aware
+  // links (the app-switcher does this at click time).
+  window.glacialDecorateUrl = function (url) {
+    var el = document.documentElement;
+    // For theme/aesthetic, the resolved <html> value IS the pick (auto resolves
+    // to a concrete OS theme — but if the user never pinned, we don't want to
+    // freeze the OS guess onto the link). So only carry theme when it was an
+    // explicit pick: a cookie, a URL param, or a forced light/dark default.
+    var themePicked = !!(readThemeCookie() || getURLParam('theme') || DEFAULT_THEME);
+    return glacialDecorateUrlCore(url, {
+      theme: themePicked ? el.getAttribute('data-theme') : null,
+      skin: el.getAttribute('data-skin'),
+      aesthetic: el.getAttribute('data-aesthetic'),
+      defaults: { skin: DEFAULT_SKIN || 'default' }
+    });
   };
 
   // ===== Aurora orbs (existing, prefers-reduced-motion gated) =====
@@ -796,7 +972,8 @@
   // swatches (each rendering its own [data-skin] tokens), and an aesthetic toggle.
   // Controls drive the existing public setters — no private state of its own.
   // opts: { skins: ['default', ...], aesthetics: [{ value, label }], label }.
-  var GLACIAL_BUILTIN_SKINS = ['default', 'warm-serif', 'midnight-mono', 'lavender', 'deep-navy', 'nord'];
+  // (GLACIAL_BUILTIN_SKINS is declared up in the Skin section so it's available
+  //  to the pre-paint persist-on-param validation too.)
 
   function resolveTarget(target) {
     if (!target) return null;
@@ -1001,15 +1178,23 @@
   };
 
   // ===== App switcher (v2.6.0) — Tier 2 =====
-  // glacialAppSwitcher({ services: [{ name, url, description, status?, group? }], target })
+  // glacialAppSwitcher({ services: [{ name, url, description, status?, group?, carry? }], target, carryAppearance? })
   // renders data-driven .glacial-tile launchers. status ∈ green|yellow|red drives
   // the status dot (existing --green/--yellow/--red tokens). group buckets tiles
   // under a heading. Returns the rendered container.
+  //
+  // v2.7.0 — appearance carry: a tile click decorates its URL with the LIVE
+  // theme/skin/aesthetic (via glacialDecorateUrl) at CLICK time, so the current
+  // pick follows the hop (reading at click time, not render time, never carries a
+  // stale pick). Per-service `carry:false` skips a tile (use for non-glacial
+  // targets so we don't append params to foreign/canonical links). Switcher-level
+  // `carryAppearance:false` disables it globally. Both default ON.
   window.glacialAppSwitcher = function (config) {
     config = config || {};
     var services = config.services || [];
     var host = resolveTarget(config.target);
     if (!host) { console.warn('[glacial] App-switcher target not found:', config.target); return null; }
+    var carryAppearance = config.carryAppearance !== false; // default ON
 
     var grid = document.createElement('div');
     grid.className = 'glacial-app-switcher';
@@ -1035,7 +1220,24 @@
       byGroup[g].forEach(function (s) {
         var tile = document.createElement('a');
         tile.className = 'glacial-tile';
-        tile.href = s.url || '#';
+        var rawUrl = s.url || '#';
+        tile.href = rawUrl;
+
+        // Decorate at CLICK time so the carried appearance is the live pick, not
+        // whatever it was at render. Only for glacial-aware targets (carry !== false)
+        // and only when the switcher hasn't disabled carry. A plain left-click
+        // (no modifier) rewrites href just-in-time; modifier/middle clicks
+        // (open-in-new-tab) get the same decorated href so they carry too.
+        var shouldCarry = carryAppearance && s.carry !== false && rawUrl !== '#';
+        if (shouldCarry) {
+          tile.addEventListener('click', function () {
+            try { tile.href = window.glacialDecorateUrl(rawUrl); } catch (e) {}
+          });
+          // Keyboard activation (Enter) fires click, so this covers a11y too.
+          tile.addEventListener('auxclick', function () {
+            try { tile.href = window.glacialDecorateUrl(rawUrl); } catch (e) {}
+          });
+        }
 
         if (s.status && STATUS[s.status]) {
           var dot = document.createElement('span');
@@ -1160,7 +1362,8 @@
     toast: window.glacialToast,
     palette: window.glacialPalette,
     mountSettings: window.glacialMountSettings,
-    appSwitcher: window.glacialAppSwitcher
+    appSwitcher: window.glacialAppSwitcher,
+    decorateUrl: window.glacialDecorateUrl
   };
 
   // ===== Boot banner =====
