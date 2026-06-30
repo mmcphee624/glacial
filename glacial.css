@@ -1,5 +1,5 @@
 /* Glacial Design System — Shared CSS Tokens
- * @version 2.7.0
+ * @version 2.8.0
  * Import this file into any service for Glacial theming.
  * See DESIGN.md for full specification, RECIPES.md for page recipes.
  */
@@ -1983,6 +1983,43 @@
   color: var(--text-strong);
   line-height: 1.2;
   margin: 0 0 var(--space-xs);
+}
+
+/* ===== Layout primitives (v2.8.0, Tier 1) =================
+ * The page-level scaffolding the recipes assume — see DESIGN.md
+ * "Layout constraints". Components style themselves; these style the
+ * page. glacial historically shipped no container/grid (the examples
+ * used demo-only .ex-* classes marked "do not copy"); these implement
+ * the documented widths + breakpoints so a page — or a cloned starter —
+ * needs no bespoke layout CSS. Tokens/px only, no color. */
+.glacial-container {
+  width: 100%;
+  max-width: 1100px;          /* List / index — DESIGN.md §Layout constraints */
+  margin-inline: auto;
+  padding-inline: var(--space-lg);
+}
+.glacial-container-narrow { max-width: 700px; }   /* Form / detail */
+.glacial-container-wide   { max-width: 1280px; }  /* Dashboard */
+@media (max-width: 767px) {
+  .glacial-container { padding-inline: var(--space-md); }
+}
+
+.glacial-grid {
+  display: grid;
+  gap: var(--space-md);
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+.glacial-grid-2 { grid-template-columns: repeat(2, 1fr); }
+.glacial-grid-3 { grid-template-columns: repeat(3, 1fr); }
+.glacial-grid-4 { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 1023px) {
+  .glacial-grid-3,
+  .glacial-grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 540px) {
+  .glacial-grid-2,
+  .glacial-grid-3,
+  .glacial-grid-4 { grid-template-columns: 1fr; }
 }
 
 /* ===== Settings cog + popover (v2.6.0, Tier 1) =============

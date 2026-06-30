@@ -9,7 +9,7 @@ Agent path:  README → RECIPES.md → examples → DESIGN.md (you are here)
 Human path:  README → examples → DESIGN.md → RECIPES.md (optional)
 ```
 
-Current version: **`2.5.0`** — see [`VERSION`](./VERSION) and [`CHANGELOG.md`](./CHANGELOG.md).
+Current version: see [`VERSION`](./VERSION) and [`CHANGELOG.md`](./CHANGELOG.md). (Not hand-maintained here — it drifts.)
 
 ---
 
@@ -316,7 +316,7 @@ to consumers.
 - **Scale:** 4, 8, 12, 16, 20, 24, 32, 48px
 - **Card padding:** 12px
 - **Card gap:** 8px
-- **Container padding:** 20px (12px on mobile)
+- **Container padding:** 24px (16px on mobile) — shipped as `.glacial-container` gutters
 - **Header height:** 48px
 
 ### Layout constraints
@@ -328,6 +328,14 @@ to consumers.
 | Dashboard | 1280px |
 | Board / kanban | 1200px |
 | Tour (with rail) | full page |
+
+**Primitives (v2.8.0):** these widths ship as `.glacial-container` (1100px, list/index) with
+`.glacial-container-narrow` (700px, form/detail) and `.glacial-container-wide` (1280px,
+dashboard) — centered, with responsive gutters (24px, 16px under 768px). Metric and card
+grids use `.glacial-grid` (responsive `auto-fit`, `minmax(220px, 1fr)`) or
+`.glacial-grid-{2,3,4}` (collapse to 2-up at ≤1024px, 1-up at ≤540px). Before v2.8.0 these
+lived only in the demo-only `.ex-*` classes; a page — or a cloned starter — now needs no
+bespoke layout CSS.
 
 ### Responsive breakpoints
 

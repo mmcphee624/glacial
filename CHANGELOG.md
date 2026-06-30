@@ -4,6 +4,21 @@ All notable changes to glacial are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.8.0] — 2026-06-29
+
+Layout primitives. glacial now ships the page-level scaffolding the recipes assume:
+`.glacial-container` (with `-narrow` / `-wide` modifiers for the documented 700 / 1100 /
+1280px widths) and `.glacial-grid` (auto-fit by default; `-2` / `-3` / `-4` fixed-column
+modifiers that collapse at the standard breakpoints). Previously a page got its container
+and grid from the demo-only `.ex-*` classes (marked "do not copy" in `_examples.css`), so
+every prototype re-rolled layout; these implement DESIGN.md's "Layout constraints" as real
+classes, letting a page — or a cloned starter — carry no bespoke layout CSS. Fully additive
+(MINOR): no token or class removals, no new tokens; existing usage unchanged.
+
+### Added
+- `.glacial-container` + `.glacial-container-narrow` (700px, form/detail) + `.glacial-container-wide` (1280px, dashboard); base is 1100px (list/index), centered with responsive gutters.
+- `.glacial-grid` (responsive `auto-fit`) + `.glacial-grid-2` / `-3` / `-4` (collapse to 2-up at ≤1024px, 1-up at ≤540px).
+
 ## [2.7.0] — 2026-06-16
 
 Cross-surface appearance carry. A theme/skin pick on one surface follows the user

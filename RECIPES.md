@@ -418,6 +418,10 @@ Every public `.glacial-*` class shipped in v2.4.0:
 - **Pagination:** `.glacial-pagination` + `.glacial-pagination-item` (`aria-current="page"` for current)
 - **Tooltip:** attribute-only — `[data-glacial-tooltip="text"]`
 
+### Layout primitives (v2.8.0)
+- `.glacial-container` (+ `-narrow` 700px / `-wide` 1280px) — centered max-width column with responsive gutters; implements DESIGN.md's "Layout constraints"
+- `.glacial-grid` (responsive `auto-fit`) + `.glacial-grid-2` / `-3` / `-4` — collapse to 2-up at ≤1024px, 1-up at ≤540px
+
 ### Behavior hooks (data attributes)
 - `data-theme="light|dark"` on `<html>` — forces theme
 - `data-skin="<name>"` on `<html>` — selects skin

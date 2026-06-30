@@ -1,6 +1,6 @@
 /**
  * Glacial Design System — Theme + Skin + Aesthetic + Aurora + Debug + Tier 2/3 helpers
- * @version 2.7.0
+ * @version 2.8.0
  *
  * Include via <script src="glacial.js"></script>
  * Provides:
@@ -19,7 +19,7 @@
  *   - window.glacialDecorateUrl(url)              (v2.7.0 — carry live theme/skin/aesthetic as URL params)
  *   - window.glacial.help()
  *
- * Sets <html data-glacial-loaded="2.7.0"> before first paint.
+ * Sets <html data-glacial-loaded="2.8.0"> before first paint.
  *
  * Theme/skin priority (highest first):
  *   1. URL params:  ?theme=light|dark · ?skin=<name> · ?aesthetic=<name>
@@ -147,7 +147,7 @@ if (typeof module !== 'undefined' && module.exports) {
   // there is no document — bail so importing for the pure-core test is safe.
   if (typeof document === 'undefined') return;
 
-  var VERSION = '2.7.0';
+  var VERSION = '2.8.0';
 
   // ===== Optional config (v2.6.0) =====
   // Read from a window global, falling back to <meta name="..."> content. All
@@ -1335,7 +1335,10 @@ if (typeof module !== 'undefined' && module.exports) {
     'glacial-app-switcher', 'glacial-app-switcher-group', 'glacial-app-switcher-row',
     'glacial-tile', 'glacial-tile-status', 'glacial-tile-status-green',
     'glacial-tile-status-yellow', 'glacial-tile-status-red',
-    'glacial-tile-name', 'glacial-tile-desc'
+    'glacial-tile-name', 'glacial-tile-desc',
+    // v2.8.0 — Tier 1 layout primitives
+    'glacial-container', 'glacial-container-narrow', 'glacial-container-wide',
+    'glacial-grid', 'glacial-grid-2', 'glacial-grid-3', 'glacial-grid-4'
   ];
 
   window.glacial = {

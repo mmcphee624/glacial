@@ -1,5 +1,14 @@
 # Migrating
 
+## v2.7.0 → v2.8.0
+
+**Additive — no action required.** v2.8 adds layout primitives — `.glacial-container`
+(+ `-narrow` / `-wide`) and `.glacial-grid` (+ `-2` / `-3` / `-4`) — implementing the
+"Layout constraints" already documented in `DESIGN.md` as real classes. No tokens or
+classes were removed and no new tokens were added. If you previously hand-rolled a page
+container or metric grid (or copied the demo-only `.ex-*` layout), you can switch to these;
+nothing forces it.
+
 ## v2.6.x → v2.7.0
 
 **One removal, otherwise additive.** v2.7 replaces v2.6's shared-cookie-domain
