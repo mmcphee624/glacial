@@ -67,6 +67,7 @@ To verify components respect `prefers-reduced-motion`:
 | `form.html` | Form recipe | breadcrumbs, alert, glass card with inputs |
 | `board.html` | Board recipe | 4-column glass cards, badges, filter-bar |
 | `mobile.html` | Mobile audit | 44px touch-target check, table column-hide, filter-bar scroll-snap, breadcrumb truncation |
+| `icons.html` | (catalog) | The bundled line-icon set; `glacialIcon('name')`, a live `--icon-stroke` slider, click-to-copy |
 | `skins-preview.html` | (catalog) | Same dashboard rendered under the built-in skins side-by-side |
 | `v2.6-continuity.html` | (feature) | Settings cog, app switcher, shared-theme config, cross-tab sync |
 | `v2.7-appearance-carry.html` | (feature) | Cross-surface appearance carry: app-switcher click-time URL decoration, `glacialDecorateUrl`, `carry:false`, opt-in defaults |

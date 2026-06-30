@@ -1,5 +1,15 @@
 # Migrating
 
+## v2.8.0 → v2.9.0
+
+**Additive — no action required.** v2.9 adds the icon system: `glacialIcon(name)` /
+`window.glacial.icon`, the `.glacial-icon` class, and the `--icon-stroke` token. Nothing was
+removed. You can replace hand-drawn inline `<svg>` icons with `glacialIcon('name')` (it
+returns an SVG string for `innerHTML` / templates), but nothing forces it. Icon **names** are
+public API going forward — a rename is MAJOR with a deprecation cycle, and a small alias map
+already maps common synonyms (`gear`→`settings`, etc.). Find names at runtime with
+`glacialIcon('?')` or `window.glacial.help().icons`.
+
 ## v2.7.0 → v2.8.0
 
 **Additive — no action required.** v2.8 adds layout primitives — `.glacial-container`

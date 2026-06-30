@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 /*
- * Glacial JS unit gate (v2.7.0). Pure Node, ZERO dependencies — the built-in
- * node:test runner (requires Node 18+). Covers the pure decorateUrl core that
- * powers cross-surface appearance carry (window.glacialDecorateUrl / the
- * app-switcher). glacial.js exports the pure core under CommonJS and
+ * Glacial JS unit gate (v2.9.0). Pure Node, ZERO dependencies — the built-in
+ * node:test runner (requires Node 18+). Covers the pure cores glacial.js exports
+ * under CommonJS: decorateUrl (cross-surface appearance carry) and iconSvg (the
+ * icon registry — escaping/coercion is a security boundary, since the output is
+ * inserted via innerHTML). glacial.js exports the pure cores under CommonJS and
  * short-circuits its DOM IIFE when there is no `document`, so requiring it here
  * is side-effect-free.
  *
@@ -19,7 +20,7 @@ import { dirname, join } from 'node:path';
 
 const require = createRequire(import.meta.url);
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const { decorateUrl } = require(join(ROOT, 'glacial.js'));
+const { decorateUrl, iconSvg } = require(join(ROOT, 'glacial.js'));
 
 const DEF = { defaults: { skin: 'default' } };
 // merge a partial pick onto the standard defaults
@@ -137,4 +138,64 @@ test('aesthetic carried when set, omitted when unset', () => {
     decorateUrl('https://example.com/?aesthetic=hybrid', pick({ skin: 'nord' })),
     'https://example.com/?skin=nord'
   );
+});
+
+// ===== Icon core (v2.9.0) — pure iconSvg(name, opts) =====
+// The returned string is inserted via innerHTML downstream (e.g. glacialPalette),
+// so escaping + numeric coercion of caller-supplied opts is a security boundary,
+// not polish. These cases lock that in.
+
+test('iconSvg: exported pure function', () => {
+  assert.equal(typeof iconSvg, 'function');
+});
+
+test('iconSvg: known name → glacial-icon svg, decorative by default', () => {
+  const s = iconSvg('plus');
+  assert.match(s, /^<svg /);
+  assert.match(s, /class="glacial-icon"/);
+  assert.match(s, /viewBox="0 0 24 24"/);
+  assert.match(s, /aria-hidden="true"/);
+  assert.doesNotMatch(s, /role="img"/);
+});
+
+test('iconSvg: alias resolves to the canonical glyph', () => {
+  assert.equal(iconSvg('add'), iconSvg('plus')); // add → plus
+});
+
+test('iconSvg: unknown name → placeholder, never throws or blanks', () => {
+  const s = iconSvg('totally-not-an-icon');
+  assert.match(s, /^<svg /);
+  assert.match(s, /class="glacial-icon"/);
+  assert.ok(s.length > 20);
+});
+
+test('iconSvg: title → role=img + escaped <title> (XSS boundary)', () => {
+  const s = iconSvg('x', { title: 'a"b<c>d&e\'f' });
+  assert.match(s, /role="img"/);
+  assert.match(s, /<title>.*<\/title>/);
+  assert.doesNotMatch(s, /a"b<c>d&e'f/);          // raw payload must not survive
+  for (const ent of ['&quot;', '&lt;', '&gt;', '&amp;', '&#39;']) assert.ok(s.includes(ent), ent);
+});
+
+test('iconSvg: class sanitized to safe tokens (no attribute breakout)', () => {
+  const s = iconSvg('x', { class: 'my-class">"<script>' });
+  const m = s.match(/class="([^"]*)"/);
+  assert.ok(m, 'class attr is well-formed');
+  assert.match(m[1], /^glacial-icon /);
+  assert.doesNotMatch(m[1], /[<>"]/);
+});
+
+test('iconSvg: numeric opts coerced; junk never breaks an attribute', () => {
+  const s = iconSvg('x', { size: '24"><script', strokeWidth: 'nope' });
+  assert.doesNotMatch(s, /(width|height|stroke-width)="[^"]*[<>]/); // no <,> breakout in a value
+  assert.doesNotMatch(s, /<script/);                                // junk tail dropped by parseFloat
+  assert.doesNotMatch(s, /stroke-width=/);  // non-numeric → no attr (CSS token handles it)
+  const ok = iconSvg('x', { size: 32, strokeWidth: 2 });
+  assert.match(ok, /width="32" height="32"/);
+  assert.match(ok, /stroke-width="2"/);
+});
+
+test('iconSvg: null/empty name → placeholder (defensive)', () => {
+  assert.match(iconSvg(null), /class="glacial-icon"/);
+  assert.match(iconSvg(''), /class="glacial-icon"/);
 });

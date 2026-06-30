@@ -1,6 +1,6 @@
 /**
  * Glacial Design System — Theme + Skin + Aesthetic + Aurora + Debug + Tier 2/3 helpers
- * @version 2.8.0
+ * @version 2.9.0
  *
  * Include via <script src="glacial.js"></script>
  * Provides:
@@ -19,7 +19,7 @@
  *   - window.glacialDecorateUrl(url)              (v2.7.0 — carry live theme/skin/aesthetic as URL params)
  *   - window.glacial.help()
  *
- * Sets <html data-glacial-loaded="2.8.0"> before first paint.
+ * Sets <html data-glacial-loaded="2.9.0"> before first paint.
  *
  * Theme/skin priority (highest first):
  *   1. URL params:  ?theme=light|dark · ?skin=<name> · ?aesthetic=<name>
@@ -133,11 +133,154 @@ var glacialDecorateUrlCore = (function () {
   return decorate;
 })();
 
+// ===== Icon system pure core (v2.9.0) =====
+// Inline line-icon registry + a pure iconSvg(name, opts) returning an
+// '<svg class="glacial-icon">…</svg>' string. Pure + DOM-free so it's
+// node:test-able and reusable (palette icons, starters). SECURITY: the returned
+// string is inserted via innerHTML downstream (e.g. glacialPalette), so every
+// caller-supplied opt (title/class/size/strokeWidth) is HTML-escaped or
+// numerically coerced here — only the registry's own hardcoded markup is
+// trusted. Glyphs are a 24×24 grid designed at stroke 1.5 (applied via the
+// .glacial-icon class / --icon-stroke token); fill="none" line strokes with a
+// small fill-hybrid subset for dense status glyphs.
+var glacialIconCore = (function () {
+  'use strict';
+
+  // Curated 41-glyph line set (v1.0.0) — 24×24 grid, designed at stroke 1.5,
+  // round caps/joins, currentColor. Stroke-only except small filled shapes
+  // (fill="currentColor" stroke="none") for 16px legibility: info-circle,
+  // alert-triangle, dot, list bullets, server status dots, more-horizontal.
+  // Entries are inner markup only — the wrapper adds <svg>/viewBox/stroke.
+  var REGISTRY = {
+    // nav
+    'home': '<path d="M3.5 10.5 12 3.5l8.5 7"/><path d="M5.5 9.5V20a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1V9.5"/><path d="M9.5 21v-6h5v6"/>',
+    'search': '<circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/>',
+    'menu': '<path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/>',
+    'dashboard': '<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
+    'list': '<circle cx="5" cy="7" r="1.1" fill="currentColor" stroke="none"/><circle cx="5" cy="12" r="1.1" fill="currentColor" stroke="none"/><circle cx="5" cy="17" r="1.1" fill="currentColor" stroke="none"/><path d="M9.5 7H20"/><path d="M9.5 12H20"/><path d="M9.5 17H20"/>',
+    'settings': '<circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v3.2M12 18v3.2M21.2 12H18M6 12H2.8M18.5 5.5l-2.2 2.2M7.7 16.3l-2.2 2.2M18.5 18.5l-2.2-2.2M7.7 7.7 5.5 5.5"/>',
+    'user': '<circle cx="12" cy="8" r="3.6"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/>',
+    'bell': '<path d="M17 9.5A5 5 0 0 0 7 9.5c0 5.2-2.2 6.8-2.2 6.8h14.4S17 14.7 17 9.5Z"/><path d="M10.2 19.5a2 2 0 0 0 3.6 0"/>',
+    'folder': '<path d="M3.5 7.5A1.5 1.5 0 0 1 5 6h3.6l2 2.4H19A1.5 1.5 0 0 1 20.5 9.9v7.6A1.5 1.5 0 0 1 19 19H5a1.5 1.5 0 0 1-1.5-1.5Z"/>',
+    // status
+    'check-circle': '<circle cx="12" cy="12" r="8.5"/><path d="m8.4 12.2 2.4 2.4 4.8-5.2"/>',
+    'alert-triangle': '<path d="M10.3 4.9 2.7 18.3a2 2 0 0 0 1.7 3h15.2a2 2 0 0 0 1.7-3L13.7 4.9a2 2 0 0 0-3.4 0Z"/><path fill="currentColor" stroke="none" d="M11 10h2v4.2h-2z"/><circle cx="12" cy="17.3" r="1.1" fill="currentColor" stroke="none"/>',
+    'info-circle': '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="8" r="1.1" fill="currentColor" stroke="none"/><path fill="currentColor" stroke="none" d="M11 11h2v6h-2z"/>',
+    'x-circle': '<circle cx="12" cy="12" r="8.5"/><path d="m9.2 9.2 5.6 5.6M14.8 9.2l-5.6 5.6"/>',
+    'clock': '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.2V12l3.2 2"/>',
+    'activity': '<path d="M3 12h3.8l2.4-6 3.8 12 2.4-6H21"/>',
+    'shield': '<path d="M12 3.5 19 6v5c0 4.5-3 7.6-7 9.5-4-1.9-7-5-7-9.5V6Z"/>',
+    'dot': '<circle cx="12" cy="12" r="4" fill="currentColor" stroke="none"/>',
+    'server': '<rect x="4" y="4.5" width="16" height="6" rx="1.5"/><rect x="4" y="13.5" width="16" height="6" rx="1.5"/><circle cx="7.5" cy="7.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="7.5" cy="16.5" r="1.1" fill="currentColor" stroke="none"/>',
+    // actions
+    'plus': '<path d="M12 5v14M5 12h14"/>',
+    'edit': '<path d="M4 20.5 8.2 19 18.6 8.6a1.5 1.5 0 0 0 0-2.2l-1-1a1.5 1.5 0 0 0-2.2 0L5 15.8Z"/><path d="m14.3 6.7 3 3"/>',
+    'trash': '<path d="M4.5 7h15"/><path d="M9 7V5.6A1.6 1.6 0 0 1 10.6 4h2.8A1.6 1.6 0 0 1 15 5.6V7"/><path d="M6.8 7l.9 11.6A1.6 1.6 0 0 0 9.3 20h5.4a1.6 1.6 0 0 0 1.6-1.4L17.2 7"/><path d="M10.2 10.5v5.5M13.8 10.5v5.5"/>',
+    'download': '<path d="M12 4v10.5"/><path d="m7.8 10.5 4.2 4.2 4.2-4.2"/><path d="M5 19.5h14"/>',
+    'upload': '<path d="M12 14.5V4"/><path d="m7.8 8.2 4.2-4.2 4.2 4.2"/><path d="M5 19.5h14"/>',
+    'copy': '<rect x="8.5" y="8.5" width="11" height="11" rx="1.8"/><path d="M15.5 8.5V6A1.5 1.5 0 0 0 14 4.5H6A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h2.5"/>',
+    'external-link': '<path d="M13.5 4.5H19.5V10.5"/><path d="M19.5 4.5 12 12"/><path d="M17.5 13.2V18a1.5 1.5 0 0 1-1.5 1.5H6A1.5 1.5 0 0 1 4.5 18V8A1.5 1.5 0 0 1 6 6.5h4.8"/>',
+    'filter': '<path d="M4.5 6.2h15l-5.7 6.9V19l-3.6 1.6v-7.5Z"/>',
+    'refresh': '<path d="M19.8 11A7.8 7.8 0 0 0 6.4 6.2L4.5 8"/><path d="M4.5 4.2V8h3.8"/><path d="M4.2 13A7.8 7.8 0 0 0 17.6 17.8L19.5 16"/><path d="M19.5 19.8V16h-3.8"/>',
+    'x': '<path d="M6.2 6.2 17.8 17.8M17.8 6.2 6.2 17.8"/>',
+    'check': '<path d="m5 12.5 4.5 4.5L19 6.5"/>',
+    'more-horizontal': '<circle cx="5.5" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="18.5" cy="12" r="1.3" fill="currentColor" stroke="none"/>',
+    // arrows
+    'arrow-up': '<path d="M12 19.5V5"/><path d="m6.5 10.5 5.5-5.5 5.5 5.5"/>',
+    'arrow-down': '<path d="M12 4.5V19"/><path d="m6.5 13.5 5.5 5.5 5.5-5.5"/>',
+    'arrow-left': '<path d="M19.5 12H5"/><path d="m10.5 6.5-5.5 5.5 5.5 5.5"/>',
+    'arrow-right': '<path d="M4.5 12H19"/><path d="m13.5 6.5 5.5 5.5-5.5 5.5"/>',
+    'chevron-up': '<path d="m6 15 6-6 6 6"/>',
+    'chevron-down': '<path d="m6 9 6 6 6-6"/>',
+    'chevron-left': '<path d="m15 6-6 6 6 6"/>',
+    'chevron-right': '<path d="m9 6 6 6-6 6"/>',
+    // data
+    'bar-chart': '<rect x="4.5" y="10.5" width="4" height="9" rx="0.8"/><rect x="10" y="5.5" width="4" height="14" rx="0.8"/><rect x="15.5" y="13.5" width="4" height="6" rx="0.8"/>',
+    'calendar': '<rect x="4" y="5.5" width="16" height="15" rx="2"/><path d="M4 9.7h16"/><path d="M8.5 3.5v4M15.5 3.5v4"/>',
+    'database': '<ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.6 3.1 2.9 7 2.9s7-1.3 7-2.9V6"/><path d="M5 12v6c0 1.6 3.1 2.9 7 2.9s7-1.3 7-2.9v-6"/>'
+  };
+
+  // Common synonyms → canonical name, so a near-miss guess still resolves.
+  var ALIASES = {
+    'gear': 'settings', 'cog': 'settings', 'magnifier': 'search',
+    'delete': 'trash', 'bin': 'trash', 'dismiss': 'x', 'close': 'x', 'add': 'plus',
+    'pencil': 'edit', 'kebab': 'more-horizontal', 'more': 'more-horizontal',
+    'ellipsis': 'more-horizontal', 'warning': 'alert-triangle', 'warn': 'alert-triangle',
+    'success': 'check-circle', 'error': 'x-circle', 'info': 'info-circle',
+    'caret-down': 'chevron-down', 'caret-up': 'chevron-up',
+    'caret-left': 'chevron-left', 'caret-right': 'chevron-right',
+    'analytics': 'bar-chart', 'chart': 'bar-chart', 'db': 'database',
+    'pulse': 'activity', 'profile': 'user', 'notification': 'bell', 'grid': 'dashboard'
+  };
+
+  function escAttr(s) {
+    return String(s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+  function finiteNum(v) {
+    var n = typeof v === 'number' ? v : parseFloat(v);
+    return isFinite(n) ? n : null;
+  }
+  function canonical(name) {
+    var key = String(name == null ? '' : name).toLowerCase().trim();
+    if (Object.prototype.hasOwnProperty.call(REGISTRY, key)) return key;
+    if (Object.prototype.hasOwnProperty.call(ALIASES, key) &&
+        Object.prototype.hasOwnProperty.call(REGISTRY, ALIASES[key])) return ALIASES[key];
+    return null;
+  }
+
+  // Visible placeholder for an unknown name — never throws, never silently blank.
+  var PLACEHOLDER = '<rect x="3.5" y="3.5" width="17" height="17" rx="2"/><path d="M9 9l6 6M15 9l-6 6"/>';
+
+  function iconSvg(name, opts) {
+    opts = opts || {};
+    var key = canonical(name);
+    var body = key ? REGISTRY[key] : PLACEHOLDER;
+
+    var cls = 'glacial-icon';
+    if (opts['class'] != null) {
+      // class tokens only — strip anything that could break out of the attribute
+      var safe = String(opts['class']).replace(/[^a-zA-Z0-9 _-]/g, '').trim();
+      if (safe) cls += ' ' + safe;
+    }
+
+    var attrs = ' class="' + cls + '" viewBox="0 0 24 24"';
+    var sz = finiteNum(opts.size);
+    if (sz && sz > 0) attrs += ' width="' + sz + '" height="' + sz + '"';
+    var sw = finiteNum(opts.strokeWidth);
+    if (sw && sw > 0) attrs += ' stroke-width="' + sw + '"';
+
+    var titleEl = '';
+    if (opts.title != null && String(opts.title) !== '') {
+      attrs += ' role="img"';
+      titleEl = '<title>' + escAttr(opts.title) + '</title>';
+    } else {
+      attrs += ' aria-hidden="true" focusable="false"';
+    }
+
+    return '<svg' + attrs + '>' + titleEl + body + '</svg>';
+  }
+
+  // inner markup only (no <svg> wrapper) — '' for an unknown name.
+  function iconInner(name) {
+    var key = canonical(name);
+    return key ? REGISTRY[key] : '';
+  }
+
+  return {
+    iconSvg: iconSvg,
+    iconInner: iconInner,
+    names: function () { return Object.keys(REGISTRY); },
+    has: function (name) { return canonical(name) !== null; }
+  };
+})();
+
 // Export the pure core for node:test (CommonJS). When required under node there
 // is no DOM, so the browser IIFE below short-circuits — only the pure function
 // is exposed. In the browser this guard is a no-op (no module global).
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { decorateUrl: glacialDecorateUrlCore };
+  module.exports = { decorateUrl: glacialDecorateUrlCore, iconSvg: glacialIconCore.iconSvg, iconInner: glacialIconCore.iconInner };
 }
 
 (function () {
@@ -147,7 +290,7 @@ if (typeof module !== 'undefined' && module.exports) {
   // there is no document — bail so importing for the pure-core test is safe.
   if (typeof document === 'undefined') return;
 
-  var VERSION = '2.8.0';
+  var VERSION = '2.9.0';
 
   // ===== Optional config (v2.6.0) =====
   // Read from a window global, falling back to <meta name="..."> content. All
@@ -1338,8 +1481,26 @@ if (typeof module !== 'undefined' && module.exports) {
     'glacial-tile-name', 'glacial-tile-desc',
     // v2.8.0 — Tier 1 layout primitives
     'glacial-container', 'glacial-container-narrow', 'glacial-container-wide',
-    'glacial-grid', 'glacial-grid-2', 'glacial-grid-3', 'glacial-grid-4'
+    'glacial-grid', 'glacial-grid-2', 'glacial-grid-3', 'glacial-grid-4',
+    // v2.9.0 — icons
+    'glacial-icon'
   ];
+
+  // ===== Icons (v2.9.0) =====
+  // Thin DOM wrapper over the pure iconSvg core. glacialIcon('home') → an SVG
+  // string for innerHTML / template use. No arg (or '?' / 'help') → the name list.
+  function glacialIcon(name, opts) {
+    if (name == null || name === '?' || name === 'help') {
+      var list = glacialIconCore.names();
+      try { console.info('[glacial] ' + list.length + ' icons: ' + list.join(', ')); } catch (e) {}
+      return list;
+    }
+    if (!glacialIconCore.has(name)) {
+      try { console.warn('[glacial] unknown icon "' + name + '" — rendering placeholder. Run glacialIcon("?") for the list.'); } catch (e) {}
+    }
+    return glacialIconCore.iconSvg(name, opts);
+  }
+  window.glacialIcon = glacialIcon;
 
   window.glacial = {
     version: VERSION,
@@ -1351,6 +1512,7 @@ if (typeof module !== 'undefined' && module.exports) {
         aesthetic: document.documentElement.getAttribute('data-aesthetic'),
         aurora: orbsActive,
         classes: CLASSES.slice(),
+        icons: glacialIconCore.names(),
         tokens: snapshotTokens()
       };
     },
@@ -1366,7 +1528,9 @@ if (typeof module !== 'undefined' && module.exports) {
     palette: window.glacialPalette,
     mountSettings: window.glacialMountSettings,
     appSwitcher: window.glacialAppSwitcher,
-    decorateUrl: window.glacialDecorateUrl
+    decorateUrl: window.glacialDecorateUrl,
+    icon: window.glacialIcon,
+    iconInner: glacialIconCore.iconInner
   };
 
   // ===== Boot banner =====

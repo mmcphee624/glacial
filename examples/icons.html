@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Icons · Glacial Examples</title>
+  <link rel="stylesheet" href="../glacial.css">
+  <link rel="stylesheet" href="../skins/default.css">
+  <link rel="stylesheet" href="../skins/warm-serif.css">
+  <link rel="stylesheet" href="../skins/midnight-mono.css">
+  <link rel="stylesheet" href="../skins/lavender.css">
+  <link rel="stylesheet" href="../skins/deep-navy.css">
+  <link rel="stylesheet" href="../skins/nord.css">
+  <link rel="stylesheet" href="_examples.css">
+  <script src="../glacial.js"></script>
+  <style>
+    /* page-local demo chrome (not part of glacial) */
+    .icon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin: 16px 0; }
+    .icon-cell {
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      padding: 18px 8px; text-align: center;
+      border: 1px solid var(--border-card); border-radius: var(--radius); background: var(--bg-card);
+      transition: border-color 0.15s, transform 0.15s;
+    }
+    .icon-cell:hover { border-color: var(--border-hover); transform: translateY(-1px); }
+    .icon-cell .swatch { display: flex; align-items: baseline; gap: 12px; color: var(--text-strong); min-height: 28px; }
+    .icon-cell .s24 { font-size: 24px; line-height: 0; }
+    .icon-cell .s16 { font-size: 16px; line-height: 0; }
+    .icon-cell .nm { font-family: var(--font-mono); font-size: 11px; color: var(--text-secondary); cursor: pointer; word-break: break-all; }
+    .icon-cell .nm:hover { color: var(--accent); }
+    .ctrlbar { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 8px 0 4px; font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary); }
+    .ctrlbar input[type=range] { accent-color: var(--accent); vertical-align: middle; }
+  </style>
+</head>
+<body>
+  <header class="glacial-glass-header ex-toolbar">
+    <div class="ex-toolbar-inner">
+      <span class="ex-logo">GLACIAL</span>
+      <nav class="glacial-nav ex-nav">
+        <a href="index.html">index</a>
+        <a href="dashboard.html">dashboard</a>
+        <a href="list.html">list</a>
+        <a href="detail.html">detail</a>
+        <a href="form.html">form</a>
+        <a href="board.html">board</a>
+        <a href="icons.html" class="active">icons</a>
+        <a href="skins-preview.html">skins</a>
+      </nav>
+      <div class="ex-controls">
+        <select class="ex-select" data-glacial-skin>
+          <option value="default">default</option>
+          <option value="warm-serif">warm-serif</option>
+          <option value="midnight-mono">midnight-mono</option>
+          <option value="lavender">lavender</option>
+          <option value="deep-navy">deep-navy</option>
+          <option value="nord">nord</option>
+        </select>
+        <button class="glacial-toggle" onclick="glacialToggleTheme()" title="Toggle theme">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="ex-main">
+    <nav aria-label="Breadcrumb" class="glacial-breadcrumbs" style="margin: 8px 0 16px;">
+      <a href="index.html">Home</a>
+      <span class="glacial-breadcrumbs-sep">/</span>
+      <span class="glacial-breadcrumbs-current">Icons</span>
+    </nav>
+
+    <section class="ex-hero">
+      <h1 class="ex-h1">Icons</h1>
+      <p class="ex-lede">
+        The bundled line-icon set. <code>glacialIcon('name')</code> returns an inline-SVG string
+        (use it with <code>.innerHTML</code> or in a template). Each glyph inherits text color via
+        <code>currentColor</code> and sizes to <code>1em</code>. Click a name to copy its call;
+        drag the slider to preview the <code>--icon-stroke</code> token across all skins.
+      </p>
+    </section>
+
+    <div class="ctrlbar">
+      <label>--icon-stroke <input id="stroke" type="range" min="1" max="2" step="0.05" value="1.5"></label>
+      <span id="strokeval">1.5</span>
+      <span id="count"></span>
+    </div>
+
+    <div id="grid" class="icon-grid" aria-busy="true"></div>
+
+    <p class="ex-lede" id="empty" style="display:none;">
+      No icons in the registry yet. (Stub set pending the curated glyphs.)
+    </p>
+  </main>
+
+  <script src="_examples.js"></script>
+  <script>
+    (function () {
+      var grid = document.getElementById('grid');
+      var names = (window.glacial && window.glacial.help) ? (window.glacial.help().icons || []) : [];
+      document.getElementById('count').textContent = names.length + ' icons';
+
+      if (!names.length) {
+        grid.setAttribute('aria-busy', 'false');
+        document.getElementById('empty').style.display = '';
+        return;
+      }
+
+      grid.innerHTML = names.map(function (n) {
+        return '<div class="icon-cell">' +
+          '<div class="swatch">' +
+            '<span class="s24">' + glacialIcon(n) + '</span>' +
+            '<span class="s16">' + glacialIcon(n) + '</span>' +
+          '</div>' +
+          '<span class="nm" role="button" tabindex="0" data-name="' + n + '" ' +
+            'title="copy glacialIcon(\'' + n + '\')">' + n + '</span>' +
+        '</div>';
+      }).join('');
+      grid.setAttribute('aria-busy', 'false');
+
+      function copyName(el) {
+        var call = "glacialIcon('" + el.getAttribute('data-name') + "')";
+        try { if (navigator.clipboard) navigator.clipboard.writeText(call); } catch (e) {}
+        var prev = el.textContent;
+        el.textContent = 'copied!';
+        setTimeout(function () { el.textContent = prev; }, 900);
+      }
+      grid.addEventListener('click', function (e) {
+        var t = e.target.closest('.nm'); if (t) copyName(t);
+      });
+      grid.addEventListener('keydown', function (e) {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        var t = e.target.closest('.nm'); if (t) { e.preventDefault(); copyName(t); }
+      });
+
+      var stroke = document.getElementById('stroke');
+      var sv = document.getElementById('strokeval');
+      stroke.addEventListener('input', function () {
+        document.documentElement.style.setProperty('--icon-stroke', stroke.value);
+        sv.textContent = parseFloat(stroke.value).toFixed(2);
+      });
+    })();
+  </script>
+</body>
+</html>

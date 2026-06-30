@@ -422,6 +422,9 @@ Every public `.glacial-*` class shipped in v2.4.0:
 - `.glacial-container` (+ `-narrow` 700px / `-wide` 1280px) — centered max-width column with responsive gutters; implements DESIGN.md's "Layout constraints"
 - `.glacial-grid` (responsive `auto-fit`) + `.glacial-grid-2` / `-3` / `-4` — collapse to 2-up at ≤1024px, 1-up at ≤540px
 
+### Icons (v2.9.0)
+- `.glacial-icon` — inline line-icon (1em, `currentColor`, weight via `--icon-stroke`); markup from `glacialIcon(name)`. Names: `glacialIcon('?')`.
+
 ### Behavior hooks (data attributes)
 - `data-theme="light|dark"` on `<html>` — forces theme
 - `data-skin="<name>"` on `<html>` — selects skin
@@ -448,5 +451,6 @@ Every public `.glacial-*` class shipped in v2.4.0:
 - `window.glacialOpenModal(idOrEl)` / `window.glacialCloseModal(idOrEl?)` (v2.4.0)
 - `window.glacialToast({ message, variant, timeout, action })` → returns a dismiss fn (v2.4.0)
 - `window.glacialPalette({ items, onSelect, placeholder, shortcut })` → returns `{ open, close, isOpen, setItems }`
+- `window.glacialIcon(name, { title?, class?, size?, strokeWidth? })` → `<svg class="glacial-icon">` string; `glacialIcon('?')` → name list
 - `window.glacial.help()` → full state object
-- `window.glacial.{toggleTheme, setSkin, setAesthetic, onThemeChange, openDrawer, closeDrawer, openModal, closeModal, toast, palette, version}` → namespaced API
+- `window.glacial.{toggleTheme, setSkin, setAesthetic, onThemeChange, openDrawer, closeDrawer, openModal, closeModal, toast, palette, icon, version}` → namespaced API

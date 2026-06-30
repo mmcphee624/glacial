@@ -356,6 +356,25 @@ bespoke layout CSS.
 
 Five stacked `.glacial-glass` cards on iOS Safari at full 20px blur drop below 30 FPS during scroll — this policy keeps mobile smooth.
 
+### Icons (v2.9.0)
+
+Bundled line-icon set, accessed via `glacialIcon(name)` (or `window.glacial.icon`). The markup
+is folded into `glacial.js`, so it ships with the two-file vendor — no extra request.
+
+- **Grid + weight:** 24×24 viewBox, geometry inside a 20×20 live area. Designed at stroke 1.5;
+  rendered via `.glacial-icon` (`width`/`height` `1em`, `stroke: currentColor`,
+  `stroke-width: var(--icon-stroke)`). Skins retune weight through `--icon-stroke`.
+- **Style:** stroke-only line glyphs, with a small **fill-hybrid** subset (info-circle,
+  alert-triangle, dot, small status dots) whose inner counter is filled so it stays legible at
+  16px — matching the existing alert/status icons.
+- **a11y:** decorative by default (`aria-hidden="true"`); pass `{ title }` to get `role="img"`
+  + a `<title>`. Caller-supplied `title`/`class`/`size` are escaped/coerced before output (the
+  string is inserted via `innerHTML` downstream — a security boundary, see `scripts/test-js.mjs`).
+- **Names are public API.** Same stability policy as classes (removal = MAJOR after a MINOR
+  deprecation; visual refinement allowed within a MINOR). A synonym alias map
+  (`gear→settings`, `magnifier→search`, …) resolves near-miss names; list them at runtime with
+  `glacialIcon('?')` or `window.glacial.help().icons`.
+
 ---
 
 ## Glass Effect

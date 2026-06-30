@@ -4,6 +4,31 @@ All notable changes to glacial are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.9.0] — 2026-06-30
+
+Icons. A bundled line-icon set + `glacialIcon(name)` helper, so prototypes stop hand-drawing
+inline SVG (the inconsistent "AI slop" the system exists to prevent). Folded into core
+`glacial.js` — not a separate file — so it ships through the existing two-file vendor + CDN
+allowlist with no extra `<script>`. Glyphs are a 24×24 grid designed at stroke 1.5, sized at
+`1em` via `.glacial-icon`; stroke weight is the `--icon-stroke` token so skins retune it. The
+helper is XSS-safe: caller-supplied `title`/`class`/`size` are escaped/coerced before they
+reach the markup, which is inserted via `innerHTML` downstream. Additive (MINOR): one class,
+one token, no removals.
+
+### Added
+- `glacialIcon(name, opts)` / `window.glacial.icon` — returns an `<svg class="glacial-icon">`
+  string. `opts`: `title` (→ `role="img"` + escaped `<title>`; else `aria-hidden`), `class`,
+  `size`, `strokeWidth`. Unknown name → a visible placeholder + a console warning.
+  `glacialIcon('?')` (or no arg) returns the name list; `window.glacial.help().icons` too.
+- `.glacial-icon` class + `--icon-stroke` token (default 1.5).
+- A synonym alias map (`gear→settings`, `magnifier→search`, `delete→trash`, …) so near-miss guesses resolve.
+- `examples/icons.html` reference grid; `node:test` coverage for `iconSvg` including the escaping boundary.
+
+### Note
+Icon **names** are public API (same stability policy as classes — removal is MAJOR after a
+MINOR deprecation). A glyph's visual form may be refined within a MINOR; a significant redraw
+gets a MIGRATING note.
+
 ## [2.8.0] — 2026-06-29
 
 Layout primitives. glacial now ships the page-level scaffolding the recipes assume:

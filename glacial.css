@@ -1,5 +1,5 @@
 /* Glacial Design System — Shared CSS Tokens
- * @version 2.8.0
+ * @version 2.9.0
  * Import this file into any service for Glacial theming.
  * See DESIGN.md for full specification, RECIPES.md for page recipes.
  */
@@ -64,6 +64,8 @@
   --space-xl: 32px;
   --space-2xl: 48px;
   --space-3xl: 64px;
+  /* v2.9.0 — icon stroke weight; skins retune (mono thinner, serif heavier) */
+  --icon-stroke: 1.5;
   /* v2.4.0 — fluid type scale (clamp: min @ 360px → max @ ~1240px). Keeps
    * headings readable on ultra-wide screens without a JS resize handler. */
   --text-xs: clamp(0.6875rem, 0.66rem + 0.14vw, 0.75rem);
@@ -2020,6 +2022,24 @@
   .glacial-grid-2,
   .glacial-grid-3,
   .glacial-grid-4 { grid-template-columns: 1fr; }
+}
+
+/* ===== Icon (v2.9.0, Tier 1) ===============================
+ * Inline line-icon sizing. width=height=1em so an icon scales with its text
+ * context; stroke comes from --icon-stroke (skins retune for mono/serif). Glyph
+ * markup is supplied by glacialIcon(); fill-hybrid sub-shapes set fill inline.
+ * Tokens/keywords only, no color. */
+.glacial-icon {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  vertical-align: -0.125em;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--icon-stroke);
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 /* ===== Settings cog + popover (v2.6.0, Tier 1) =============
