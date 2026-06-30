@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+  GLACIAL STARTER · Form / Settings   (recipe: RECIPES.md → "Form")
+  ──────────────────────────────────────────────────────────────────────────────
+  A clonable settings/create form. To adopt:
+    1. ASSET PATHS — ../glacial.* below work when previewing inside the glacial repo.
+       After copying out, change ../ to your vendored path or a pinned CDN, e.g.:
+         https://cdn.jsdelivr.net/gh/mmcphee624/glacial@v2.9.0/glacial.css
+         https://cdn.jsdelivr.net/gh/mmcphee624/glacial@v2.9.0/glacial.js
+       Unstyled page? The load-check at the bottom will tell you the paths are wrong.
+    2. CONTENT — replace what's between the  CONTENT:… START / END  markers.
+    3. Delete this header + the load-check <script> once wired up.
+  Narrow column via .glacial-container-narrow — no bespoke layout CSS. Validation runs
+  on SUBMIT (not per-keystroke); labels are always visible (never placeholder-as-label).
+-->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Settings</title>
+  <!-- ⚠ copied this out of glacial/starters/? change ../ below to your vendor/CDN path -->
+  <link rel="stylesheet" href="../glacial.css">
+  <script src="../glacial.js"></script>
+</head>
+<body>
+  <main class="glacial-container-narrow" style="padding-block: var(--space-lg);">
+
+    <!-- CONTENT: header — START -->
+    <nav aria-label="Breadcrumb" class="glacial-breadcrumbs" style="margin-bottom: var(--space-md);">
+      <a href="#">Settings</a>
+      <span class="glacial-breadcrumbs-sep">/</span>
+      <span class="glacial-breadcrumbs-current">Profile</span>
+    </nav>
+    <h1 class="glacial-h1">Profile</h1>
+    <p style="color: var(--text-secondary); margin: 0 0 var(--space-lg);">
+      Stacked fields on a narrow column — one clear scanning order. Add fieldsets, not columns.
+    </p>
+    <!-- CONTENT: header — END -->
+
+    <!-- ERROR STATE: shown only after a failed submit (hidden by default). -->
+    <div class="glacial-alert glacial-alert-error" id="form-error" role="alert" hidden style="margin-bottom: var(--space-md);">
+      <span class="glacial-alert-icon" style="font-size: 16px;" data-glacial-icon="alert-triangle"></span>
+      <div class="glacial-alert-body">
+        <div class="glacial-alert-title">Check the highlighted field</div>
+        Display name is required.
+      </div>
+    </div>
+
+    <!-- CONTENT: form — START -->
+    <form id="profile-form" novalidate>
+      <div class="glacial-glass" style="padding: var(--space-lg); display: flex; flex-direction: column; gap: var(--space-md);">
+
+        <div class="glacial-field">
+          <label class="glacial-field-label" for="name">Display name</label>
+          <input class="glacial-input" id="name" name="name" type="text" autocomplete="name">
+          <span class="glacial-field-hint">Shown on your public profile.</span>
+          <span class="glacial-field-error" id="name-error" hidden>Display name is required.</span>
+        </div>
+
+        <div class="glacial-field">
+          <label class="glacial-field-label" for="email">Email</label>
+          <input class="glacial-input" id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com">
+          <span class="glacial-field-hint">Only used for account notices.</span>
+        </div>
+
+        <div class="glacial-field">
+          <label class="glacial-field-label" for="role">Role</label>
+          <select class="glacial-select" id="role" name="role">
+            <option>Viewer</option>
+            <option>Editor</option>
+            <option>Admin</option>
+          </select>
+        </div>
+
+        <div class="glacial-field">
+          <label class="glacial-field-label" for="bio">Bio</label>
+          <textarea class="glacial-textarea" id="bio" name="bio" placeholder="A sentence or two…"></textarea>
+        </div>
+
+        <div class="glacial-field" style="flex-direction: row; align-items: center; justify-content: space-between;">
+          <label class="glacial-field-label" for="notify" style="margin: 0;">Email me about activity</label>
+          <input type="checkbox" class="glacial-switch" id="notify" name="notify" checked>
+        </div>
+
+      </div>
+
+      <div style="display: flex; gap: var(--space-sm); margin-top: var(--space-md);">
+        <button class="glacial-btn glacial-btn-primary" type="submit">
+          <span data-glacial-icon="check" style="margin-right: 4px;"></span>Save changes
+        </button>
+        <button class="glacial-btn glacial-btn-secondary" type="reset">Cancel</button>
+      </div>
+    </form>
+    <!-- CONTENT: form — END -->
+
+  </main>
+
+  <!-- ───── delete everything below once you've wired glacial into your project ───── -->
+  <script>
+    document.querySelectorAll('[data-glacial-icon]').forEach(function (el) {
+      el.innerHTML = glacialIcon(el.getAttribute('data-glacial-icon'));
+    });
+
+    // CONTENT: validation — validate on SUBMIT, surface the field + the top alert.
+    var form = document.getElementById('profile-form');
+    var name = document.getElementById('name');
+    var nameError = document.getElementById('name-error');
+    var formError = document.getElementById('form-error');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var bad = !name.value.trim();
+      name.setAttribute('aria-invalid', bad ? 'true' : 'false');
+      nameError.hidden = !bad;
+      formError.hidden = !bad;
+      if (bad) { name.focus(); return; }
+      if (window.glacialToast) glacialToast({ message: 'Settings saved', variant: 'success' });
+    });
+    form.addEventListener('reset', function () {
+      name.removeAttribute('aria-invalid');
+      nameError.hidden = true;
+      formError.hidden = true;
+    });
+
+    // STARTER load-check — makes a silent "unstyled page" failure loud.
+    if (!document.documentElement.hasAttribute('data-glacial-loaded')) {
+      document.body.insertAdjacentHTML('afterbegin',
+        '<div style="position:fixed;left:0;right:0;top:0;z-index:9999;background:#b91c1c;' +
+        'color:#fff;font:600 13px/1.4 system-ui,sans-serif;padding:10px 16px;text-align:center">' +
+        'glacial.css / glacial.js did not load — fix the asset paths in the &lt;head&gt; ' +
+        '(see the copy-out note at the top of this file).</div>');
+    }
+  </script>
+</body>
+</html>

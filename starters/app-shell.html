@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+  GLACIAL STARTER · App shell (rail + split-view + Cmd+K)   (recipe: RECIPES.md → "Split view")
+  ──────────────────────────────────────────────────────────────────────────────
+  A clonable master/detail app shell — the Linear/Mail layout. To adopt:
+    1. ASSET PATHS — ../glacial.* work when previewing inside the glacial repo. After
+       copying out, change ../ to your vendored path or a pinned CDN, e.g.:
+         https://cdn.jsdelivr.net/gh/mmcphee624/glacial@v2.9.0/glacial.css
+         https://cdn.jsdelivr.net/gh/mmcphee624/glacial@v2.9.0/glacial.js
+       Unstyled page? The load-check at the bottom says the paths are wrong.
+    2. CONTENT — replace what's between the  CONTENT:… START / END  markers + the
+       `threads` data object in the script.
+    3. Delete this header + the load-check once wired up.
+  Uses .glacial-rail-shell + .glacial-split-view (no bespoke layout CSS). The only local
+  <style> is behavioral: hiding the Cmd+K hint on touch (no physical keyboard).
+  ↑/↓ steps rows, Enter/click opens; on mobile the panes swap via [data-mobile-view].
+-->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>App shell</title>
+  <!-- ⚠ copied this out of glacial/starters/? change ../ below to your vendor/CDN path -->
+  <link rel="stylesheet" href="../glacial.css">
+  <script src="../glacial.js"></script>
+  <style>
+    /* behavioral only (NOT layout): no physical keyboard ⇒ hide the Cmd+K hint */
+    @media (pointer: coarse) { .kbd-hint { display: none !important; } }
+  </style>
+</head>
+<body>
+  <div class="glacial-rail-shell">
+
+    <!-- CONTENT: rail (nav) — START -->
+    <aside class="glacial-rail" aria-label="Primary">
+      <div class="glacial-rail-brand">GL</div>
+      <a class="glacial-rail-item" href="#" aria-current="page">
+        <span class="glacial-rail-item-icon" style="font-size:18px" data-glacial-icon="list"></span>
+        <span class="glacial-rail-item-tip">Inbox</span>
+        <span class="glacial-rail-item-label">Inbox</span>
+      </a>
+      <a class="glacial-rail-item" href="#">
+        <span class="glacial-rail-item-icon" style="font-size:18px" data-glacial-icon="dashboard"></span>
+        <span class="glacial-rail-item-tip">Boards</span>
+        <span class="glacial-rail-item-label">Boards</span>
+      </a>
+      <a class="glacial-rail-item" href="#">
+        <span class="glacial-rail-item-icon" style="font-size:18px" data-glacial-icon="search"></span>
+        <span class="glacial-rail-item-tip">Search</span>
+        <span class="glacial-rail-item-label">Search</span>
+      </a>
+      <span class="glacial-rail-spacer"></span>
+      <button class="glacial-rail-item" type="button" id="rail-settings">
+        <span class="glacial-rail-item-icon" style="font-size:18px" data-glacial-icon="settings"></span>
+        <span class="glacial-rail-item-tip">Settings</span>
+        <span class="glacial-rail-item-label">Settings</span>
+      </button>
+    </aside>
+    <!-- CONTENT: rail (nav) — END -->
+
+    <main class="glacial-rail-content" style="padding: 0;">
+      <div class="glacial-split-view" id="split" style="min-height: 100vh;">
+
+        <!-- CONTENT: list — START -->
+        <div class="glacial-split-list" id="list" role="listbox" aria-label="Threads" tabindex="0">
+          <div class="glacial-split-list-header">
+            <h2 class="glacial-split-list-title">Inbox</h2>
+            <span class="glacial-split-list-meta" id="list-count">5 threads</span>
+          </div>
+          <!-- rows are populated from `threads` below so list + detail never drift -->
+        </div>
+        <!-- CONTENT: list — END -->
+
+        <!-- CONTENT: detail — START -->
+        <div class="glacial-split-detail" id="detail">
+          <button class="glacial-split-back" type="button" id="back">← Inbox</button>
+          <!-- default = empty state until a row is chosen -->
+          <div class="glacial-split-empty" id="detail-empty">Select a thread to read it.</div>
+          <div id="detail-body" hidden></div>
+        </div>
+        <!-- CONTENT: detail — END -->
+
+      </div>
+    </main>
+  </div>
+
+  <span class="kbd-hint" style="position:fixed;right:14px;bottom:12px;font:600 11px var(--font-mono);color:var(--text-faint);background:var(--bg-card);border:1px solid var(--border-card);border-radius:var(--radius-sm);padding:4px 8px;pointer-events:none;">⌘K</span>
+
+  <!-- ───── delete everything below once you've wired glacial into your project ───── -->
+  <script>
+    // CONTENT: data — replace with your records.
+    var threads = [
+      { id: 't1', title: 'Q3 roadmap review', meta: 'Maya · 9:42', body: 'Can we lock the Q3 themes before Friday? I want eng to start scoping.' },
+      { id: 't2', title: 'Deploy went out', meta: 'CI · 9:18', body: 'v2.9.0 shipped to production. Error rate flat, latency nominal.' },
+      { id: 't3', title: 'Design tokens drift', meta: 'Sam · 8:55', body: 'Two surfaces are a version behind on glacial. Re-vendor needed.' },
+      { id: 't4', title: 'Customer call notes', meta: 'Priya · Tue', body: 'They want SSO and an audit log. SSO is the blocker for the renewal.' },
+      { id: 't5', title: 'On-call handoff', meta: 'Lee · Mon', body: 'Quiet weekend. One flaky test in the billing suite — ticket filed.' }
+    ];
+
+    var split = document.getElementById('split');
+    var list = document.getElementById('list');
+    var detailEmpty = document.getElementById('detail-empty');
+    var detailBody = document.getElementById('detail-body');
+    var selected = null;
+
+    document.getElementById('list-count').textContent = threads.length + ' threads';
+
+    // Build rows from data (list + detail stay in sync).
+    list.insertAdjacentHTML('beforeend', threads.map(function (t) {
+      return '<a class="glacial-split-row" href="#" role="option" data-id="' + t.id + '">' +
+        '<span class="glacial-split-row-title">' + t.title + '</span>' +
+        '<span class="glacial-split-row-meta"><span>' + t.meta + '</span></span>' +
+        '</a>';
+    }).join(''));
+    var rows = Array.prototype.slice.call(list.querySelectorAll('.glacial-split-row'));
+
+    function open(id) {
+      var t = threads.find(function (x) { return x.id === id; });
+      if (!t) return;
+      rows.forEach(function (r) {
+        var on = r.getAttribute('data-id') === id;
+        r.classList.toggle('is-selected', on);
+        r.setAttribute('aria-current', on ? 'true' : 'false');
+      });
+      detailBody.innerHTML =
+        '<h1 class="glacial-h1">' + t.title + '</h1>' +
+        '<p style="color:var(--text-secondary);margin:0 0 var(--space-md)">' + t.meta + '</p>' +
+        '<p style="line-height:1.6;max-width:70ch">' + t.body + '</p>' +
+        '<div style="display:flex;gap:var(--space-sm);margin-top:var(--space-lg)">' +
+          '<button class="glacial-btn glacial-btn-primary"><span data-glacial-icon="check" style="margin-right:4px"></span>Resolve</button>' +
+          '<button class="glacial-btn glacial-btn-secondary">Snooze</button>' +
+        '</div>';
+      detailEmpty.hidden = true;
+      detailBody.hidden = false;
+      selected = id;
+      split.setAttribute('data-mobile-view', 'detail'); // mobile: show detail pane
+      hydrateIcons(detailBody);
+    }
+
+    list.addEventListener('click', function (e) {
+      var row = e.target.closest('.glacial-split-row');
+      if (row) { e.preventDefault(); open(row.getAttribute('data-id')); }
+    });
+    document.getElementById('back').addEventListener('click', function () {
+      split.setAttribute('data-mobile-view', 'list'); // mobile: back to list
+    });
+
+    // ↑/↓ steps through rows, Enter opens (power-user browsing).
+    list.addEventListener('keydown', function (e) {
+      if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp' && e.key !== 'Enter') return;
+      var i = rows.findIndex(function (r) { return r.getAttribute('data-id') === selected; });
+      if (e.key === 'Enter') { if (i >= 0) open(rows[i].getAttribute('data-id')); return; }
+      e.preventDefault();
+      i = e.key === 'ArrowDown' ? Math.min(rows.length - 1, i + 1) : Math.max(0, i - 1);
+      open(rows[i].getAttribute('data-id'));
+      rows[i].scrollIntoView({ block: 'nearest' });
+    });
+
+    // Cmd+K palette — jump to any thread. Auto-binds the shortcut.
+    if (window.glacialPalette) {
+      glacialPalette({
+        placeholder: 'Jump to a thread…',
+        items: threads.map(function (t) { return { id: t.id, label: t.title, section: 'Threads' }; }),
+        onSelect: function (item) { open(item.id); }
+      });
+    }
+
+    // glacialIcon() hydration for [data-glacial-icon] (demo helper).
+    function hydrateIcons(scope) {
+      (scope || document).querySelectorAll('[data-glacial-icon]').forEach(function (el) {
+        if (!el.firstChild) el.innerHTML = glacialIcon(el.getAttribute('data-glacial-icon'));
+      });
+    }
+    hydrateIcons(document);
+
+    // STARTER load-check — makes a silent "unstyled page" failure loud.
+    if (!document.documentElement.hasAttribute('data-glacial-loaded')) {
+      document.body.insertAdjacentHTML('afterbegin',
+        '<div style="position:fixed;left:0;right:0;top:0;z-index:9999;background:#b91c1c;' +
+        'color:#fff;font:600 13px/1.4 system-ui,sans-serif;padding:10px 16px;text-align:center">' +
+        'glacial.css / glacial.js did not load — fix the asset paths in the &lt;head&gt; ' +
+        '(see the copy-out note at the top of this file).</div>');
+    }
+  </script>
+</body>
+</html>

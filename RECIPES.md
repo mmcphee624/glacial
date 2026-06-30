@@ -2,6 +2,11 @@
 
 The agent's first stop. Pick the recipe that matches the page you're building, copy the markup from the linked example, ship.
 
+> **To build a page:** if a [`starters/`](./starters/) file matches — **dashboard**, **app-shell**
+> (split view), or **form** — clone it and replace its `CONTENT` blocks. Otherwise pick a recipe
+> below and copy the linked example's `<main>`. Starters are clone-and-ship (no demo chrome);
+> examples are the rendered reference.
+
 This file is intentionally short. Anything not here is in `DESIGN.md` (token spec, contracts) or `examples/` (rendered reference).
 
 ---
@@ -45,7 +50,7 @@ If `window.glacial` is undefined, `glacial.js` didn't load. If `data-glacial-loa
 
 Paste this into the agent working in a fresh repo:
 
-> Adopt glacial: vendor a tagged copy of `mmcphee624/glacial` v2.2.0 to `vendor/glacial/` (curl `https://github.com/mmcphee624/glacial/archive/v2.2.0.tar.gz`, extract). Link `vendor/glacial/glacial.css` and `vendor/glacial/glacial.js` from your app shell. Pick the page recipe in `vendor/glacial/RECIPES.md` matching what you're building. Don't override `--accent` directly — write a skin under `vendor/glacial/skins/` if you need rebranding. Verify by checking `<html data-glacial-loaded>` is set and `window.glacial.help()` returns `{version: "2.2.0"}`.
+> Adopt glacial: vendor a tagged copy of `mmcphee624/glacial` v2.2.0 to `vendor/glacial/` (curl `https://github.com/mmcphee624/glacial/archive/v2.2.0.tar.gz`, extract). Link `vendor/glacial/glacial.css` and `vendor/glacial/glacial.js` from your app shell. To build a page, clone the closest file from `vendor/glacial/starters/` (dashboard / app-shell / form) and replace its CONTENT blocks; for other page types pick the recipe in `vendor/glacial/RECIPES.md` and copy the example's `<main>`. Don't override `--accent` directly — write a skin under `vendor/glacial/skins/` if you need rebranding. Verify by checking `<html data-glacial-loaded>` is set and `window.glacial.help()` returns `{version: "2.2.0"}`.
 
 The verification step matters. Without it, agents ship pages where glacial silently isn't loaded and you don't notice for hours.
 
@@ -108,7 +113,7 @@ Each recipe gives you:
 - Don't use cards-of-cards (don't put `.glacial-glass` inside another `.glacial-glass`).
 - Don't full-bleed the table on a desktop dashboard. Constrain to the container.
 
-**Copy this:** [examples/dashboard.html](./examples/dashboard.html) (the entire `<main>`).
+**Start here:** clone [`starters/dashboard.html`](./starters/dashboard.html) — clone-and-ship, no demo chrome. **Reference:** [examples/dashboard.html](./examples/dashboard.html) (rendered showcase).
 **Why this layout:** F-pattern scan — top-left is the north-star metric, alerts sit at eye-level on the left where users land after scanning metrics, status rows on the right give peripheral confirmation. Activity table at the bottom is reference, not focal.
 
 ### List / Index
@@ -136,7 +141,7 @@ Each recipe gives you:
 - Don't lose selection state when filtering — keep the selected row highlighted even if it's filtered out (and show a "Selected (filtered out)" indicator).
 - Don't update the URL on every selection — that breaks browser back. Update on explicit deep-link only.
 
-**Copy this:** [examples/v2.1-tour.html](./examples/v2.1-tour.html) (uses drawer instead of split — adapt with `.glacial-split-view`; see DESIGN.md for full split-view spec).
+**Start here:** clone [`starters/app-shell.html`](./starters/app-shell.html) — a real `.glacial-split-view` + rail + Cmd+K + mobile list↔detail swap. **Reference:** [examples/v2.1-tour.html](./examples/v2.1-tour.html) (drawer variant).
 **Why this layout:** keyboard-first browsing (↑↓ steps through rows, Enter opens). Detail updates without page reload, so animations are quick and context never reloads.
 
 ### Detail
@@ -164,7 +169,7 @@ Each recipe gives you:
 - Don't use placeholder-as-label. Always have a visible label above the input.
 - Don't cram inputs into a wide grid. Stack them vertically; the eye scans fields sequentially.
 
-**Copy this:** [examples/form.html](./examples/form.html).
+**Start here:** clone [`starters/form.html`](./starters/form.html). **Reference:** [examples/form.html](./examples/form.html).
 **Why this layout:** stacked inputs on a narrow column = clear scanning order, no field competes for attention with another.
 
 ### Board (kanban)

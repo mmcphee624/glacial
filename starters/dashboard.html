@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+  GLACIAL STARTER · Dashboard   (recipe: RECIPES.md → "Dashboard")
+  ──────────────────────────────────────────────────────────────────────────────
+  A clonable KPI overview. Unlike examples/, this carries NO demo chrome — clone it
+  and ship. To adopt:
+    1. ASSET PATHS — the two ../glacial.* links below resolve when you preview this
+       INSIDE the glacial repo. After you copy this file out, change ../ to your
+       vendored path (vendor/glacial/…) or a pinned CDN, e.g.:
+         https://cdn.jsdelivr.net/gh/mmcphee624/glacial@v2.9.0/glacial.css
+         https://cdn.jsdelivr.net/gh/mmcphee624/glacial@v2.9.0/glacial.js
+       If the page renders unstyled, that's why — the load-check at the bottom says so.
+    2. CONTENT — replace everything between the  CONTENT:… START / END  markers.
+    3. Delete this header + the load-check <script> once you're wired up.
+  Layout uses glacial's own primitives (.glacial-container-wide, .glacial-grid) — no
+  bespoke CSS. Icons come from glacialIcon(); a typo renders a visible placeholder.
+-->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Dashboard</title>
+  <!-- ⚠ copied this out of glacial/starters/? change ../ below to your vendor/CDN path -->
+  <link rel="stylesheet" href="../glacial.css">
+  <script src="../glacial.js"></script>
+</head>
+<body>
+  <main class="glacial-container-wide" style="padding-block: var(--space-lg);">
+
+    <!-- CONTENT: header — START -->
+    <nav aria-label="Breadcrumb" class="glacial-breadcrumbs" style="margin-bottom: var(--space-md);">
+      <a href="#">Home</a>
+      <span class="glacial-breadcrumbs-sep">/</span>
+      <span class="glacial-breadcrumbs-current">Dashboard</span>
+    </nav>
+    <h1 class="glacial-h1">Operations</h1>
+    <p style="color: var(--text-secondary); max-width: 64ch; margin: 0 0 var(--space-lg);">
+      Your north-star numbers first. Replace these tiles with the few metrics a viewer
+      should scan in five seconds — not every number you have.
+    </p>
+    <!-- CONTENT: header — END -->
+
+    <!-- CONTENT: metric row — START -->
+    <!-- 4-up grid; collapses to 2-up (≤1024px) then 1-up (≤540px) automatically. -->
+    <section class="glacial-grid glacial-grid-4">
+      <div class="glacial-metric">
+        <span class="glacial-metric-label">Active users</span>
+        <span class="glacial-metric-value">1,284</span>
+        <span class="glacial-metric-delta glacial-metric-delta-up">▲ 12.4% · 24h</span>
+      </div>
+      <div class="glacial-metric">
+        <span class="glacial-metric-label">Revenue</span>
+        <span class="glacial-metric-value">$84,210</span>
+        <span class="glacial-metric-delta glacial-metric-delta-up">▲ 3.1% · 24h</span>
+      </div>
+      <div class="glacial-metric">
+        <span class="glacial-metric-label">Error rate</span>
+        <span class="glacial-metric-value">0.18%</span>
+        <span class="glacial-metric-delta glacial-metric-delta-down">▼ 0.04% · 24h</span>
+      </div>
+      <!-- LOADING STATE: swap the skeleton for real content when data arrives. -->
+      <div class="glacial-metric">
+        <span class="glacial-metric-label">Pending tasks</span>
+        <span class="glacial-skeleton glacial-skeleton-text" style="width: 60%; height: 26px; margin: 2px 0;"></span>
+        <span class="glacial-skeleton glacial-skeleton-text" style="width: 80%; height: 11px;"></span>
+      </div>
+    </section>
+    <!-- CONTENT: metric row — END -->
+
+    <!-- CONTENT: notices + service status — START -->
+    <section class="glacial-grid glacial-grid-2" style="margin-top: var(--space-md); align-items: start;">
+      <div>
+        <h2 class="glacial-h2">Notices</h2>
+        <!-- ERROR STATE: a system-level message. Use the semantic variant. -->
+        <div class="glacial-alert glacial-alert-error" role="alert" style="margin-bottom: var(--space-sm);">
+          <span class="glacial-alert-icon" style="font-size: 16px;" data-glacial-icon="x-circle"></span>
+          <div class="glacial-alert-body">
+            <div class="glacial-alert-title">Payments degraded</div>
+            Checkout error rate above threshold since 09:14 UTC. On-call paged.
+          </div>
+          <button class="glacial-alert-dismiss" aria-label="Dismiss">×</button>
+        </div>
+        <div class="glacial-alert glacial-alert-info">
+          <span class="glacial-alert-icon" style="font-size: 16px;" data-glacial-icon="info-circle"></span>
+          <div class="glacial-alert-body">
+            <div class="glacial-alert-title">Maintenance tonight</div>
+            DB migration at 02:00 UTC. Expected downtime ~4 minutes.
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h2 class="glacial-h2">Services</h2>
+        <div class="glacial-glass" style="padding: var(--space-xs) var(--space-sm);">
+          <div class="glacial-status-row" data-state="healthy">
+            <span class="glacial-status-row-icon" style="font-size: 18px;" data-glacial-icon="server"></span>
+            <span class="glacial-status-row-name">api</span>
+            <span class="glacial-status-row-meta">99.98%</span>
+            <span class="glacial-status-row-dot" aria-label="healthy"></span>
+          </div>
+          <div class="glacial-status-row" data-state="active">
+            <span class="glacial-status-row-icon" style="font-size: 18px;" data-glacial-icon="activity"></span>
+            <span class="glacial-status-row-name">jobs-worker</span>
+            <span class="glacial-status-row-meta">processing 18</span>
+            <span class="glacial-status-row-dot" aria-label="active"></span>
+          </div>
+          <div class="glacial-status-row" data-state="error">
+            <span class="glacial-status-row-icon" style="font-size: 18px;" data-glacial-icon="x-circle"></span>
+            <span class="glacial-status-row-name">analytics-pipe</span>
+            <span class="glacial-status-row-meta">last seen 14m ago</span>
+            <span class="glacial-status-row-dot" aria-label="error"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- CONTENT: notices + service status — END -->
+
+    <!-- CONTENT: activity table — START -->
+    <section style="margin-top: var(--space-lg);">
+      <h2 class="glacial-h2">Recent activity</h2>
+      <div class="glacial-glass" style="padding: 0; overflow: hidden;">
+        <table class="glacial-table">
+          <thead>
+            <tr>
+              <th data-priority="1">When</th>
+              <th data-priority="1">Who</th>
+              <th data-priority="2">Action</th>
+              <th data-priority="3">IP</th>
+              <th data-priority="2" class="num">Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>10:42</td><td>maxm</td><td>deploy(api)</td><td>10.0.4.12</td><td class="num">42s</td></tr>
+            <tr><td>10:38</td><td>system</td><td>backup-rotate</td><td>—</td><td class="num">3.1m</td></tr>
+            <tr><td>10:14</td><td>maxm</td><td>config-edit</td><td>10.0.4.12</td><td class="num">8s</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- EMPTY STATE: render this <tbody> instead when there are zero rows:
+        <tbody><tr><td colspan="5">
+          <div class="glacial-empty-state">
+            <div class="glacial-empty-state-title">No activity yet</div>
+            <div class="glacial-empty-state-caption">Actions will appear here as they happen.</div>
+          </div>
+        </td></tr></tbody>
+      -->
+    </section>
+    <!-- CONTENT: activity table — END -->
+
+  </main>
+
+  <!-- ───── delete everything below once you've wired glacial into your project ───── -->
+  <script>
+    // Demo of glacialIcon(): fill every [data-glacial-icon] slot with its glyph.
+    // In a real app you'd call glacialIcon('name') directly where you build markup.
+    document.querySelectorAll('[data-glacial-icon]').forEach(function (el) {
+      el.innerHTML = glacialIcon(el.getAttribute('data-glacial-icon'));
+    });
+    // STARTER load-check — turns the silent "unstyled page" failure into a loud one.
+    if (!document.documentElement.hasAttribute('data-glacial-loaded')) {
+      document.body.insertAdjacentHTML('afterbegin',
+        '<div style="position:fixed;left:0;right:0;top:0;z-index:9999;background:#b91c1c;' +
+        'color:#fff;font:600 13px/1.4 system-ui,sans-serif;padding:10px 16px;text-align:center">' +
+        'glacial.css / glacial.js did not load — fix the asset paths in the &lt;head&gt; ' +
+        '(see the copy-out note at the top of this file).</div>');
+    }
+  </script>
+</body>
+</html>
