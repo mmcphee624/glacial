@@ -1,0 +1,114 @@
+/* GLACIAL skin: cobalt — deep navy field + electric cobalt accent.
+   Finance, ledgers, control planes. Dark mode is the primary surface.
+   Cool aurora orbs only (no warm hue competes with the accent).
+   Status set: jade green · amber · coral red (not pink) · cyan info
+   (pulled off the accent so "info" never reads as "primary"). */
+
+/* ---- LIGHT (cobalt deepens slightly so it stays crisp on white) -------- */
+[data-skin="cobalt"] {
+  --accent: #2f6fe3;
+  --accent-bg: rgba(47, 111, 227, 0.12);
+  --accent-border: rgba(47, 111, 227, 0.30);
+  --btn-primary-text: #ffffff;
+
+  --bg: #eceef4;
+  --bg-card: rgba(255, 255, 255, 0.80);
+  --bg-card-hover: rgba(255, 255, 255, 0.95);
+  --bg-header: rgba(255, 255, 255, 0.68);
+  --bg-input: rgba(255, 255, 255, 0.90);
+  --bg-overlay: rgba(15, 25, 45, 0.34);
+
+  --border: rgba(35, 50, 80, 0.10);
+  --border-card: rgba(47, 111, 227, 0.16);
+  --border-hover: rgba(47, 111, 227, 0.36);
+
+  --text: #374251;
+  --text-strong: #1a2331;
+  --text-secondary: #536176;
+  --text-muted: #8492a4;
+  --text-faint: #b7c1cf;
+
+  --green: #1a8c5a; --green-bg: rgba(26, 140, 90, 0.12);
+  --yellow: #bd7a12; --yellow-bg: rgba(189, 122, 18, 0.12);
+  --red: #cf4436;    --red-bg: rgba(207, 68, 54, 0.12);
+  --blue: #1aa3bf;   --blue-bg: rgba(26, 163, 191, 0.12);
+
+  --orb-1-color: #16294d;
+  --orb-2-color: #1d4a86;
+  --orb-3-color: #2f6fe3;
+  --orb-opacity: 0;
+}
+
+/* ---- DARK (manual) ----------------------------------------------------- */
+[data-skin="cobalt"][data-theme="dark"] {
+  --accent: #3b82f0;
+  --accent-bg: rgba(59, 130, 240, 0.14);
+  --accent-border: rgba(59, 130, 240, 0.34);
+  --btn-primary-text: #f2f7ff;
+
+  --bg: #08101f;
+  --bg-card: rgba(130, 170, 255, 0.06);
+  --bg-card-hover: rgba(130, 170, 255, 0.10);
+  --bg-header: rgba(8, 16, 31, 0.66);
+  --bg-input: rgba(130, 170, 255, 0.05);
+  --bg-overlay: rgba(0, 0, 0, 0.62);
+
+  --border: rgba(130, 170, 255, 0.10);
+  --border-card: rgba(130, 170, 255, 0.11);
+  --border-hover: rgba(59, 130, 240, 0.38);
+
+  --text: #b4c4dc;
+  --text-strong: #e8eefb;
+  --text-secondary: #7e91b2;
+  --text-muted: #50607c;
+  --text-faint: #2f3c4f;
+
+  --green: #2fcf9a; --green-bg: rgba(47, 207, 154, 0.13);
+  --yellow: #eab24a; --yellow-bg: rgba(234, 178, 74, 0.13);
+  --red: #f0735f;    --red-bg: rgba(240, 115, 95, 0.14);
+  --blue: #22c1d4;   --blue-bg: rgba(34, 193, 212, 0.14);
+
+  --orb-1-color: #16294d;
+  --orb-2-color: #1d4a86;
+  --orb-3-color: #2f6fe3;
+  --orb-opacity: 1;
+  --shadow: none;
+}
+
+/* ---- DARK (OS, when the user hasn't forced light) ---------------------- */
+@media (prefers-color-scheme: dark) {
+  [data-skin="cobalt"]:not([data-theme="light"]) {
+    --accent: #3b82f0;
+    --accent-bg: rgba(59, 130, 240, 0.14);
+    --accent-border: rgba(59, 130, 240, 0.34);
+    --btn-primary-text: #f2f7ff;
+
+    --bg: #08101f;
+    --bg-card: rgba(130, 170, 255, 0.06);
+    --bg-card-hover: rgba(130, 170, 255, 0.10);
+    --bg-header: rgba(8, 16, 31, 0.66);
+    --bg-input: rgba(130, 170, 255, 0.05);
+    --bg-overlay: rgba(0, 0, 0, 0.62);
+
+    --border: rgba(130, 170, 255, 0.10);
+    --border-card: rgba(130, 170, 255, 0.11);
+    --border-hover: rgba(59, 130, 240, 0.38);
+
+    --text: #b4c4dc;
+    --text-strong: #e8eefb;
+    --text-secondary: #7e91b2;
+    --text-muted: #50607c;
+    --text-faint: #2f3c4f;
+
+    --green: #2fcf9a; --green-bg: rgba(47, 207, 154, 0.13);
+    --yellow: #eab24a; --yellow-bg: rgba(234, 178, 74, 0.13);
+    --red: #f0735f;    --red-bg: rgba(240, 115, 95, 0.14);
+    --blue: #22c1d4;   --blue-bg: rgba(34, 193, 212, 0.14);
+
+    --orb-1-color: #16294d;
+    --orb-2-color: #1d4a86;
+    --orb-3-color: #2f6fe3;
+    --orb-opacity: 1;
+    --shadow: none;
+  }
+}

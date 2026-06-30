@@ -58,7 +58,7 @@ Three independent axes, all set on `<html>`:
 | Axis | Values | Default |
 |------|--------|---------|
 | `data-theme` | `light` / `dark` (or unset → OS preference) | OS preference |
-| `data-skin` | `default` / `warm-serif` / `midnight-mono` / `lavender` / `deep-navy` / `nord` | `default` |
+| `data-skin` | `default` / `warm-serif` / `midnight-mono` / `lavender` / `deep-navy` / `nord` / `cobalt` / `aqua` | `default` |
 | `data-aesthetic` | unset (polished) / `hybrid` (brutalist edges on glass) | unset |
 
 Set them programmatically:

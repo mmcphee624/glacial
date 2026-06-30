@@ -22,7 +22,7 @@ Glass Hybrid — frosted glass morphism that adapts between two distinct moods.
 - **Decoration level:** Intentional — glass + orbs provide depth without clutter.
 - **Mood:** Technical but alive. A control panel that feels good to look at, not just functional.
 
-Six skins extend this aesthetic to other moods (warm-serif, midnight-mono, lavender, deep-navy, nord). The skin contract guarantees they all share the same component shape — only tokens change.
+Skins extend this aesthetic to other moods (warm-serif, midnight-mono, lavender, deep-navy, nord, and the deep-navy-based cobalt + aqua). The skin contract guarantees they all share the same component shape — only tokens change.
 
 ---
 

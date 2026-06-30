@@ -1,6 +1,6 @@
 /**
  * Glacial Design System — Theme + Skin + Aesthetic + Aurora + Debug + Tier 2/3 helpers
- * @version 2.9.0
+ * @version 2.10.0
  *
  * Include via <script src="glacial.js"></script>
  * Provides:
@@ -19,7 +19,7 @@
  *   - window.glacialDecorateUrl(url)              (v2.7.0 — carry live theme/skin/aesthetic as URL params)
  *   - window.glacial.help()
  *
- * Sets <html data-glacial-loaded="2.9.0"> before first paint.
+ * Sets <html data-glacial-loaded="2.10.0"> before first paint.
  *
  * Theme/skin priority (highest first):
  *   1. URL params:  ?theme=light|dark · ?skin=<name> · ?aesthetic=<name>
@@ -290,7 +290,7 @@ if (typeof module !== 'undefined' && module.exports) {
   // there is no document — bail so importing for the pure-core test is safe.
   if (typeof document === 'undefined') return;
 
-  var VERSION = '2.9.0';
+  var VERSION = '2.10.0';
 
   // ===== Optional config (v2.6.0) =====
   // Read from a window global, falling back to <meta name="..."> content. All
@@ -504,7 +504,7 @@ if (typeof module !== 'undefined' && module.exports) {
   // persist-on-param validation (a carried ?skin= must be a known skin before it's
   // written to the cookie). Custom consumer skins still apply via ?skin=/cookie,
   // they just aren't auto-persisted from a carried param.
-  var GLACIAL_BUILTIN_SKINS = ['default', 'warm-serif', 'midnight-mono', 'lavender', 'deep-navy', 'nord'];
+  var GLACIAL_BUILTIN_SKINS = ['default', 'warm-serif', 'midnight-mono', 'lavender', 'deep-navy', 'nord', 'cobalt', 'aqua'];
 
   function getSkin() {
     // Precedence: URL ?skin= > persisted cookie > GLACIAL_DEFAULT_SKIN > 'default'.

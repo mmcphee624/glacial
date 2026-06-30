@@ -4,6 +4,18 @@ All notable changes to glacial are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.0] — 2026-06-30
+
+Two new skins, additive. `cobalt` (deep navy + electric cobalt — finance, ledgers, control
+planes) and `aqua` (deep navy + bright cyan, deepening to teal in light — telemetry,
+monitoring). Both ship light + manual-dark + OS-dark blocks, cool-only aurora, and a shared
+status set (jade / amber / coral / cyan-info). Registered in the settings-cog swatch picker
+and the `?skin=` validator. The six existing skins are unchanged. Designed in claude design.
+
+### Added
+- `skins/cobalt.css`, `skins/aqua.css` (token-only, contract-clean).
+- `cobalt` + `aqua` in `GLACIAL_BUILTIN_SKINS` (swatch picker + URL/cookie validation); shown in `examples/skins-preview.html`.
+
 ## [2.9.0] — 2026-06-30
 
 Icons. A bundled line-icon set + `glacialIcon(name)` helper, so prototypes stop hand-drawing

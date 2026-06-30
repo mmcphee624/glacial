@@ -87,6 +87,8 @@ The verification step matters. Without it, agents ship pages where glacial silen
 | `lavender` | Journals, note-taking, calm productivity. Pale lavender + dusty purple + twilight orbs. |
 | `deep-navy` | Finance, contracts, infrastructure. Abyssal navy + sky cyan + tighter radii. |
 | `nord` | Calm enterprise, engineering tools. Arctic frost palette, no aurora. |
+| `cobalt` | Finance, ledgers, control planes. Deep navy + electric cobalt; dark-first. |
+| `aqua` | Telemetry, monitoring. Deep navy + bright cyan (deepens to teal in light). |
 
 Set with `<html data-skin="warm-serif">` or `glacialSetSkin("warm-serif")`. URL param `?skin=warm-serif` overrides cookie for one page load.
 
@@ -338,6 +340,8 @@ These appeared in surveyed projects and are mistakes you should not repeat:
 | `lavender` | Pale lavender + dusty purple + twilight orbs — journals, calm productivity. |
 | `deep-navy` | Abyssal navy + sky cyan + tighter radii — finance, contracts, ledger UIs. |
 | `nord` | Arctic frost palette, muted blues, no aurora — calm engineering tools. |
+| `cobalt` | Deep navy + electric cobalt — finance, ledgers, control planes. Dark-first. |
+| `aqua` | Deep navy + bright cyan (teal in light) — telemetry, monitoring. |
 
 Authoring a new skin: copy `skins/_template.css`. Rules:
 1. Only override CSS custom property values.

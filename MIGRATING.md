@@ -1,5 +1,11 @@
 # Migrating
 
+## v2.9.0 → v2.10.0
+
+**Additive — no action required.** v2.10 adds two skins, `cobalt` and `aqua` (deep-navy
+field, cool aurora, light + dark). Nothing was removed — the six existing skins still work.
+Opt in with `<html data-skin="cobalt">`, `glacialSetSkin('aqua')`, or `?skin=cobalt`.
+
 ## v2.8.0 → v2.9.0
 
 **Additive — no action required.** v2.9 adds the icon system: `glacialIcon(name)` /
