@@ -4,6 +4,20 @@ All notable changes to glacial are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.1] — 2026-07-03
+
+Cobalt polish. The dark `cobalt` skin's aurora orbs are disabled — on the near-black
+`#08101f` field they washed out to muddy grey-blue smudges (visible at 4K), and a tuned
+brighter-cobalt palette, previewed live at 4K, still didn't earn the orbs' place. Cobalt-only:
+no other skin's aurora is touched, and the shared orb engine in `glacial.css` is unchanged.
+The `--orb-*-color` tokens are kept in place, so re-enabling is a one-value `--orb-opacity`
+flip later. Light cobalt is unaffected (its orbs were already off).
+
+### Changed
+- `skins/cobalt.css`: `--orb-opacity: 0` in both dark blocks (manual `[data-theme="dark"]` +
+  the OS-dark `@media (prefers-color-scheme: dark)` mirror). Header comment updated to note
+  the disabled aurora, following the `nord` / `warm-serif` precedent.
+
 ## [2.10.0] — 2026-06-30
 
 Two new skins, additive. `cobalt` (deep navy + electric cobalt — finance, ledgers, control
