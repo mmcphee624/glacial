@@ -2043,9 +2043,10 @@
 }
 
 /* ===== Settings cog + popover (v2.6.0, Tier 1) =============
- * A cog button (.glacial-settings-cog) toggling an anchored popover
- * (.glacial-settings-popover) with a theme segmented control, a skin swatch
- * picker, and an aesthetic toggle. Injected by glacialMountSettings(). Each
+ * A cog button (.glacial-settings-cog) toggling a top-layer popover
+ * (.glacial-settings-popover, native Popover API since v2.11.0) with a theme
+ * segmented control, a skin swatch picker, and an aesthetic toggle. Injected by
+ * glacialMountSettings(), which JS-anchors the popover under the cog. Each
  * swatch carries its own [data-skin], so var(--accent)/var(--bg) below resolve
  * to that skin's tokens — never a hardcoded color. */
 .glacial-settings { position: relative; display: inline-block; }
@@ -2072,14 +2073,21 @@
   border-color: var(--accent-border);
 }
 .glacial-settings-cog:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* Promoted to the browser top layer via the native Popover API (v2.11.0):
+ * escapes the header's backdrop-filter stacking context, so the panel always
+ * paints above page UI without a z-index race. JS anchors it to the cog
+ * (fixed top/right set on open); the [popover] reset clears the UA centering,
+ * and while closed the UA style makes [popover] display:none for us. */
 .glacial-settings-popover {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  z-index: 210;
+  position: fixed;
+  margin: 0;
+  inset: auto;
   min-width: 240px;
   padding: var(--space-md);
-  display: flex;
+  /* No `display` here on purpose: the UA style makes a closed [popover]
+   * display:none, and an author display would override that (author origin
+   * beats UA regardless of specificity), leaving the panel laid out while
+   * closed. Layout is set on :popover-open instead. */
   flex-direction: column;
   gap: var(--space-md);
   background: var(--bg-overlay);
@@ -2090,13 +2098,22 @@
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.25);
   opacity: 0;
   transform: translateY(-4px);
-  pointer-events: none;
-  transition: opacity 0.15s, transform 0.15s;
+  /* display/overlay are named so the exit fade can run off the top layer where
+   * transition-behavior: allow-discrete is supported; where it isn't, they're
+   * inert and opacity/transform still animate the enter (via @starting-style). */
+  transition: opacity 0.15s, transform 0.15s, display 0.15s, overlay 0.15s;
+  transition-behavior: allow-discrete;
 }
-.glacial-settings-popover[data-open="true"] {
+.glacial-settings-popover:popover-open {
+  display: flex;
   opacity: 1;
   transform: none;
-  pointer-events: auto;
+}
+@starting-style {
+  .glacial-settings-popover:popover-open {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
 }
 .glacial-settings-group { display: flex; flex-direction: column; gap: var(--space-sm); }
 .glacial-settings-label {
@@ -2160,7 +2177,8 @@
 }
 .glacial-settings-swatch:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 @media (max-width: 540px) {
-  .glacial-settings-popover { right: 0; left: auto; min-width: 220px; }
+  /* position is JS-anchored (fixed top/right); just tighten the min-width */
+  .glacial-settings-popover { min-width: 220px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .glacial-settings-popover,
