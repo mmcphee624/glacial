@@ -1125,6 +1125,8 @@ if (typeof module !== 'undefined' && module.exports) {
     return null;
   }
 
+  var glacialSettingsSeq = 0;
+
   window.glacialMountSettings = function (target, opts) {
     opts = opts || {};
     var host = resolveTarget(target);
@@ -1149,9 +1151,16 @@ if (typeof module !== 'undefined' && module.exports) {
 
     var pop = document.createElement('div');
     pop.className = 'glacial-settings-popover';
-    pop.setAttribute('data-open', 'false');
     pop.setAttribute('role', 'dialog');
     pop.setAttribute('aria-label', 'Appearance settings');
+    // Top layer (v2.11.0): popover="auto" lifts the panel out of the header's
+    // backdrop-filter stacking context so it always paints above page UI, and
+    // brings light-dismiss + Esc + focus-return for free. The cog is wired as
+    // its invoker via popovertarget — correct toggle semantics with no
+    // click-through re-open race. Position is JS-anchored to the cog (below).
+    pop.id = 'glacial-settings-pop-' + (++glacialSettingsSeq);
+    pop.setAttribute('popover', 'auto');
+    cog.setAttribute('popovertarget', pop.id);
 
     // --- Theme segmented control (light / dark / auto) ---
     var themeGroup = document.createElement('div');
@@ -1288,36 +1297,46 @@ if (typeof module !== 'undefined' && module.exports) {
 
     function syncAll() { syncSeg(); syncSkins(); syncAes(); }
 
-    function openPop() {
-      pop.setAttribute('data-open', 'true');
-      cog.setAttribute('aria-expanded', 'true');
-      syncAll();
+    // Glue the top-layer popover to the cog: the top layer doesn't inherit the
+    // cog's position, so read the cog's viewport rect and set fixed coords,
+    // right-aligned under it (matches the old right:0 anchor). Clamped so it
+    // never runs off the left edge. Re-runs on scroll/resize while open.
+    function anchorPop() {
+      var r = cog.getBoundingClientRect();
+      pop.style.top = (r.bottom + 8) + 'px';
+      pop.style.right = Math.max(0, window.innerWidth - r.right) + 'px';
+      pop.style.left = 'auto';
     }
-    function closePop() {
-      pop.setAttribute('data-open', 'false');
-      cog.setAttribute('aria-expanded', 'false');
-    }
-    function isOpen() { return pop.getAttribute('data-open') === 'true'; }
 
-    cog.addEventListener('click', function (e) {
-      e.stopPropagation();
-      if (isOpen()) closePop(); else openPop();
+    // The Popover API is the single source of truth for open/close — the cog
+    // invoker, light-dismiss (click-away), and Esc all route through it, so
+    // there are no hand-rolled outside-click/Esc handlers to double-bind.
+    // beforetoggle fires before paint, so we anchor + sync before the panel
+    // shows (no first-frame flash) and mirror aria-expanded on the cog.
+    pop.addEventListener('beforetoggle', function (e) {
+      var open = e.newState === 'open';
+      cog.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open) { anchorPop(); syncAll(); }
     });
-    // Keep the popover open when interacting inside it.
-    pop.addEventListener('click', function (e) { e.stopPropagation(); });
-    document.addEventListener('click', function () { if (isOpen()) closePop(); });
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && isOpen()) { closePop(); cog.focus(); }
-    });
+    var reanchor = function () { if (pop.matches(':popover-open')) anchorPop(); };
+    window.addEventListener('scroll', reanchor, true);
+    window.addEventListener('resize', reanchor);
+
     // Stay in sync when theme/skin/aesthetic change from anywhere (other tabs,
     // a Cmd+K command, the OS listener).
-    document.addEventListener('glacial:change', function () { if (isOpen()) syncAll(); });
+    document.addEventListener('glacial:change', function () {
+      if (pop.matches(':popover-open')) syncAll();
+    });
 
     root.appendChild(cog);
     root.appendChild(pop);
     host.appendChild(root);
     syncAll();
-    return { open: openPop, close: closePop, root: root };
+    return {
+      open: function () { if (!pop.matches(':popover-open')) pop.showPopover(); },
+      close: function () { if (pop.matches(':popover-open')) pop.hidePopover(); },
+      root: root
+    };
   };
 
   // ===== App switcher (v2.6.0) — Tier 2 =====

@@ -4,6 +4,39 @@ All notable changes to glacial are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.11.0] — 2026-07-03
+
+Settings popover → top layer. The appearance/skin-picker popover
+(`.glacial-settings-popover`) now opens in the browser **top layer** via the native
+Popover API, instead of as a `z-index: 210` absolutely-positioned element. The old
+approach was trapped: an absolutely-positioned popover's z-index only competes inside its
+nearest stacking-context ancestor, and the cog usually lives in a `backdrop-filter` header
+(a stacking-context trigger), so any page content in a higher context painted over it — the
+panel rendered *behind* other UI on some surfaces. The top layer sits above all page content
+regardless of z-index or ancestor stacking contexts, which is the semantically correct
+"always on top" primitive. Every other floating Glacial surface (drawer, palette, modal)
+already escapes via `position: fixed; inset: 0`; the settings popover was the odd one out.
+
+General fix — improves the settings panel on every skin and every consumer (homelab, Dev
+Board, all MaxOS surfaces), not cobalt-specific. Additive behavior (MINOR): no class or token
+removals; the public `glacialMountSettings()` return shape (`{ open, close, root }`) is
+unchanged.
+
+Browser support: JS anchoring (not CSS Anchor Positioning) keeps this off any Chromium-only
+path. Popover API is supported on Safari ≥ 17.0, Firefox desktop ≥ 125, and Firefox iOS —
+covering Safari + Firefox on both macOS and iOS.
+
+### Changed
+- `.glacial-settings-popover` is now `popover="auto"`, promoted to the top layer. The cog is
+  wired as its invoker via `popovertarget`, so light-dismiss (click-away), Esc, and
+  focus-return to the cog come from the platform — the hand-rolled outside-click/Esc handlers
+  are removed (no double-binding). A small JS helper anchors the popover under the cog on
+  open and re-anchors on scroll/resize.
+- `glacial.css`: `.glacial-settings-popover` moves from `position: absolute; z-index: 210` to
+  `position: fixed` + a `[popover]` reset (`margin: 0; inset: auto`), open state keyed off
+  `:popover-open` (with `@starting-style` for the enter transition) instead of `[data-open]`.
+  Look (bg-overlay, blur, border, shadow, fade) is unchanged.
+
 ## [2.10.1] — 2026-07-03
 
 Cobalt polish. The dark `cobalt` skin's aurora orbs are disabled — on the near-black
