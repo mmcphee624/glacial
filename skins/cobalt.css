@@ -1,6 +1,8 @@
 /* GLACIAL skin: cobalt — deep navy field + electric cobalt accent.
    Finance, ledgers, control planes. Dark mode is the primary surface.
-   Cool aurora orbs only (no warm hue competes with the accent).
+   Aurora orbs are disabled on dark — on the near-black #08101f field they
+   washed out to muddy grey-blue smudges (visible at 4K). The --orb-*-color
+   tokens are kept so re-enabling is a one-value --orb-opacity flip.
    Status set: jade green · amber · coral red (not pink) · cyan info
    (pulled off the accent so "info" never reads as "primary"). */
 
@@ -71,7 +73,8 @@
   --orb-1-color: #16294d;
   --orb-2-color: #1d4a86;
   --orb-3-color: #2f6fe3;
-  --orb-opacity: 1;
+  /* Aurora off on dark — washed out to grey-blue smudges on #08101f (4K). */
+  --orb-opacity: 0;
   --shadow: none;
 }
 
@@ -108,7 +111,8 @@
     --orb-1-color: #16294d;
     --orb-2-color: #1d4a86;
     --orb-3-color: #2f6fe3;
-    --orb-opacity: 1;
+    /* Aurora off on dark — washed out to grey-blue smudges on #08101f (4K). */
+    --orb-opacity: 0;
     --shadow: none;
   }
 }
